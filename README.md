@@ -29,37 +29,56 @@ A web platform for sharing and discovering Microsoft Visio shapes and stencils. 
 
 ### Steps
 
-**1. Clone the repository**
+**1. Create required directories**
 ```bash
-git clone <repository-url>
-cd <repository-folder>
+mkdir -p /services/visio-shapes-server
+cd /services/visio-shapes-server
+mkdir -p volumes/shapes volumes/stencils volumes/db
+chown -R 1000:1000 volumes/
 ```
 
-**2. Configure environment**
+**2. Clone the repository**
 ```bash
-cp env_example .env
+git clone https://github.com/ThomasWinkel/Visio-Shapes-Server.git
 ```
 
-Edit `.env` and set all values, especially `SECRET_KEY`, `DATABASE_URI`, and the `MAIL_*` settings. See [Configuration](#configuration) for details.
-
-**3. Create required directories**
+**3. Configure environment**
 ```bash
-mkdir -p app/stencils app/static/images/shapes
+cp Visio-Shapes-Server/example_.env .env
 ```
 
-**4. Build and start the container**
+Edit `.env` and set all values, especially `SECRET_KEY`, and the `MAIL_*` settings. See [Configuration](#configuration) for details.
+
+**4. Configure docker-compose**
 ```bash
-docker compose up -d --build
+cp Visio-Shapes-Server/example_docker-compose.yml docker-compose.yml
 ```
 
-**5. Run database migrations**
+Edit `docker-compose.yml` and adapt to your setup.
+
+**5. Build and start the container**
 ```bash
-docker compose exec app uv run flask db upgrade
+docker-compose up -d --build
+```
+
+**6. Run database migrations**
+```bash
+docker-compose exec www_visio /usr/src/app/.venv/bin/flask db upgrade
 ```
 
 The application is now available on port `5000`.
 
-> On subsequent deployments, repeat steps 4 and 5.
+**7. Maintenance**
+
+To update the application to the latest version:
+```bash
+cd /services/visio-shapes-server/Visio-Shapes-Server
+git pull
+cd ..
+docker-compose up -d --build
+docker-compose exec www_visio /usr/src/app/.venv/bin/flask db upgrade
+docker system prune -f
+```
 
 ## Configuration
 

@@ -1,0 +1,17 @@
+services:
+
+  www_visio:
+    build: ./Visio-Shapes-Server
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./volumes/shapes:/usr/src/app/app/static/images/shapes
+      - ./volumes/stencils:/usr/src/app/app/stencils
+      - ./volumes/db:/usr/src/app/instance
+    networks:
+      - nginx_proxy
+      - default
+
+networks:
+  nginx_proxy:
+    external: true

@@ -8,4 +8,4 @@ RUN useradd --no-create-home appuser && chown -R appuser /usr/src/app
 USER appuser
 ENV FLASK_APP=app:create_app
 EXPOSE 5000
-CMD ["uv", "run", "gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:create_app()"]
+CMD ["/usr/src/app/.venv/bin/gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:create_app()"]
