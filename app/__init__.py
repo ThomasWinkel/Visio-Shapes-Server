@@ -6,7 +6,7 @@ def create_app(config_class=Config):
     app = Flask(__name__)
     app.config.from_object(config_class)
 
-    # Initialize Flask extensions here
+    # Initialize Flask extensions
     db.init_app(app)
     migrate.init_app(app, db)
     bcrypt.init_app(app)
@@ -14,37 +14,45 @@ def create_app(config_class=Config):
     mail.init_app(app)
     cors.init_app(app)
 
-    # Decorators for user authentication
+    # User loader / token verifier
     from app.models.auth import User
 
     @login_manager.user_loader
     def user_loader(id):
         return User.query.get(int(id))
-    
+
     @http_auth.verify_token
     def verify_token(token):
         return User.query.filter_by(token=token).first()
 
-    # Register blueprints here
+    # Redirect unauthenticated users to login page
+    login_manager.login_view = 'auth.login'
+
+    # Register blueprints
     from app.blueprints.visio import bp as visio_bp
     app.register_blueprint(visio_bp)
 
     from app.blueprints.auth import bp as auth_bp
     app.register_blueprint(auth_bp)
 
-    # Serve SPA
-    @app.route('/', defaults={'path': ''})
-    @app.route('/<path:path>')
-    def index(path):
-        if path == '':
-            return render_template('index.html')
-        if path == 'spa/index.html':
-            return render_template(path)
-        elif path == 'spa/about.html':
-            return render_template(path)
-        elif path.startswith('spa/'):
-            return render_template("spa/404.html")
-        else:
-            return render_template("index.html")
+    from app.blueprints.account import bp as account_bp
+    app.register_blueprint(account_bp)
+
+    # Browser-site routes
+    @app.route('/')
+    def index():
+        return render_template('browser/landing.html')
+
+    @app.route('/browse')
+    def browse():
+        return render_template('browser/browse.html')
+
+    @app.route('/impressum')
+    def impressum():
+        return render_template('browser/impressum.html')
+
+    @app.route('/datenschutz')
+    def datenschutz():
+        return render_template('browser/datenschutz.html')
 
     return app

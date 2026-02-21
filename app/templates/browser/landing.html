@@ -1,0 +1,95 @@
+{% extends 'base_browser.html' %}
+{% block title %}Visio-Shapes – Microsoft Visio Shapes teilen{% endblock %}
+
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Visio-Shapes" class="hero-logo">
+    <h1>Microsoft Visio Shapes<br>weltweit teilen</h1>
+    <p>Lade deine Visio-Shapes und Schablonen hoch, teile sie mit der Community und entdecke Shapes von anderen Nutzern.</p>
+    <div class="hero-buttons">
+      <a href="/browse" class="btn btn-primary">Shapes durchsuchen</a>
+      <a href="https://github.com/ThomasWinkel/Visio-Shapes-Server" class="btn btn-secondary" target="_blank" rel="noopener">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<section class="steps-section">
+  <div class="container">
+    <h2>Wie funktioniert es?</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-number">1</div>
+        <h3>VSTO-AddIn installieren</h3>
+        <p>Installiere das Visio-AddIn, das eine Seitenleiste in Microsoft Visio hinzufügt.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">2</div>
+        <h3>Shapes hochladen</h3>
+        <p>Selektiere Shapes oder eine ganze Schablone in Visio und lade sie mit einem Klick hoch.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-number">3</div>
+        <h3>Shapes verwenden</h3>
+        <p>Suche und filtere in der Seitenleiste, dann ziehe Shapes per Drag &amp; Drop auf die Zeichenfläche.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="latest-section">
+  <div class="container">
+    <h2>Neueste Shapes</h2>
+    <div class="shapes-grid" id="latest-grid">
+      <div class="loading-indicator">Shapes werden geladen…</div>
+    </div>
+    <div class="section-footer">
+      <a href="/browse" class="btn btn-ghost">Alle Shapes ansehen</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  async function loadLatest() {
+    const grid = document.getElementById('latest-grid');
+    try {
+      const res = await fetch('/get_shapes?sort=date_desc');
+      const shapes = await res.json();
+      const latest = shapes.slice(0, 6);
+      grid.innerHTML = '';
+      if (latest.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p>Noch keine Shapes vorhanden.</p></div>';
+        return;
+      }
+      latest.forEach(shape => {
+        grid.insertAdjacentHTML('beforeend', `
+          <div class="shape-card">
+            <div class="shape-card-image">
+              <img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy">
+            </div>
+            <div class="shape-card-body">
+              <div class="shape-card-name">${escHtml(shape.name)}</div>
+              <div class="shape-card-keywords">${escHtml(shape.keywords)}</div>
+            </div>
+            <div class="shape-card-footer">
+              <span class="shape-card-user">${escHtml(shape.user_name)}</span>
+            </div>
+          </div>
+        `);
+      });
+    } catch (e) {
+      grid.innerHTML = '<div class="empty-state"><p>Shapes konnten nicht geladen werden.</p></div>';
+    }
+  }
+
+  function escHtml(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  loadLatest();
+</script>
+{% endblock %}

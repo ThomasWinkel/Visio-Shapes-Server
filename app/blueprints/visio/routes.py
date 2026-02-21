@@ -1,4 +1,4 @@
-from flask import render_template, request, send_file, jsonify, current_app
+from flask import render_template, request, send_file, jsonify, current_app, redirect, url_for
 from app.blueprints.visio import bp
 from app.extensions import db, http_auth
 from flask_login import current_user
@@ -9,20 +9,47 @@ import json, logging
 from pathlib import Path
 
 
+@bp.route('/panel')
+def panel():
+    return render_template('panel/panel.html')
+
+
 @bp.route('/get_shapes')
 def get_shapes():
-    shapes = Shape.query.all()
+    sort = request.args.get('sort', 'date_desc')
+
+    if sort == 'popular':
+        # Count downloads per shape, order by count desc
+        download_counts = (
+            db.session.query(ShapeDownload.shape_id, func.count(ShapeDownload.id).label('cnt'))
+            .group_by(ShapeDownload.shape_id)
+            .subquery()
+        )
+        shapes = (
+            db.session.query(Shape)
+            .outerjoin(download_counts, Shape.id == download_counts.c.shape_id)
+            .order_by(func.coalesce(download_counts.c.cnt, 0).desc())
+            .all()
+        )
+        result = []
+        for shape in shapes:
+            s = shape.serialize()
+            # attach download count
+            count_row = db.session.query(func.count(ShapeDownload.id)).filter(ShapeDownload.shape_id == shape.id).scalar()
+            s['download_count'] = count_row or 0
+            result.append(s)
+        return jsonify(result)
+    elif sort == 'date_asc':
+        shapes = Shape.query.order_by(Shape.upload_date.asc()).all()
+    else:  # date_desc (default)
+        shapes = Shape.query.order_by(Shape.upload_date.desc()).all()
+
     return jsonify([shape.serialize() for shape in shapes])
 
 
-@bp.route('/search', methods=['GET','POST'])
+@bp.route('/search', methods=['GET', 'POST'])
 def search():
-    if request.method == 'POST':
-        search = request.form['search']
-    else:
-        search = ''
-    shapes = Shape.query.where(Shape.name.contains(search)).order_by(Shape.id)
-    return render_template('visio/index.html', shapes=shapes)
+    return redirect(url_for('index'))
 
 
 @bp.route('/download_stencil/<int:stencil_id>')
@@ -42,7 +69,7 @@ def download_stencil(stencil_id):
 
         return send_file(file_path, download_name = stencil.file_name, as_attachment=True)
     else:
-        return '<p>Downloads are only available for registered users.</p>'
+        return redirect(url_for('auth.login'))
 
 
 @bp.route('/get_shape/<int:shape_id>')

@@ -1,0 +1,129 @@
+{% extends 'base_browser.html' %}
+{% block title %}Mein Account – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="account-container">
+
+  <div class="account-header">
+    <h1>Mein Account</h1>
+    <p class="account-meta">{{ current_user.name }} &middot; {{ current_user.email }}</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="shapes">Meine Shapes ({{ shapes|length }})</button>
+    <button class="tab-btn" data-tab="stencils">Meine Schablonen ({{ stencils|length }})</button>
+  </div>
+
+  <!-- Shapes Tab -->
+  <div class="tab-panel active" id="tab-shapes">
+    {% if shapes %}
+      {% for shape in shapes %}
+      <div class="account-item" id="shape-item-{{ shape.id }}">
+        <div class="account-item-image">
+          <img src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
+        </div>
+        <div class="account-item-body">
+          <div class="account-item-name">{{ shape.name }}</div>
+          <div class="account-item-meta">
+            Keywords: {{ shape.keywords }}<br>
+            Hochgeladen: {{ shape.upload_date.strftime('%d.%m.%Y') }}
+            {% if shape.stencil %} &middot; Teil von Schablone: {{ shape.stencil.title }}{% endif %}
+          </div>
+          <div class="account-item-actions">
+            <button class="btn btn-secondary btn-sm" onclick="toggleEdit('shape', {{ shape.id }})">Bearbeiten</button>
+            <button class="btn btn-danger btn-sm" onclick="confirmDelete('shape', {{ shape.id }}, '{{ shape.name|e }}')">Löschen</button>
+          </div>
+          <div class="edit-form" id="edit-shape-{{ shape.id }}">
+            <form onsubmit="submitEdit(event, 'shape', {{ shape.id }})">
+              <div class="form-group">
+                <label>Name</label>
+                <input type="text" class="form-control" name="name" value="{{ shape.name|e }}" required>
+              </div>
+              <div class="form-group">
+                <label>Keywords</label>
+                <input type="text" class="form-control" name="keywords" value="{{ shape.keywords|e }}">
+              </div>
+              <div class="form-group">
+                <label>Prompt</label>
+                <input type="text" class="form-control" name="prompt" value="{{ shape.prompt|e }}">
+              </div>
+              <div class="edit-form-actions">
+                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdit('shape', {{ shape.id }})">Abbrechen</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Du hast noch keine Shapes hochgeladen.</p></div>
+    {% endif %}
+  </div>
+
+  <!-- Stencils Tab -->
+  <div class="tab-panel" id="tab-stencils">
+    {% if stencils %}
+      {% for stencil in stencils %}
+      <div class="account-item" id="stencil-item-{{ stencil.id }}">
+        <div class="account-item-body">
+          <div class="account-item-name">{{ stencil.title }}</div>
+          <div class="account-item-meta">
+            Datei: {{ stencil.file_name }} &middot;
+            Shapes: {{ stencil.shapes|length }} &middot;
+            Hochgeladen: {{ stencil.upload_date.strftime('%d.%m.%Y') }}
+            {% if stencil.categories %} &middot; Kategorien: {{ stencil.categories }}{% endif %}
+          </div>
+          <div class="account-item-actions">
+            <button class="btn btn-secondary btn-sm" onclick="toggleEdit('stencil', {{ stencil.id }})">Bearbeiten</button>
+            <button class="btn btn-danger btn-sm" onclick="confirmDelete('stencil', {{ stencil.id }}, '{{ stencil.title|e }}')">Löschen</button>
+          </div>
+          <div class="edit-form" id="edit-stencil-{{ stencil.id }}">
+            <form onsubmit="submitEdit(event, 'stencil', {{ stencil.id }})">
+              <div class="form-group">
+                <label>Titel</label>
+                <input type="text" class="form-control" name="title" value="{{ stencil.title|e }}" required>
+              </div>
+              <div class="form-group">
+                <label>Kategorien</label>
+                <input type="text" class="form-control" name="categories" value="{{ stencil.categories|e }}">
+              </div>
+              <div class="form-group">
+                <label>Tags</label>
+                <input type="text" class="form-control" name="tags" value="{{ stencil.tags|e }}">
+              </div>
+              <div class="form-group">
+                <label>Kommentar</label>
+                <input type="text" class="form-control" name="comments" value="{{ stencil.comments|e }}">
+              </div>
+              <div class="edit-form-actions">
+                <button type="submit" class="btn btn-primary btn-sm">Speichern</button>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="toggleEdit('stencil', {{ stencil.id }})">Abbrechen</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>Du hast noch keine Schablonen hochgeladen.</p></div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Delete confirmation dialog -->
+<dialog id="delete-dialog">
+  <h3>Löschen bestätigen</h3>
+  <p id="delete-dialog-text"></p>
+  <div class="dialog-actions">
+    <button class="btn btn-secondary" onclick="document.getElementById('delete-dialog').close()">Abbrechen</button>
+    <button class="btn btn-danger" id="delete-confirm-btn">Löschen</button>
+  </div>
+</dialog>
+
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/account.js') }}"></script>
+{% endblock %}

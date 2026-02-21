@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 44" width="220" height="44">
+  <!-- Two overlapping rectangles suggesting Visio shapes/diagrams -->
+  <rect x="2" y="6" width="22" height="22" rx="3" fill="#E07B39" opacity="0.7"/>
+  <rect x="10" y="14" width="22" height="22" rx="3" fill="#E07B39"/>
+  <!-- Wordmark -->
+  <text x="40" y="31" font-family="'Open Sans', Arial, sans-serif" font-weight="600" font-size="19" fill="#1C1C1A">Visio-Shapes</text>
+</svg>

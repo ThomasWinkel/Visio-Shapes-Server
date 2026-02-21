@@ -1,0 +1,26 @@
+{% extends 'base_browser.html' %}
+{% block title %}Registrieren – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h1>Registrieren</h1>
+    <p style="font-size:0.875rem;color:var(--color-text-muted);margin-bottom:var(--space-3);text-align:center">
+      Nach der Registrierung bekommst du ein automatisch generiertes Passwort per E-Mail zugeschickt.<br>
+      Bitte logge dich innerhalb von 5 Minuten ein.
+    </p>
+    <form method="POST">
+      <div class="form-group">
+        <label for="email">E-Mail-Adresse</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="E-Mail eingeben" required autofocus>
+      </div>
+      <div class="form-group">
+        <label for="name">Benutzername</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="Benutzernamen wählen" required minlength="2">
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;margin-top:0.5rem">Registrieren</button>
+    </form>
+    <p class="auth-link">Bereits registriert? <a href="/login">Login</a></p>
+  </div>
+</div>
+{% endblock %}

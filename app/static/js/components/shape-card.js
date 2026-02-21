@@ -1,129 +1,119 @@
+/* shape-card.js – Web Component for Panel Drag & Drop */
+
 class ShapeCard extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({ mode: "open"});
-    }
+  constructor() {
+    super();
+    this.attachShadow({ mode: 'open' });
+  }
 
-    connectedCallback() {
-        this.render();
-        const shape = JSON.parse(this.getAttribute('shape'));
-        const div = this.shadowRoot.getElementById(shape.id);
-        div.addEventListener("mousedown", (e) => {
-            if (e.button != 0) return;
-            this.addDataObject();
-        });
+  connectedCallback() {
+    this.render();
+    const shape = JSON.parse(this.getAttribute('shape'));
+    const preview = this.shadowRoot.getElementById('preview-' + shape.id);
+    if (preview) {
+      preview.addEventListener('mousedown', e => {
+        if (e.button !== 0) return;
+        this.triggerDragDrop();
+      });
     }
+  }
 
-    static get observedAttributes() {
-        return ['shape'];
-    }
+  static get observedAttributes() { return ['shape']; }
 
-    attributeChangedCallback(name, oldValue, newValue) {
-        if (name === 'shape') {
-            //this.render();
+  render() {
+    const shape = JSON.parse(this.getAttribute('shape'));
+    this.shadowRoot.innerHTML = `
+      <style>
+        :host { display: block; font-family: 'Open Sans', sans-serif; }
+        .card {
+          background: #fff;
+          border: 1px solid #E8E0D8;
+          border-radius: 8px;
+          padding: 0.5rem;
+          margin-bottom: 0.4rem;
+          display: flex;
+          gap: 0.5rem;
+          align-items: center;
+          cursor: grab;
+          transition: background-color 150ms ease;
+          user-select: none;
         }
-    }
-
-    render() {
-        const shape = JSON.parse(this.getAttribute('shape')); //todo: Shape as class property
-
-        this.shadowRoot.innerHTML = `
-            <style>
-                .stencilContainer {
-                    border: 1px solid rgba(0, 0, 0, 0.2);
-                    padding: 16px;
-                    border-radius: 8px;
-                    margin: 8px;
-                    display: flex;
-                    gap: 8px;
-                }
-
-                .stencilPreview {
-                    width: 200px;
-                }
-
-                .stencilImage {
-                    display: block;
-                    max-width: 150px;
-                    max-height: 500px;
-                }
-
-                .stencilText {
-                    display: flex;
-                    flex-direction: column;
-                }
-
-                .stencilName {
-                    font-size: large;
-                }
-
-                .stencilPrompt {
-                    font-size: small;
-                }
-
-                .stencilKeywords {
-                    font-size: small;
-                }
-
-                .stencilDownload {
-                    font-size: small;
-                }
-
-                .stencilUploadDate {
-                    color: rgba(0, 0, 0, 0.4);
-                    font-size: smaller;
-                }
-            </style>
-
-            <div class="stencilContainer">
-                <div class="stencilPreview" id="${shape.id}">
-                    <a href="static/images/shapes/${shape.id}.png"> <img class="stencilImage" src="static/images/shapes/${shape.id}.png" alt="preview"> </a>
-                </div>
-                <div class="stencilText">
-                    <div class="stencilName"> ${shape.name} </div>
-                    <div class="stencilPrompt"> ${shape.prompt} </div>
-                    <div class="stencilKeywords"> ${shape.keywords} </div>
-                    ${shape.stencil_id != '' ? 
-                    `<div class="stencilDownload">
-                        <a href="/download_stencil/${shape.stencil_id}">${shape.stencil_file_name}</a>
-                    </div>`
-                    : ''}
-                    <p class="user" data-user-id="${shape.user_id}">${shape.user_name}</p>
-                </div>
-            </div>
-        `;
-
-        this.shadowRoot.querySelector('.user').addEventListener('click', () => {
-            const event = new CustomEvent('filter-by-user', {
-                detail: shape.user_id,
-                bubbles: true,
-                composed: true,
-            });
-            this.dispatchEvent(event);
-        });
-    }
-
-    addDataObject() {
-        const WebViewDragDrop = window.chrome.webview.hostObjects.WebViewDragDrop;
-        const shape = JSON.parse(this.getAttribute('shape'));
-
-        if (shape.data_object) {
-            WebViewDragDrop.DragDropShape(shape.data_object);
-        } else {
-            fetch(`/get_shape/${shape.id}`)
-                .then(response => response.text())
-                .then(text => {
-                    shape.data_object = text;
-                    WebViewDragDrop.DragDropShape(shape.data_object);
-                    this.setAttribute('shape', JSON.stringify(shape));
-                    this.dispatchEvent(new CustomEvent('dataObjectAdded', {
-                        detail: { shape },
-                        bubbles: true,
-                        composed: true
-                    }));
-                });
+        .card:hover { background-color: #F5F0EB; }
+        .card:active { cursor: grabbing; }
+        .img-wrap {
+          width: 44px;
+          height: 44px;
+          flex-shrink: 0;
+          background: #F5F0EB;
+          border-radius: 4px;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
+        img { max-width: 100%; max-height: 100%; object-fit: contain; display: block; }
+        .body { flex: 1; min-width: 0; }
+        .name {
+          font-size: 0.82rem;
+          font-weight: 600;
+          color: #1C1C1A;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .meta {
+          font-size: 0.7rem;
+          color: #6B6B67;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      </style>
+      <div class="card" id="preview-${shape.id}">
+        <div class="img-wrap">
+          <img src="/static/images/shapes/${shape.id}.png" alt="${this._esc(shape.name)}">
+        </div>
+        <div class="body">
+          <div class="name">${this._esc(shape.name)}</div>
+          <div class="meta">${this._esc(shape.keywords)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  _esc(str) {
+    return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  triggerDragDrop() {
+    const shape = JSON.parse(this.getAttribute('shape'));
+    if (shape.data_object) {
+      this._doDragDrop(shape.data_object);
+    } else {
+      fetch(`/get_shape/${shape.id}`)
+        .then(r => r.text())
+        .then(dataObject => {
+          shape.data_object = dataObject;
+          this.setAttribute('shape', JSON.stringify(shape));
+          this.dispatchEvent(new CustomEvent('dataObjectAdded', {
+            detail: { shape }, bubbles: true, composed: true
+          }));
+          this._doDragDrop(dataObject);
+        })
+        .catch(err => console.error('get_shape failed:', err));
     }
+  }
+
+  _doDragDrop(dataObject) {
+    try {
+      const hostObjects = window.chrome?.webview?.hostObjects;
+      if (hostObjects && hostObjects.WebViewDragDrop) {
+        hostObjects.WebViewDragDrop.DragDropShape(dataObject);
+      }
+    } catch (err) {
+      console.warn('WebViewDragDrop not available:', err);
+    }
+  }
 }
 
-customElements.define("shape-card", ShapeCard);
+customElements.define('shape-card', ShapeCard);

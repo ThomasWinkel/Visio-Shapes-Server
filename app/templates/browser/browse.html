@@ -1,0 +1,33 @@
+{% extends 'base_browser.html' %}
+{% block title %}Shapes durchsuchen – Visio-Shapes{% endblock %}
+
+{% block content %}
+
+<div class="filter-bar">
+  <div class="filter-bar-inner">
+    <input type="text" id="search" placeholder="Suchen…" autocomplete="off" spellcheck="false">
+    <select id="category-filter">
+      <option value="">Alle Kategorien</option>
+    </select>
+    <select id="sort-order">
+      <option value="date_desc">Neueste zuerst</option>
+      <option value="date_asc">Älteste zuerst</option>
+      <option value="popular">Meistgenutzt</option>
+    </select>
+  </div>
+</div>
+
+<div class="container">
+  <div class="shapes-grid" id="shapes-grid"></div>
+  <div class="loading-indicator" id="loading" style="display:none">Shapes werden geladen…</div>
+  <div class="empty-state" id="empty" style="display:none"><p>Keine Shapes gefunden.</p></div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+  const LOGGED_IN = {{ 'true' if current_user.is_authenticated else 'false' }};
+</script>
+<script src="{{ url_for('static', filename='js/browse.js') }}"></script>
+{% endblock %}

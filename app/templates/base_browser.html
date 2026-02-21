@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Visio-Shapes{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/design.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/browser.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+  <nav class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Visio-Shapes">
+      </a>
+      <ul class="nav-links">
+        <li><a href="/browse">Browse</a></li>
+        {% if current_user.is_authenticated %}
+          <li><a href="/account">Account</a></li>
+          <li><a href="/logout">Logout</a></li>
+        {% else %}
+          <li><a href="/login">Login</a></li>
+          <li><a href="/register" class="btn btn-primary btn-sm">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash-messages">
+        {% for category, message in messages %}
+          <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}{% endblock %}
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <ul class="footer-links">
+        <li><a href="/impressum">Impressum</a></li>
+        <li><a href="/datenschutz">Datenschutz</a></li>
+        <li><a href="https://github.com/ThomasWinkel/Visio-Shapes-Server" target="_blank" rel="noopener">GitHub</a></li>
+      </ul>
+      <span class="footer-copy">&copy; Thomas Winkel / geradeaus.engineering</span>
+    </div>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

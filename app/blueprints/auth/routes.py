@@ -13,35 +13,34 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user : User = User.query.filter_by(email=email).first()
-        
-        if user:
-            if bcrypt.check_password_hash(user.password_hash, password):
-                flash('Logged in successfully!', category='success')
-                user.last_active = func.now()
-                db.session.commit()
-                login_user(user, remember=True)
-                return redirect(url_for('index'))
-            
-        flash('Login failed, try again.', category='error')
+        user: User = User.query.filter_by(email=email).first()
 
-    return render_template('auth/login.html')
+        if user and bcrypt.check_password_hash(user.password_hash, password):
+            user.last_active = func.now()
+            db.session.commit()
+            login_user(user, remember=True)
+            next_url = request.args.get('next') or url_for('browse')
+            return redirect(next_url)
+
+        flash('Login fehlgeschlagen. Bitte versuche es erneut.', category='error')
+
+    return render_template('browser/login.html')
 
 
 @bp.route('/token_login', methods=['POST'])
 def token_login():
     if current_user.is_authenticated:
         logout_user()
-        
+
     token = request.form['token']
-    user : User = User.query.filter_by(token=token).first()
-    
+    user: User = User.query.filter_by(token=token).first()
+
     if user:
         user.last_active = func.now()
         db.session.commit()
         login_user(user, remember=True)
 
-    return redirect(url_for('index'))
+    return redirect(url_for('visio.panel'))
 
 
 @bp.route('/logout')
@@ -57,51 +56,55 @@ def register():
         email = request.form['email']
         name = request.form['name']
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            flash('Email already exists.', category='error')
-            return render_template('auth/register.html')
-        
-        user = User.query.filter_by(name=name).first()
-        if user:
-            flash('Name already exists.', category='error')
-            return render_template('auth/register.html')
+        if User.query.filter_by(email=email).first():
+            flash('E-Mail-Adresse bereits registriert.', category='error')
+            return render_template('browser/register.html')
+
+        if User.query.filter_by(name=name).first():
+            flash('Benutzername bereits vergeben.', category='error')
+            return render_template('browser/register.html')
 
         if len(name) < 2:
-            flash('Name must be at least 2 characters.', category='error')
-            return render_template('auth/register.html')
-        
+            flash('Benutzername muss mindestens 2 Zeichen lang sein.', category='error')
+            return render_template('browser/register.html')
+
         password = generate_password(10)
         token = '#' + password
-        
+
+        from flask import current_app
+        current_app.logger.warning(
+            f'\n--- REGISTRATION ---\n  User:     {name}\n  Password: {password}\n  Token:    {token}\n---'
+        )
+
         new_user = User(
             email=email,
             name=name,
             password_hash=bcrypt.generate_password_hash(password),
             token=token
         )
-
         db.session.add(new_user)
         db.session.commit()
-        
+
         msg = Message(
-            'Welcome to visio-shapes.com',
+            'Willkommen bei visio-shapes.com',
             recipients=[email],
-            body = (f'You are subscribing to https://www.visio-shapes.com\n'
-                f'Please login within the next 5 minutes.\n'
+            body=(
+                f'Du hast dich bei https://www.visio-shapes.com registriert.\n'
+                f'Bitte logge dich innerhalb der nächsten 5 Minuten ein.\n'
                 f'\n'
-                f'  Your password is: {password}\n'
+                f'  Dein Passwort lautet: {password}\n'
                 f'\n'
-                f'Don\'t worry if you missed the time.\n'
-                f'Just register again: https://www.visio-shapes/register\n'
+                f'Falls du die Zeit verpasst hast, registriere dich einfach erneut:\n'
+                f'https://www.visio-shapes.com/register\n'
                 f'\n'
-                f'You did not expect this email?\n'
-                f'Someone probably made a typo -> Do nothing.')
+                f'Du hast diese E-Mail nicht erwartet?\n'
+                f'Jemand hat wahrscheinlich einen Tippfehler gemacht – ignoriere diese E-Mail.'
+            )
         )
         mail.send(msg)
 
-        flash(f'An email has been send to {email}\nPlease login within the next 5 minutes.', category='success')
+        flash(f'Eine E-Mail wurde an {email} gesendet. Bitte logge dich innerhalb von 5 Minuten ein.', category='success')
         delete_user_if_not_loggedIn_after_time(new_user.id)
         return redirect(url_for('auth.login'))
 
-    return render_template('auth/register.html')
+    return render_template('browser/register.html')

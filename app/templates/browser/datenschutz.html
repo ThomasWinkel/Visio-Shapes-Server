@@ -1,0 +1,58 @@
+{% extends 'base_browser.html' %}
+{% block title %}Datenschutz – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="legal-container">
+  <h1>Datenschutzerklärung</h1>
+
+  <h2>1. Verantwortlicher</h2>
+  <address>
+    Thomas Winkel<br>
+    geradeaus.engineering<br>
+    Neuhäuser Straße 91b, 33102 Paderborn<br>
+    E-Mail: <a href="mailto:info@geradeaus.engineering">info@geradeaus.engineering</a>
+  </address>
+
+  <h2>2. Erhobene Daten</h2>
+  <p>
+    Bei der Registrierung werden E-Mail-Adresse und Benutzername gespeichert. Das Passwort wird als
+    Bcrypt-Hash gespeichert und ist nicht rekonstruierbar. Beim Hochladen von Shapes werden die
+    zugehörigen Metadaten (Name, Keywords, Prompt) sowie Vorschaubilder und Datei-Inhalte gespeichert.
+  </p>
+  <p>
+    Download-Ereignisse (welcher Nutzer hat welches Shape/welche Schablone heruntergeladen) werden
+    protokolliert, um die Popularitätssortierung zu ermöglichen.
+  </p>
+
+  <h2>3. Zweck der Verarbeitung</h2>
+  <p>
+    Die erhobenen Daten werden ausschließlich zur Bereitstellung der Plattform (Authentifizierung,
+    Shape-Verwaltung) verwendet und nicht an Dritte weitergegeben.
+  </p>
+
+  <h2>4. Speicherdauer</h2>
+  <p>
+    Nutzerdaten werden so lange gespeichert, bis der Account gelöscht wird. Nicht aktivierte Accounts
+    (kein Login innerhalb von 5 Minuten nach Registrierung) werden automatisch gelöscht.
+  </p>
+
+  <h2>5. Rechte der betroffenen Person</h2>
+  <p>
+    Du hast das Recht auf Auskunft, Berichtigung und Löschung deiner gespeicherten Daten.
+    Wende dich dafür per E-Mail an:
+    <a href="mailto:info@geradeaus.engineering">info@geradeaus.engineering</a>
+  </p>
+
+  <h2>6. Cookies</h2>
+  <p>
+    Diese Website verwendet ein Session-Cookie zur Authentifizierung (Flask-Login). Es werden
+    keine Tracking- oder Analyse-Cookies eingesetzt.
+  </p>
+
+  <h2>7. Server-Logfiles</h2>
+  <p>
+    Der Hosting-Server speichert automatisch Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene URL).
+    Diese Daten werden nicht mit Nutzerprofilen verknüpft und nach spätestens 7 Tagen gelöscht.
+  </p>
+</div>
+{% endblock %}
