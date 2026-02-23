@@ -40,7 +40,8 @@ function buildCard(shape) {
         <div class="shape-card-keywords">${escHtml(shape.keywords)}</div>
       </div>
       <div class="shape-card-footer">
-        <span class="shape-card-user">${escHtml(shape.user_name)} &middot; ${formatDate(shape.upload_date)}</span>
+        <span class="shape-card-user">${escHtml(shape.user_name)}</span>
+        <span class="shape-card-count">&darr; ${shape.download_count ?? 0}</span>
         ${downloadBtn}
       </div>
     </div>
