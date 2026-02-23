@@ -18,33 +18,30 @@ def panel():
 def get_shapes():
     sort = request.args.get('sort', 'date_desc')
 
-    if sort == 'popular':
-        # Count downloads per shape, order by count desc
-        download_counts = (
-            db.session.query(ShapeDownload.shape_id, func.count(ShapeDownload.id).label('cnt'))
-            .group_by(ShapeDownload.shape_id)
-            .subquery()
-        )
-        shapes = (
-            db.session.query(Shape)
-            .outerjoin(download_counts, Shape.id == download_counts.c.shape_id)
-            .order_by(func.coalesce(download_counts.c.cnt, 0).desc())
-            .all()
-        )
-        result = []
-        for shape in shapes:
-            s = shape.serialize()
-            # attach download count
-            count_row = db.session.query(func.count(ShapeDownload.id)).filter(ShapeDownload.shape_id == shape.id).scalar()
-            s['download_count'] = count_row or 0
-            result.append(s)
-        return jsonify(result)
-    elif sort == 'date_asc':
-        shapes = Shape.query.order_by(Shape.upload_date.asc()).all()
-    else:  # date_desc (default)
-        shapes = Shape.query.order_by(Shape.upload_date.desc()).all()
+    download_counts = (
+        db.session.query(ShapeDownload.shape_id, func.count(ShapeDownload.id).label('cnt'))
+        .group_by(ShapeDownload.shape_id)
+        .subquery()
+    )
 
-    return jsonify([shape.serialize() for shape in shapes])
+    base_query = (
+        db.session.query(Shape, func.coalesce(download_counts.c.cnt, 0).label('cnt'))
+        .outerjoin(download_counts, Shape.id == download_counts.c.shape_id)
+    )
+
+    if sort == 'popular':
+        rows = base_query.order_by(func.coalesce(download_counts.c.cnt, 0).desc()).all()
+    elif sort == 'date_asc':
+        rows = base_query.order_by(Shape.upload_date.asc()).all()
+    else:  # date_desc (default)
+        rows = base_query.order_by(Shape.upload_date.desc()).all()
+
+    result = []
+    for shape, cnt in rows:
+        s = shape.serialize()
+        s['download_count'] = cnt
+        result.append(s)
+    return jsonify(result)
 
 
 @bp.route('/search', methods=['GET', 'POST'])

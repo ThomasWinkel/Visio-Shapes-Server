@@ -13,46 +13,77 @@
     E-Mail: <a href="mailto:info@geradeaus.engineering">info@geradeaus.engineering</a>
   </address>
 
-  <h2>2. Erhobene Daten</h2>
+  <h2>2. Verarbeitete Daten</h2>
+  <p><strong>Bei der Registrierung:</strong></p>
   <p>
-    Bei der Registrierung werden E-Mail-Adresse und Benutzername gespeichert. Das Passwort wird als
-    Bcrypt-Hash gespeichert und ist nicht rekonstruierbar. Beim Hochladen von Shapes werden die
-    zugehörigen Metadaten (Name, Keywords, Prompt) sowie Vorschaubilder und Datei-Inhalte gespeichert.
+    Es werden E-Mail-Adresse und Benutzername gespeichert sowie der Zeitpunkt der Registrierung.
+    Das Passwort wird automatisch generiert und per E-Mail zugestellt. Es wird ausschließlich als
+    Bcrypt-Hash gespeichert und ist nicht rekonstruierbar.
+    Accounts, bei denen innerhalb von 5 Minuten nach Registrierung kein Login erfolgt, werden
+    automatisch gelöscht.
   </p>
+  <p><strong>Bei der Nutzung:</strong></p>
   <p>
-    Download-Ereignisse (welcher Nutzer hat welches Shape/welche Schablone heruntergeladen) werden
-    protokolliert, um die Popularitätssortierung zu ermöglichen.
+    Der Zeitpunkt der letzten Anmeldung wird gespeichert. Beim Hochladen werden Shapes und Schablonen
+    mit ihren Metadaten (Name, Keywords, Beschreibung) sowie Vorschaubilder und Dateiinhalte gespeichert.
+    Download-Ereignisse (welcher Account hat welches Shape oder welche Schablone heruntergeladen)
+    werden protokolliert, um die Popularitätssortierung zu ermöglichen.
+  </p>
+  <p><strong>Serverzugriffe:</strong></p>
+  <p>
+    Der Webserver protokolliert automatisch IP-Adresse, Zeitpunkt und aufgerufene URL.
+    Diese Daten werden nicht mit Nutzeraccounts verknüpft und nach spätestens 7 Tagen gelöscht.
   </p>
 
-  <h2>3. Zweck der Verarbeitung</h2>
+  <h2>3. Zweck und Rechtsgrundlage</h2>
   <p>
-    Die erhobenen Daten werden ausschließlich zur Bereitstellung der Plattform (Authentifizierung,
-    Shape-Verwaltung) verwendet und nicht an Dritte weitergegeben.
+    Authentifizierung und Bereitstellung der Plattform erfolgen auf Grundlage von
+    Art. 6 Abs. 1 lit. b DSGVO (Vertragserfüllung).
+    Die Verarbeitung der Server-Logfiles beruht auf Art. 6 Abs. 1 lit. f DSGVO
+    (berechtigtes Interesse: Sicherheit und Fehleranalyse).
+    Die Daten werden nicht an Dritte weitergegeben.
   </p>
 
   <h2>4. Speicherdauer</h2>
   <p>
-    Nutzerdaten werden so lange gespeichert, bis der Account gelöscht wird. Nicht aktivierte Accounts
-    (kein Login innerhalb von 5 Minuten nach Registrierung) werden automatisch gelöscht.
+    Nutzerdaten werden gespeichert, bis der Account gelöscht wird.
+    Nicht aktivierte Accounts werden automatisch nach 5 Minuten gelöscht.
+    Server-Logfiles werden nach spätestens 7 Tagen gelöscht.
   </p>
 
-  <h2>5. Rechte der betroffenen Person</h2>
+  <h2>5. Cookies</h2>
   <p>
-    Du hast das Recht auf Auskunft, Berichtigung und Löschung deiner gespeicherten Daten.
-    Wende dich dafür per E-Mail an:
+    Diese Website verwendet ausschließlich technisch notwendige Cookies. Es findet kein Tracking statt.
+  </p>
+  <p>
+    <strong>Session-Cookie</strong> (<code>session</code>): Hält die Anmeldesitzung aufrecht.
+    Wird beim Schließen des Browsers gelöscht.
+  </p>
+  <p>
+    <strong>Angemeldet-bleiben-Cookie</strong> (<code>remember_token</code>): Wird gesetzt, wenn
+    der Nutzer die Option „Angemeldet bleiben" verwendet. Gültigkeitsdauer: 365 Tage.
+    Kann durch Abmelden (Logout) vorzeitig gelöscht werden.
+  </p>
+
+  <h2>6. Rechte der betroffenen Person</h2>
+  <p>Du hast folgende Rechte gegenüber dem Verantwortlichen:</p>
+  <p>
+    Auskunft über deine gespeicherten Daten (Art. 15 DSGVO),
+    Berichtigung unrichtiger Daten (Art. 16 DSGVO),
+    Löschung deiner Daten (Art. 17 DSGVO),
+    Einschränkung der Verarbeitung (Art. 18 DSGVO),
+    Datenportabilität (Art. 20 DSGVO),
+    Widerspruch gegen die Verarbeitung (Art. 21 DSGVO).
+  </p>
+  <p>
+    Außerdem hast du das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren
+    (Art. 77 DSGVO). Zuständig für NRW ist die Landesbeauftragte für Datenschutz und
+    Informationsfreiheit NRW:
+    <a href="https://www.ldi.nrw.de" target="_blank" rel="noopener noreferrer">www.ldi.nrw.de</a>
+  </p>
+  <p>
+    Für alle Anfragen zu deinen Rechten wende dich per E-Mail an:
     <a href="mailto:info@geradeaus.engineering">info@geradeaus.engineering</a>
-  </p>
-
-  <h2>6. Cookies</h2>
-  <p>
-    Diese Website verwendet ein Session-Cookie zur Authentifizierung (Flask-Login). Es werden
-    keine Tracking- oder Analyse-Cookies eingesetzt.
-  </p>
-
-  <h2>7. Server-Logfiles</h2>
-  <p>
-    Der Hosting-Server speichert automatisch Zugriffsdaten (IP-Adresse, Zeitpunkt, aufgerufene URL).
-    Diese Daten werden nicht mit Nutzerprofilen verknüpft und nach spätestens 7 Tagen gelöscht.
   </p>
 </div>
 {% endblock %}

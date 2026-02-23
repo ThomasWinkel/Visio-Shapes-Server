@@ -159,7 +159,7 @@
   color: var(--color-text-muted);
 }
 
-/* ── Latest Shapes (landing) ── */
+/* ── Latest / Top Shapes (landing) ── */
 .latest-section {
   padding: var(--space-5) 0;
 }
@@ -284,6 +284,12 @@
 }
 .shape-card-user a:hover {
   color: var(--color-accent);
+}
+.shape-card-count {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+  white-space: nowrap;
 }
 
 /* ── Auth Forms ── */

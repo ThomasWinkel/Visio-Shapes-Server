@@ -44,6 +44,15 @@
     <div class="shapes-grid" id="latest-grid">
       <div class="loading-indicator">Shapes werden geladen…</div>
     </div>
+  </div>
+</section>
+
+<section class="latest-section">
+  <div class="container">
+    <h2>Top Shapes</h2>
+    <div class="shapes-grid" id="top-grid">
+      <div class="loading-indicator">Shapes werden geladen…</div>
+    </div>
     <div class="section-footer">
       <a href="/browse" class="btn btn-ghost">Alle Shapes ansehen</a>
     </div>
@@ -54,42 +63,55 @@
 
 {% block scripts %}
 <script>
-  async function loadLatest() {
-    const grid = document.getElementById('latest-grid');
-    try {
-      const res = await fetch('/get_shapes?sort=date_desc');
-      const shapes = await res.json();
-      const latest = shapes.slice(0, 6);
-      grid.innerHTML = '';
-      if (latest.length === 0) {
-        grid.innerHTML = '<div class="empty-state"><p>Noch keine Shapes vorhanden.</p></div>';
-        return;
-      }
-      latest.forEach(shape => {
-        grid.insertAdjacentHTML('beforeend', `
-          <div class="shape-card">
-            <div class="shape-card-image">
-              <img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy">
-            </div>
-            <div class="shape-card-body">
-              <div class="shape-card-name">${escHtml(shape.name)}</div>
-              <div class="shape-card-keywords">${escHtml(shape.keywords)}</div>
-            </div>
-            <div class="shape-card-footer">
-              <span class="shape-card-user">${escHtml(shape.user_name)}</span>
-            </div>
-          </div>
-        `);
-      });
-    } catch (e) {
-      grid.innerHTML = '<div class="empty-state"><p>Shapes konnten nicht geladen werden.</p></div>';
-    }
-  }
-
   function escHtml(str) {
     return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  loadLatest();
+  function buildCard(shape) {
+    return `
+      <div class="shape-card">
+        <div class="shape-card-image">
+          <img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy">
+        </div>
+        <div class="shape-card-body">
+          <div class="shape-card-name">${escHtml(shape.name)}</div>
+          <div class="shape-card-keywords">${escHtml(shape.keywords)}</div>
+        </div>
+        <div class="shape-card-footer">
+          <span class="shape-card-user">${escHtml(shape.user_name)}</span>
+          <span class="shape-card-count">↓ ${shape.download_count ?? 0}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  function renderGrid(gridEl, shapes) {
+    gridEl.innerHTML = '';
+    if (shapes.length === 0) {
+      gridEl.innerHTML = '<div class="empty-state"><p>Noch keine Shapes vorhanden.</p></div>';
+      return;
+    }
+    shapes.forEach(shape => gridEl.insertAdjacentHTML('beforeend', buildCard(shape)));
+  }
+
+  async function loadSections() {
+    const latestGrid = document.getElementById('latest-grid');
+    const topGrid    = document.getElementById('top-grid');
+    try {
+      const [resNewest, resTop] = await Promise.all([
+        fetch('/get_shapes?sort=date_desc'),
+        fetch('/get_shapes?sort=popular')
+      ]);
+      const newest = (await resNewest.json()).slice(0, 8);
+      const top    = (await resTop.json()).slice(0, 8);
+      renderGrid(latestGrid, newest);
+      renderGrid(topGrid, top);
+    } catch (e) {
+      latestGrid.innerHTML = '<div class="empty-state"><p>Shapes konnten nicht geladen werden.</p></div>';
+      topGrid.innerHTML    = '<div class="empty-state"><p>Shapes konnten nicht geladen werden.</p></div>';
+    }
+  }
+
+  loadSections();
 </script>
 {% endblock %}
