@@ -36,8 +36,15 @@
           <img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy">
         </div>
         <div class="panel-card-body">
-          <div class="panel-card-name">${escHtml(shape.name)}</div>
-          <div class="panel-card-meta">${escHtml(shape.keywords)}</div>
+          <div class="panel-card-row">
+            <div class="panel-card-name">${escHtml(shape.name)}</div>
+            <div class="panel-card-user">${escHtml(shape.user_name)}</div>
+          </div>
+          <div class="panel-card-row">
+            <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>
+            <div class="panel-card-count">&darr; ${shape.download_count ?? 0}</div>
+          </div>
+          <div class="panel-card-stencil">${escHtml(shape.stencil_title)}</div>
         </div>
       </div>
     `).join('');

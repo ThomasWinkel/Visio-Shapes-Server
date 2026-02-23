@@ -47,11 +47,11 @@ body {
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  padding: 0.5rem var(--space-1);
   margin-bottom: 0.4rem;
   display: flex;
-  gap: var(--space-1);
-  align-items: center;
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
   cursor: grab;
   transition: background-color var(--transition-fast);
   user-select: none;
@@ -63,15 +63,19 @@ body {
   cursor: grabbing;
 }
 .panel-card-image {
-  width: 44px;
-  height: 44px;
+  width: 90px;
+  height: 4.5rem;
   flex-shrink: 0;
-  background-color: var(--color-surface-alt);
-  border-radius: var(--radius-input);
-  overflow: hidden;
+  background-color: var(--color-surface);
+  border-right: 1px solid var(--color-border);
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 0.4rem;
+  transition: background-color var(--transition-fast);
+}
+.panel-card:hover .panel-card-image {
+  background-color: var(--color-surface-alt);
 }
 .panel-card-image img {
   max-width: 100%;
@@ -81,6 +85,18 @@ body {
 .panel-card-body {
   flex: 1;
   min-width: 0;
+  padding: 0.35rem var(--space-1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  justify-content: center;
+}
+.panel-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.4rem;
+  min-width: 0;
 }
 .panel-card-name {
   font-size: 0.82rem;
@@ -89,13 +105,37 @@ body {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
 }
-.panel-card-meta {
+.panel-card-user {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-shrink: 0;
+  max-width: 45%;
+}
+.panel-card-keywords {
   font-size: 0.7rem;
   color: var(--color-text-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.panel-card-stencil {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: calc(0.7rem * 1.6);
+}
+.panel-card-count {
+  font-size: 0.65rem;
+  color: var(--color-text-muted);
+  opacity: 0.6;
 }
 
 /* ── States ── */

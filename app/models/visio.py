@@ -59,6 +59,7 @@ class Shape(db.Model):
             'keywords': self.keywords,
             'stencil_id': self.stencil.id if self.stencil else '',
             'stencil_file_name': self.stencil.file_name if self.stencil else '',
+            'stencil_title': self.stencil.title if self.stencil else '',
             'user_id': self.user.id,
             'user_name': self.user.name
         }
