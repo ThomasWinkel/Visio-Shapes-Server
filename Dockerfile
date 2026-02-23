@@ -4,6 +4,7 @@ WORKDIR /usr/src/app
 COPY pyproject.toml uv.lock ./
 RUN uv sync --frozen --no-dev
 COPY . .
+RUN /usr/src/app/.venv/bin/pybabel compile -d app/translations
 RUN useradd --no-create-home appuser && chown -R appuser /usr/src/app
 USER appuser
 ENV FLASK_APP=app:create_app

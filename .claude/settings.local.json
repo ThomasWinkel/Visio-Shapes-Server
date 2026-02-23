@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd /c/Temp/Server && uv run python -c \"\nfrom app import create_app\nfrom datetime import datetime\n\napp = create_app\\(\\)\napp.config['TESTING'] = True\n\n# Simulate a full request for German locale\nwith app.test_request_context\\('/', headers={'Accept-Language': 'en'}\\):\n    from flask_babel import get_locale\n    print\\('Locale from Accept-Language en:', get_locale\\(\\)\\)\n    result = app.jinja_env.filters['dateformat']\\(datetime\\(2026, 2, 23\\), 'medium'\\)\n    print\\('Date EN:', result\\)\n\nwith app.test_request_context\\('/', headers={'Accept-Language': 'de'}\\):\n    print\\('Locale from Accept-Language de:', get_locale\\(\\)\\)\n    result = app.jinja_env.filters['dateformat']\\(datetime\\(2026, 2, 23\\), 'medium'\\)\n    print\\('Date DE:', result\\)\n\" 2>&1)"
+    ]
+  }
+}

@@ -1,26 +1,26 @@
 {% extends 'base_browser.html' %}
-{% block title %}Shapes durchsuchen – Visio-Shapes{% endblock %}
+{% block title %}{{ _('Browse shapes') }} – Visio-Shapes{% endblock %}
 
 {% block content %}
 
 <div class="filter-bar">
   <div class="filter-bar-inner">
-    <input type="text" id="search" placeholder="Suchen…" autocomplete="off" spellcheck="false">
+    <input type="text" id="search" placeholder="{{ _('Search\u2026') }}" autocomplete="off" spellcheck="false">
     <select id="category-filter">
-      <option value="">Alle Kategorien</option>
+      <option value="">{{ _('All categories') }}</option>
     </select>
     <select id="sort-order">
-      <option value="date_desc">Neueste zuerst</option>
-      <option value="date_asc">Älteste zuerst</option>
-      <option value="popular">Meistgenutzt</option>
+      <option value="date_desc">{{ _('Newest first') }}</option>
+      <option value="date_asc">{{ _('Oldest first') }}</option>
+      <option value="popular">{{ _('Most popular') }}</option>
     </select>
   </div>
 </div>
 
 <div class="container">
   <div class="shapes-grid" id="shapes-grid"></div>
-  <div class="loading-indicator" id="loading" style="display:none">Shapes werden geladen…</div>
-  <div class="empty-state" id="empty" style="display:none"><p>Keine Shapes gefunden.</p></div>
+  <div class="loading-indicator" id="loading" style="display:none">{{ _('Loading shapes\u2026') }}</div>
+  <div class="empty-state" id="empty" style="display:none"><p>{{ _('No shapes found.') }}</p></div>
 </div>
 
 {% endblock %}

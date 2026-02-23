@@ -482,6 +482,31 @@ dialog p {
   margin-bottom: var(--space-1);
 }
 
+/* ── Language Switcher ── */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.8rem;
+  padding-left: var(--space-2);
+  border-left: 1px solid var(--color-border);
+}
+.lang-switcher a {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+.lang-switcher a:hover {
+  color: var(--color-accent);
+}
+.lang-switcher a.lang-active {
+  color: var(--color-text);
+}
+.lang-sep {
+  color: var(--color-border);
+}
+
 /* ── Empty / Loading States ── */
 .empty-state {
   text-align: center;

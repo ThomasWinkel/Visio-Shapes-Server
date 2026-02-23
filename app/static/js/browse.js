@@ -20,18 +20,14 @@ function escHtml(str) {
 function formatDate(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
-  return d.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  return d.toLocaleDateString(window.LOCALE === 'de' ? 'de-DE' : 'en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
 }
 
 function buildCard(shape) {
-  const stencilLink = shape.stencil_id
-    ? `<a href="/download_stencil/${shape.stencil_id}" class="btn btn-primary btn-sm">Schablone laden</a>`
-    : '';
-
   const downloadBtn = shape.stencil_id
     ? (LOGGED_IN
-        ? `<a href="/download_stencil/${shape.stencil_id}" class="btn btn-primary btn-sm">Download</a>`
-        : `<a href="/login" class="btn btn-secondary btn-sm">Login zum Download</a>`)
+        ? `<a href="/download_stencil/${shape.stencil_id}" class="btn btn-primary btn-sm">${window.TRANSLATIONS.download}</a>`
+        : `<a href="/login" class="btn btn-secondary btn-sm">${window.TRANSLATIONS.login_to_download}</a>`)
     : '';
 
   return `
@@ -129,7 +125,7 @@ async function loadShapes() {
     applyFilter();
   } catch (err) {
     grid.innerHTML = '';
-    emptyEl.textContent = 'Shapes konnten nicht geladen werden.';
+    emptyEl.textContent = window.TRANSLATIONS.load_error;
     emptyEl.style.display = 'block';
   } finally {
     loadingEl.style.display = 'none';

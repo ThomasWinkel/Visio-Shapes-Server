@@ -1,0 +1,374 @@
+# German translations for Visio-Shapes.
+# Copyright (C) 2026 Thomas Winkel
+# This file is distributed under the same license as the Visio-Shapes project.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Visio-Shapes 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-23 21:22+0100\n"
+"PO-Revision-Date: 2026-02-23 21:22+0100\n"
+"Last-Translator: Thomas Winkel\n"
+"Language-Team: de\n"
+"Language: de\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: app/__init__.py:63 app/templates/browser/browse.html:22
+#: app/templates/browser/landing.html:45 app/templates/browser/landing.html:54
+msgid "Loading shapes\u2026"
+msgstr "Shapes werden geladen\u2026"
+
+#: app/__init__.py:64
+msgid "No shapes yet."
+msgstr "Noch keine Shapes vorhanden."
+
+#: app/__init__.py:65
+msgid "Could not load shapes."
+msgstr "Shapes konnten nicht geladen werden."
+
+#: app/__init__.py:66
+msgid "Load stencil"
+msgstr "Schablone laden"
+
+#: app/__init__.py:67
+msgid "Download"
+msgstr "Download"
+
+#: app/__init__.py:68
+msgid "Log in to download"
+msgstr "Login zum Download"
+
+#: app/__init__.py:69 app/templates/browser/browse.html:23
+msgid "No shapes found."
+msgstr "Keine Shapes gefunden."
+
+#: app/__init__.py:70
+msgid "Error saving. Please try again."
+msgstr "Fehler beim Speichern. Bitte versuche es erneut."
+
+#: app/__init__.py:71
+msgid "Network error. Please try again."
+msgstr "Netzwerkfehler. Bitte versuche es erneut."
+
+#: app/__init__.py:72
+msgid "Error deleting. Please try again."
+msgstr "Fehler beim Löschen. Bitte versuche es erneut."
+
+#: app/__init__.py:73
+#, python-brace-format
+msgid "Do you really want to permanently delete \"{name}\"?"
+msgstr "Möchtest du \"{name}\" wirklich unwiderruflich löschen?"
+
+#: app/__init__.py:74 app/templates/browser/account.html:28
+msgid "Keywords:"
+msgstr "Keywords:"
+
+#: app/blueprints/auth/routes.py:26
+msgid "Login failed. Please try again."
+msgstr "Login fehlgeschlagen. Bitte versuche es erneut."
+
+#: app/blueprints/auth/routes.py:61
+msgid "Email address already registered."
+msgstr "E-Mail-Adresse bereits registriert."
+
+#: app/blueprints/auth/routes.py:65
+msgid "Username already taken."
+msgstr "Benutzername bereits vergeben."
+
+#: app/blueprints/auth/routes.py:69
+msgid "Username must be at least 2 characters long."
+msgstr "Benutzername muss mindestens 2 Zeichen lang sein."
+
+#: app/blueprints/auth/routes.py:90
+msgid "Welcome to visio-shapes.com"
+msgstr "Willkommen bei visio-shapes.com"
+
+#: app/blueprints/auth/routes.py:93
+msgid "You have registered at https://www.visio-shapes.com."
+msgstr "Du hast dich bei https://www.visio-shapes.com registriert."
+
+#: app/blueprints/auth/routes.py:94
+msgid "Please log in within the next 5 minutes."
+msgstr "Bitte logge dich innerhalb der nächsten 5 Minuten ein."
+
+#: app/blueprints/auth/routes.py:96
+#, python-format
+msgid "  Your password is: %(password)s"
+msgstr "  Dein Passwort lautet: %(password)s"
+
+#: app/blueprints/auth/routes.py:98
+msgid "If you missed the time window, simply register again:"
+msgstr "Falls du die Zeit verpasst hast, registriere dich einfach erneut:"
+
+#: app/blueprints/auth/routes.py:101
+msgid "You didn't expect this email?"
+msgstr "Du hast diese E-Mail nicht erwartet?"
+
+#: app/blueprints/auth/routes.py:102
+msgid "Someone probably made a typo \u2013 ignore this email."
+msgstr "Jemand hat wahrscheinlich einen Tippfehler gemacht \u2013 ignoriere diese E-Mail."
+
+#: app/blueprints/auth/routes.py:107
+#, python-format
+msgid "An email has been sent to %(email)s. Please log in within 5 minutes."
+msgstr "Eine E-Mail wurde an %(email)s gesendet. Bitte logge dich innerhalb von 5 Minuten ein."
+
+#: app/templates/base_browser.html:20
+msgid "Browse"
+msgstr "Browse"
+
+#: app/templates/base_browser.html:22
+msgid "Account"
+msgstr "Account"
+
+#: app/templates/base_browser.html:23
+msgid "Logout"
+msgstr "Logout"
+
+#: app/templates/base_browser.html:25 app/templates/browser/login.html:2
+#: app/templates/browser/login.html:7 app/templates/browser/register.html:22
+msgid "Login"
+msgstr "Login"
+
+#: app/templates/base_browser.html:26 app/templates/browser/login.html:19
+#: app/templates/browser/register.html:2 app/templates/browser/register.html:7
+#: app/templates/browser/register.html:20
+msgid "Register"
+msgstr "Registrieren"
+
+#: app/templates/base_browser.html:52
+msgid "Legal Notice"
+msgstr "Impressum"
+
+#: app/templates/base_browser.html:53
+msgid "Privacy Policy"
+msgstr "Datenschutz"
+
+#: app/templates/browser/account.html:2 app/templates/browser/account.html:8
+msgid "My Account"
+msgstr "Mein Account"
+
+#: app/templates/browser/account.html:13
+msgid "My Shapes"
+msgstr "Meine Shapes"
+
+#: app/templates/browser/account.html:14
+msgid "My Stencils"
+msgstr "Meine Schablonen"
+
+#: app/templates/browser/account.html:29 app/templates/browser/account.html:74
+msgid "Uploaded:"
+msgstr "Hochgeladen:"
+
+#: app/templates/browser/account.html:30
+msgid "Part of stencil:"
+msgstr "Teil von Schablone:"
+
+#: app/templates/browser/account.html:33 app/templates/browser/account.html:78
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: app/templates/browser/account.html:34 app/templates/browser/account.html:79
+#: app/templates/browser/account.html:121
+msgid "Delete"
+msgstr "Löschen"
+
+#: app/templates/browser/account.html:39
+msgid "Name"
+msgstr "Name"
+
+#: app/templates/browser/account.html:43
+msgid "Keywords"
+msgstr "Keywords"
+
+#: app/templates/browser/account.html:47
+msgid "Prompt"
+msgstr "Prompt"
+
+#: app/templates/browser/account.html:51 app/templates/browser/account.html:100
+msgid "Save"
+msgstr "Speichern"
+
+#: app/templates/browser/account.html:52 app/templates/browser/account.html:101
+#: app/templates/browser/account.html:120
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: app/templates/browser/account.html:60
+msgid "No shapes uploaded yet."
+msgstr "Du hast noch keine Shapes hochgeladen."
+
+#: app/templates/browser/account.html:72
+msgid "File:"
+msgstr "Datei:"
+
+#: app/templates/browser/account.html:73
+msgid "Shapes:"
+msgstr "Shapes:"
+
+#: app/templates/browser/account.html:75
+msgid "Categories:"
+msgstr "Kategorien:"
+
+#: app/templates/browser/account.html:84
+msgid "Title"
+msgstr "Titel"
+
+#: app/templates/browser/account.html:88
+msgid "Categories"
+msgstr "Kategorien"
+
+#: app/templates/browser/account.html:92
+msgid "Tags"
+msgstr "Tags"
+
+#: app/templates/browser/account.html:96
+msgid "Comment"
+msgstr "Kommentar"
+
+#: app/templates/browser/account.html:109
+msgid "No stencils uploaded yet."
+msgstr "Du hast noch keine Schablonen hochgeladen."
+
+#: app/templates/browser/account.html:117
+msgid "Confirm deletion"
+msgstr "Löschen bestätigen"
+
+#: app/templates/browser/browse.html:2 app/templates/browser/landing.html:12
+msgid "Browse shapes"
+msgstr "Shapes durchsuchen"
+
+#: app/templates/browser/browse.html:8
+msgid "Search\u2026"
+msgstr "Suchen\u2026"
+
+#: app/templates/browser/browse.html:10
+msgid "All categories"
+msgstr "Alle Kategorien"
+
+#: app/templates/browser/browse.html:13
+msgid "Newest first"
+msgstr "Neueste zuerst"
+
+#: app/templates/browser/browse.html:14
+msgid "Oldest first"
+msgstr "Älteste zuerst"
+
+#: app/templates/browser/browse.html:15
+msgid "Most popular"
+msgstr "Meistgenutzt"
+
+#: app/templates/browser/landing.html:2
+msgid "Visio-Shapes \u2013 Share Microsoft Visio Shapes"
+msgstr "Visio-Shapes \u2013 Microsoft Visio Shapes teilen"
+
+#: app/templates/browser/landing.html:9
+msgid "Share Microsoft Visio Shapes worldwide"
+msgstr "Microsoft Visio Shapes weltweit teilen"
+
+#: app/templates/browser/landing.html:10
+msgid ""
+"Upload your Visio shapes and stencils, share them with the community, and"
+" discover shapes from other users."
+msgstr ""
+"Lade deine Visio-Shapes und Schablonen hoch, teile sie mit der Community "
+"und entdecke Shapes von anderen Nutzern."
+
+#: app/templates/browser/landing.html:20
+msgid "How does it work?"
+msgstr "Wie funktioniert es?"
+
+#: app/templates/browser/landing.html:24
+msgid "Install VSTO Add-In"
+msgstr "VSTO-AddIn installieren"
+
+#: app/templates/browser/landing.html:25
+msgid "Install the Visio Add-In, which adds a sidebar in Microsoft Visio."
+msgstr "Installiere das Visio-AddIn, das eine Seitenleiste in Microsoft Visio hinzufügt."
+
+#: app/templates/browser/landing.html:29
+msgid "Upload shapes"
+msgstr "Shapes hochladen"
+
+#: app/templates/browser/landing.html:30
+msgid ""
+"Select shapes or a complete stencil in Visio and upload them with one "
+"click."
+msgstr ""
+"Selektiere Shapes oder eine ganze Schablone in Visio und lade sie mit "
+"einem Klick hoch."
+
+#: app/templates/browser/landing.html:34
+msgid "Use shapes"
+msgstr "Shapes verwenden"
+
+#: app/templates/browser/landing.html:35
+msgid ""
+"Search and filter in the sidebar, then drag and drop shapes onto the "
+"drawing canvas."
+msgstr ""
+"Suche und filtere in der Seitenleiste, dann ziehe Shapes per Drag & Drop "
+"auf die Zeichenfläche."
+
+#: app/templates/browser/landing.html:43
+msgid "Latest Shapes"
+msgstr "Neueste Shapes"
+
+#: app/templates/browser/landing.html:52
+msgid "Top Shapes"
+msgstr "Top Shapes"
+
+#: app/templates/browser/landing.html:57
+msgid "View all shapes"
+msgstr "Alle Shapes ansehen"
+
+#: app/templates/browser/login.html:10 app/templates/browser/register.html:13
+msgid "Email address"
+msgstr "E-Mail-Adresse"
+
+#: app/templates/browser/login.html:11 app/templates/browser/register.html:14
+msgid "Enter email"
+msgstr "E-Mail eingeben"
+
+#: app/templates/browser/login.html:14
+msgid "Password"
+msgstr "Passwort"
+
+#: app/templates/browser/login.html:15
+msgid "Enter password"
+msgstr "Passwort eingeben"
+
+#: app/templates/browser/login.html:17
+msgid "Log in"
+msgstr "Einloggen"
+
+#: app/templates/browser/login.html:19
+msgid "No account yet?"
+msgstr "Noch kein Konto?"
+
+#: app/templates/browser/register.html:9
+msgid ""
+"After registering, you will receive an automatically generated password "
+"by email. Please log in within 5 minutes."
+msgstr ""
+"Nach der Registrierung bekommst du ein automatisch generiertes Passwort "
+"per E-Mail zugeschickt. Bitte logge dich innerhalb von 5 Minuten ein."
+
+#: app/templates/browser/register.html:17
+msgid "Username"
+msgstr "Benutzername"
+
+#: app/templates/browser/register.html:18
+msgid "Choose username"
+msgstr "Benutzernamen wählen"
+
+#: app/templates/browser/register.html:22
+msgid "Already registered?"
+msgstr "Bereits registriert?"
+
+#: app/__init__.py
+msgid "Please log in to access this page."
+msgstr "Bitte logge dich ein, um auf diese Seite zuzugreifen."

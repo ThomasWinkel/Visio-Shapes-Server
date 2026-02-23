@@ -38,15 +38,15 @@ async function submitEdit(event, type, id) {
         if (nameEl) nameEl.textContent = json.name ?? json.title ?? '';
         const metaEl = item.querySelector('.account-item-meta');
         if (metaEl && type === 'shape') {
-          metaEl.firstChild.textContent = `Keywords: ${json.keywords}`;
+          metaEl.firstChild.textContent = `${window.TRANSLATIONS.keywords_label} ${json.keywords}`;
         }
       }
       toggleEdit(type, id);
     } else {
-      alert('Fehler beim Speichern. Bitte versuche es erneut.');
+      alert(window.TRANSLATIONS.save_error);
     }
   } catch (err) {
-    alert('Netzwerkfehler. Bitte versuche es erneut.');
+    alert(window.TRANSLATIONS.network_error);
   }
 }
 
@@ -56,7 +56,7 @@ let pendingDelete = null;
 function confirmDelete(type, id, name) {
   const dialog = document.getElementById('delete-dialog');
   document.getElementById('delete-dialog-text').textContent =
-    `Möchtest du "${name}" wirklich unwiderruflich löschen?`;
+    window.TRANSLATIONS.delete_confirm.replace('{name}', name);
   pendingDelete = { type, id };
   dialog.showModal();
 }
@@ -73,10 +73,10 @@ document.getElementById('delete-confirm-btn').addEventListener('click', async ()
       const item = document.getElementById(`${type}-item-${id}`);
       if (item) item.remove();
     } else {
-      alert('Fehler beim Löschen. Bitte versuche es erneut.');
+      alert(window.TRANSLATIONS.delete_error);
     }
   } catch (err) {
-    alert('Netzwerkfehler. Bitte versuche es erneut.');
+    alert(window.TRANSLATIONS.network_error);
   }
   pendingDelete = null;
 });

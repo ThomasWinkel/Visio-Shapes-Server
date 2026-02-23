@@ -1,4 +1,5 @@
 from flask import render_template, request, url_for, redirect, flash
+from flask_babel import gettext as _
 from app.blueprints.auth import bp
 from app.models.auth import User, Team, Role
 from app.extensions import db, bcrypt, mail
@@ -22,7 +23,7 @@ def login():
             next_url = request.args.get('next') or url_for('browse')
             return redirect(next_url)
 
-        flash('Login fehlgeschlagen. Bitte versuche es erneut.', category='error')
+        flash(_('Login failed. Please try again.'), category='error')
 
     return render_template('browser/login.html')
 
@@ -57,15 +58,15 @@ def register():
         name = request.form['name']
 
         if User.query.filter_by(email=email).first():
-            flash('E-Mail-Adresse bereits registriert.', category='error')
+            flash(_('Email address already registered.'), category='error')
             return render_template('browser/register.html')
 
         if User.query.filter_by(name=name).first():
-            flash('Benutzername bereits vergeben.', category='error')
+            flash(_('Username already taken.'), category='error')
             return render_template('browser/register.html')
 
         if len(name) < 2:
-            flash('Benutzername muss mindestens 2 Zeichen lang sein.', category='error')
+            flash(_('Username must be at least 2 characters long.'), category='error')
             return render_template('browser/register.html')
 
         password = generate_password(10)
@@ -86,24 +87,24 @@ def register():
         db.session.commit()
 
         msg = Message(
-            'Willkommen bei visio-shapes.com',
+            _('Welcome to visio-shapes.com'),
             recipients=[email],
-            body=(
-                f'Du hast dich bei https://www.visio-shapes.com registriert.\n'
-                f'Bitte logge dich innerhalb der nächsten 5 Minuten ein.\n'
-                f'\n'
-                f'  Dein Passwort lautet: {password}\n'
-                f'\n'
-                f'Falls du die Zeit verpasst hast, registriere dich einfach erneut:\n'
-                f'https://www.visio-shapes.com/register\n'
-                f'\n'
-                f'Du hast diese E-Mail nicht erwartet?\n'
-                f'Jemand hat wahrscheinlich einen Tippfehler gemacht – ignoriere diese E-Mail.'
-            )
+            body='\n'.join([
+                _('You have registered at https://www.visio-shapes.com.'),
+                _('Please log in within the next 5 minutes.'),
+                '',
+                _('  Your password is: %(password)s', password=password),
+                '',
+                _('If you missed the time window, simply register again:'),
+                'https://www.visio-shapes.com/register',
+                '',
+                _("You didn't expect this email?"),
+                _('Someone probably made a typo \u2013 ignore this email.'),
+            ])
         )
         mail.send(msg)
 
-        flash(f'Eine E-Mail wurde an {email} gesendet. Bitte logge dich innerhalb von 5 Minuten ein.', category='success')
+        flash(_('An email has been sent to %(email)s. Please log in within 5 minutes.', email=email), category='success')
         delete_user_if_not_loggedIn_after_time(new_user.id)
         return redirect(url_for('auth.login'))
 

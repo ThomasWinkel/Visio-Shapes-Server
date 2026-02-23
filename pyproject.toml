@@ -16,4 +16,5 @@ dependencies = [
     "gunicorn>=25.1.0",
     "python-decouple>=3.8",
     "python-dotenv>=1.2.1",
+    "flask-babel>=4.0.0",
 ]

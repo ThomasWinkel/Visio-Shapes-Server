@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ current_locale }}">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -17,14 +17,19 @@
         <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Visio-Shapes">
       </a>
       <ul class="nav-links">
-        <li><a href="/browse">Browse</a></li>
+        <li><a href="/browse">{{ _('Browse') }}</a></li>
         {% if current_user.is_authenticated %}
-          <li><a href="/account">Account</a></li>
-          <li><a href="/logout">Logout</a></li>
+          <li><a href="/account">{{ _('Account') }}</a></li>
+          <li><a href="/logout">{{ _('Logout') }}</a></li>
         {% else %}
-          <li><a href="/login">Login</a></li>
-          <li><a href="/register" class="btn btn-primary btn-sm">Register</a></li>
+          <li><a href="/login">{{ _('Login') }}</a></li>
+          <li><a href="/register" class="btn btn-primary btn-sm">{{ _('Register') }}</a></li>
         {% endif %}
+        <li class="lang-switcher">
+          <a href="{{ url_for('set_lang', lang='de') }}"{% if current_locale == 'de' %} class="lang-active"{% endif %}>DE</a>
+          <span class="lang-sep">|</span>
+          <a href="{{ url_for('set_lang', lang='en') }}"{% if current_locale == 'en' %} class="lang-active"{% endif %}>EN</a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -44,13 +49,18 @@
   <footer class="site-footer">
     <div class="footer-inner">
       <ul class="footer-links">
-        <li><a href="/impressum">Impressum</a></li>
-        <li><a href="/datenschutz">Datenschutz</a></li>
+        <li><a href="/impressum">{{ _('Legal Notice') }}</a></li>
+        <li><a href="/datenschutz">{{ _('Privacy Policy') }}</a></li>
         <li><a href="https://github.com/ThomasWinkel/Visio-Shapes-Server" target="_blank" rel="noopener">GitHub</a></li>
       </ul>
       <span class="footer-copy">&copy; Thomas Winkel / geradeaus.engineering</span>
     </div>
   </footer>
+
+  <script>
+    window.LOCALE = {{ current_locale | tojson }};
+    window.TRANSLATIONS = {{ js_translations | tojson }};
+  </script>
 
   {% block scripts %}{% endblock %}
 </body>
