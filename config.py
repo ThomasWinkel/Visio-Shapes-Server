@@ -14,3 +14,5 @@ class Config(object):
     MAIL_USERNAME = config('MAIL_USERNAME')
     MAIL_PASSWORD = config('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = config('MAIL_DEFAULT_SENDER')
+    MAX_FORM_MEMORY_SIZE = config('MAX_FORM_MEMORY_SIZE', default=16 * 1024 * 1024, cast=int)  # 16 MB
+    MAX_CONTENT_LENGTH = config('MAX_CONTENT_LENGTH', default=100 * 1024 * 1024, cast=int)    # 100 MB
