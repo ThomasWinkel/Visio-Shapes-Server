@@ -98,6 +98,7 @@ function applyFilter() {
 }
 
 function populateCategories() {
+  while (categoryFilter.options.length > 1) categoryFilter.remove(1);
   const cats = new Set();
   allShapes.forEach(shape => {
     shape.keywords.split(',').forEach(k => {

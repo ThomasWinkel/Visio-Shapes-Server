@@ -484,27 +484,59 @@ dialog p {
 
 /* ── Language Switcher ── */
 .lang-switcher {
-  display: flex;
-  align-items: center;
-  gap: 0.2rem;
-  font-size: 0.8rem;
+  position: relative;
   padding-left: var(--space-2);
   border-left: 1px solid var(--color-border);
 }
-.lang-switcher a {
-  color: var(--color-text-muted);
+.lang-details {
+  position: relative;
+}
+.lang-details summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: 0.8rem;
   font-weight: var(--font-weight-semibold);
-  text-decoration: none;
+  color: var(--color-text-muted);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-button);
+  user-select: none;
   transition: color var(--transition-fast);
 }
-.lang-switcher a:hover {
+.lang-details summary::-webkit-details-marker { display: none; }
+.lang-details summary::after { content: ' ▾'; }
+.lang-details[open] summary::after { content: ' ▴'; }
+.lang-details summary:hover {
   color: var(--color-accent);
 }
-.lang-switcher a.lang-active {
+.lang-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 0.4rem);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  list-style: none;
+  padding: var(--space-1) 0;
+  margin: 0;
+  min-width: 7rem;
+  z-index: 100;
+}
+.lang-dropdown li a {
+  display: block;
+  padding: var(--space-1) var(--space-2);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.lang-dropdown li a:hover {
+  background: var(--color-surface-alt);
   color: var(--color-text);
 }
-.lang-sep {
-  color: var(--color-border);
+.lang-dropdown li a.lang-active {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
 }
 
 /* ── Empty / Loading States ── */
