@@ -1,0 +1,62 @@
+{% extends 'base_browser.html' %}
+{% block title %}Admin – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+
+  <h1>{{ _('User Administration') }}</h1>
+
+  <table class="admin-table">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th>{{ _('Email') }}</th>
+        <th>{{ _('Registered') }}</th>
+        <th>{{ _('Last active') }}</th>
+        <th>Shapes</th>
+        <th>Stencils</th>
+        <th>{{ _('Role') }}</th>
+        <th>{{ _('Actions') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td><a href="/admin/user/{{ user.id }}">{{ user.name }}</a></td>
+        <td>{{ user.email }}</td>
+        <td>{{ user.register_date | dateformat('medium') }}</td>
+        <td>{{ user.last_active | dateformat('medium') if user.last_active else '\u2014' }}</td>
+        <td>{{ shape_counts.get(user.id, 0) }}</td>
+        <td>{{ stencil_counts.get(user.id, 0) }}</td>
+        <td>
+          {% if user.email == owner_email %}
+            <span class="admin-badge admin-badge-owner">Owner</span>
+          {% elif user.id in admin_user_ids %}
+            <span class="admin-badge admin-badge-admin">Admin</span>
+          {% endif %}
+        </td>
+        <td>
+          <div class="admin-actions">
+            {% if user.email != owner_email %}
+              <form method="post" action="/admin/user/{{ user.id }}/delete" style="display:inline" onsubmit="return confirm('{{ _('Do you really want to permanently delete &quot;%(name)s&quot;? All shapes and stencils will also be deleted.', name=user.name) }}')">
+                <button type="submit" class="btn btn-danger btn-sm">{{ _('Delete') }}</button>
+              </form>
+            {% endif %}
+            {% if current_user_is_owner and user.email != owner_email %}
+              <form method="post" action="/admin/user/{{ user.id }}/toggle_admin" style="display:inline">
+                {% if user.id in admin_user_ids %}
+                  <button type="submit" class="btn btn-secondary btn-sm">{{ _('Revoke admin') }}</button>
+                {% else %}
+                  <button type="submit" class="btn btn-primary btn-sm">{{ _('Grant admin') }}</button>
+                {% endif %}
+              </form>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+{% endblock %}

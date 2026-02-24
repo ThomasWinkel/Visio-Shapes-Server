@@ -1,0 +1,127 @@
+{% extends 'base_browser.html' %}
+{% block title %}{{ user.name }} – Admin – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+
+  <p><a href="/admin">&larr; {{ _('Back to overview') }}</a></p>
+
+  <h1>{{ user.name }}</h1>
+  <p class="account-meta">
+    {{ user.email }} &middot;
+    {{ _('Registered:') }} {{ user.register_date | dateformat('medium') }} &middot;
+    {{ _('Last active:') }} {{ user.last_active | dateformat('medium') if user.last_active else '\u2014' }}
+  </p>
+
+  <!-- Section A: Uploaded Shapes -->
+  <div class="admin-section">
+    <h2>{{ _('Uploaded Shapes') }}</h2>
+    {% if uploaded_shapes %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>{{ _('Name') }}</th>
+          <th>{{ _('Downloads') }}</th>
+          <th>{{ _('Uploaded') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shape, cnt in uploaded_shapes %}
+        <tr>
+          <td><img class="admin-thumb" src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}"></td>
+          <td>{{ shape.name }}</td>
+          <td>{{ cnt }}</td>
+          <td>{{ shape.upload_date | dateformat('medium') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="empty-state">{{ _('No shapes uploaded yet.') }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Section B: Downloaded Shapes -->
+  <div class="admin-section">
+    <h2>{{ _('Downloaded Shapes') }}</h2>
+    {% if downloaded_shapes %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th></th>
+          <th>{{ _('Name') }}</th>
+          <th>{{ _('Times downloaded') }}</th>
+          <th>{{ _('Uploaded') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for shape, cnt in downloaded_shapes %}
+        <tr>
+          <td><img class="admin-thumb" src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}"></td>
+          <td>{{ shape.name }}</td>
+          <td>{{ cnt }}</td>
+          <td>{{ shape.upload_date | dateformat('medium') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="empty-state">{{ _('No shapes downloaded yet.') }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Section C: Uploaded Stencils -->
+  <div class="admin-section">
+    <h2>{{ _('Uploaded Stencils') }}</h2>
+    {% if uploaded_stencils %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>{{ _('Title') }}</th>
+          <th>Shapes</th>
+          <th>{{ _('Downloads') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stencil, cnt in uploaded_stencils %}
+        <tr>
+          <td>{{ stencil.title }}</td>
+          <td>{{ stencil.shapes | length }}</td>
+          <td>{{ cnt }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="empty-state">{{ _('No stencils uploaded yet.') }}</p>
+    {% endif %}
+  </div>
+
+  <!-- Section D: Downloaded Stencils -->
+  <div class="admin-section">
+    <h2>{{ _('Downloaded Stencils') }}</h2>
+    {% if downloaded_stencils %}
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>{{ _('Title') }}</th>
+          <th>{{ _('Times downloaded') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stencil, cnt in downloaded_stencils %}
+        <tr>
+          <td>{{ stencil.title }}</td>
+          <td>{{ cnt }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <p class="empty-state">{{ _('No stencils downloaded yet.') }}</p>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}

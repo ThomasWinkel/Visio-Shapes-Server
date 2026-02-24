@@ -651,6 +651,80 @@ dialog p {
   font-weight: var(--font-weight-semibold);
 }
 
+/* ── Admin ── */
+.admin-container {
+  max-width: 1100px;
+  margin: var(--space-4) auto;
+  padding: 0 var(--space-3);
+}
+.admin-container h1 {
+  font-size: 1.6rem;
+  margin-bottom: var(--space-3);
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+.admin-table th {
+  text-align: left;
+  padding: 0.5rem var(--space-1);
+  border-bottom: 2px solid var(--color-border);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+.admin-table td {
+  padding: 0.5rem var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
+}
+.admin-table tr:last-child td {
+  border-bottom: none;
+}
+.admin-table tr:hover td {
+  background-color: var(--color-surface-alt);
+}
+.admin-badge {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-input);
+  font-size: 0.72rem;
+  font-weight: var(--font-weight-semibold);
+}
+.admin-badge-owner {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+.admin-badge-admin {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text-muted);
+  border: 1px solid var(--color-border);
+}
+.admin-actions {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.admin-section {
+  margin-bottom: var(--space-4);
+}
+.admin-section h2 {
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-2);
+  padding-bottom: var(--space-1);
+  border-bottom: 1px solid var(--color-border);
+}
+.admin-thumb {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-input);
+}
+
 /* ── Empty / Loading States ── */
 .empty-state {
   text-align: center;

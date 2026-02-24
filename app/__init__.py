@@ -54,6 +54,9 @@ def create_app(config_class=Config):
     from app.blueprints.account import bp as account_bp
     app.register_blueprint(account_bp)
 
+    from app.blueprints.admin import bp as admin_bp
+    app.register_blueprint(admin_bp)
+
     # Inject current locale and JS translations into every template
     @app.context_processor
     def inject_i18n():
@@ -73,7 +76,16 @@ def create_app(config_class=Config):
             'delete_confirm':    _('Do you really want to permanently delete "{name}"?'),
             'keywords_label':    _('Keywords:'),
         }
-        return {'current_locale': locale, 'js_translations': js_translations}
+        from flask_login import current_user as cu
+        owner_email = app.config.get('OWNER_EMAIL', '')
+        _is_owner = cu.is_authenticated and cu.email == owner_email
+        _is_admin = cu.is_authenticated and any(r.name == 'admin' for r in cu.roles)
+        return {
+            'current_locale': locale,
+            'js_translations': js_translations,
+            'current_user_is_admin': _is_admin,
+            'current_user_is_owner': _is_owner,
+        }
 
     # Language switching
     @app.route('/set_lang/<lang>')

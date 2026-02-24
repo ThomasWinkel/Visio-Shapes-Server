@@ -21,6 +21,9 @@
       <ul class="nav-links">
         <li><a href="/browse">{{ _('Browse') }}</a></li>
         {% if current_user.is_authenticated %}
+          {% if current_user_is_admin or current_user_is_owner %}
+            <li><a href="/admin">Admin</a></li>
+          {% endif %}
           <li><a href="/account">{{ _('Account') }}</a></li>
           <li><a href="/logout">{{ _('Logout') }}</a></li>
         {% else %}
