@@ -37,6 +37,27 @@ body {
   border-color: var(--color-accent);
 }
 
+/* ── View Toggle Button ── */
+.panel-view-toggle {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-input);
+  background-color: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+.panel-view-toggle:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
 /* ── Shape List ── */
 .panel-shapes {
   padding: var(--space-1);
@@ -136,6 +157,36 @@ body {
   font-size: 0.65rem;
   color: var(--color-text-muted);
   opacity: 0.6;
+}
+
+/* ── Detail View ── */
+.panel-card.detail {
+  align-items: flex-start;
+}
+.panel-card.detail .panel-card-image {
+  width: 180px;
+  height: auto;
+  max-height: 700px;
+  flex-shrink: 0;
+}
+.panel-card.detail .panel-card-image img {
+  max-width: 100%;
+  max-height: 700px;
+  object-fit: contain;
+}
+.panel-card.detail .panel-card-body {
+  justify-content: flex-start;
+  gap: 0.25rem;
+}
+.panel-card.detail .panel-card-name,
+.panel-card.detail .panel-card-keywords,
+.panel-card.detail .panel-card-stencil {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: unset;
+}
+.panel-card.detail .panel-card-row {
+  width: 100%;
 }
 
 /* ── States ── */

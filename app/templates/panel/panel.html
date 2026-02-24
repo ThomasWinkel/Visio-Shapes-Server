@@ -8,6 +8,22 @@
   <select id="category-filter">
     <option value="">Alle</option>
   </select>
+  <button id="view-toggle" class="panel-view-toggle" title="Ansicht wechseln" aria-label="Ansicht wechseln">
+    <svg id="icon-detail" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="currentColor">
+      <rect x="0" y="0" width="6" height="15" rx="1"/>
+      <rect x="8" y="0" width="7" height="3" rx="1"/>
+      <rect x="8" y="5" width="7" height="3" rx="1"/>
+      <rect x="8" y="10" width="7" height="3" rx="1"/>
+    </svg>
+    <svg id="icon-list" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="currentColor" style="display:none">
+      <rect x="0" y="0" width="4" height="4" rx="1"/>
+      <rect x="6" y="1" width="9" height="2" rx="1"/>
+      <rect x="0" y="6" width="4" height="4" rx="1"/>
+      <rect x="6" y="7" width="9" height="2" rx="1"/>
+      <rect x="0" y="12" width="4" height="3" rx="1"/>
+      <rect x="6" y="13" width="9" height="2" rx="1"/>
+    </svg>
+  </button>
 </div>
 
 <div class="panel-shapes" id="panel-shapes">
@@ -19,9 +35,44 @@
 {% block scripts %}
 <script>
   let allShapes = [];
+  let detailView = localStorage.getItem('panel-view') === 'detail';
 
   function escHtml(str) {
     return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function cardHtml(shape) {
+    const doAttr = escHtml(shape.data_object ?? '');
+    const img = `<div class="panel-card-image"><img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy"></div>`;
+    if (detailView) {
+      return `
+        <div class="panel-card detail" data-id="${shape.id}" data-do="${doAttr}">
+          ${img}
+          <div class="panel-card-body">
+            <div class="panel-card-name">${escHtml(shape.name)}</div>
+            <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>
+            <div class="panel-card-stencil">${escHtml(shape.stencil_title)}</div>
+            <div class="panel-card-user">${escHtml(shape.user_name)}</div>
+            <div class="panel-card-count">&darr; ${shape.download_count ?? 0}</div>
+          </div>
+        </div>`;
+    } else {
+      return `
+        <div class="panel-card" data-id="${shape.id}" data-do="${doAttr}">
+          ${img}
+          <div class="panel-card-body">
+            <div class="panel-card-row">
+              <div class="panel-card-name">${escHtml(shape.name)}</div>
+              <div class="panel-card-user">${escHtml(shape.user_name)}</div>
+            </div>
+            <div class="panel-card-row">
+              <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>
+              <div class="panel-card-count">&darr; ${shape.download_count ?? 0}</div>
+            </div>
+            <div class="panel-card-stencil">${escHtml(shape.stencil_title)}</div>
+          </div>
+        </div>`;
+    }
   }
 
   function renderShapes(shapes) {
@@ -30,24 +81,7 @@
       container.innerHTML = '<div class="panel-empty">Keine Shapes gefunden.</div>';
       return;
     }
-    container.innerHTML = shapes.map(shape => `
-      <div class="panel-card" data-id="${shape.id}" data-do="${escHtml(shape.data_object ?? '')}">
-        <div class="panel-card-image">
-          <img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy">
-        </div>
-        <div class="panel-card-body">
-          <div class="panel-card-row">
-            <div class="panel-card-name">${escHtml(shape.name)}</div>
-            <div class="panel-card-user">${escHtml(shape.user_name)}</div>
-          </div>
-          <div class="panel-card-row">
-            <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>
-            <div class="panel-card-count">&darr; ${shape.download_count ?? 0}</div>
-          </div>
-          <div class="panel-card-stencil">${escHtml(shape.stencil_title)}</div>
-        </div>
-      </div>
-    `).join('');
+    container.innerHTML = shapes.map(cardHtml).join('');
 
     container.querySelectorAll('.panel-card').forEach(card => {
       card.addEventListener('mousedown', e => {
@@ -122,6 +156,25 @@
 
   document.getElementById('search').addEventListener('input', filterShapes);
   document.getElementById('category-filter').addEventListener('change', filterShapes);
+
+  // View toggle
+  const toggleBtn = document.getElementById('view-toggle');
+  const iconDetail = document.getElementById('icon-detail');
+  const iconList = document.getElementById('icon-list');
+
+  function applyView(detail) {
+    iconDetail.style.display = detail ? 'none' : '';
+    iconList.style.display = detail ? '' : 'none';
+  }
+
+  applyView(detailView);
+
+  toggleBtn.addEventListener('click', () => {
+    detailView = !detailView;
+    localStorage.setItem('panel-view', detailView ? 'detail' : 'list');
+    applyView(detailView);
+    filterShapes();
+  });
 
   init();
 </script>
