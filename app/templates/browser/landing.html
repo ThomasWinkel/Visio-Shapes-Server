@@ -36,18 +36,13 @@
       </div>
     </div>
     <div class="steps-video">
-      <div class="steps-slogan">
-        <span class="slogan-word">Share<span class="slogan-punct">...</span></span>
-        <span class="slogan-word">Benefit<span class="slogan-punct">...</span></span>
-        <span class="slogan-word">Collaborate<span class="slogan-punct">!</span></span>
-      </div>
-      <div class="steps-embed">
-        <iframe
-          src="https://www.youtube.com/embed/AXyTQ90sKQY"
-          title="Visio-Shapes"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen>
-        </iframe>
+      <div class="steps-embed" id="yt-facade" data-videoid="AXyTQ90sKQY">
+        <button class="yt-play-btn" aria-label="Play video">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="3" ry="3"/>
+            <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
       </div>
     </div>
   </div>
@@ -138,5 +133,16 @@
   }
 
   loadSections();
+
+  document.getElementById('yt-facade').addEventListener('click', function () {
+    const videoId = this.dataset.videoid;
+    const iframe = document.createElement('iframe');
+    iframe.src = 'https://www.youtube.com/embed/' + videoId + '?autoplay=1';
+    iframe.title = 'Visio-Shapes';
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+    iframe.allowFullscreen = true;
+    this.innerHTML = '';
+    this.appendChild(iframe);
+  });
 </script>
 {% endblock %}

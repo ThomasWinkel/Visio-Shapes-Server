@@ -174,27 +174,6 @@
   gap: var(--space-5);
   margin-top: var(--space-5);
 }
-.steps-slogan {
-  flex: 0 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-}
-.steps-slogan .slogan-word:nth-child(1) { padding-left: 0; }
-.steps-slogan .slogan-word:nth-child(2) { padding-left: 1.2rem; }
-.steps-slogan .slogan-word:nth-child(3) { padding-left: 2.4rem; }
-.slogan-word {
-  font-size: 1.75rem;
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--color-accent);
-  white-space: nowrap;
-  letter-spacing: -0.01em;
-}
-.slogan-punct {
-  color: var(--color-text-muted);
-  font-weight: 400;
-}
 .steps-embed {
   flex: 0 0 auto;
   width: 360px;
@@ -214,6 +193,31 @@
   height: 100%;
   border: none;
 }
+#yt-facade {
+  background: var(--color-surface);
+  cursor: pointer;
+}
+.yt-play-btn {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 100px;
+  height: 100px;
+  color: var(--color-accent);
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+#yt-facade:hover .yt-play-btn {
+  transform: translate(-50%, -50%) scale(1.08);
+  opacity: 0.8;
+}
+.yt-play-btn svg {
+  width: 100%;
+  height: 100%;
+}
 @media (max-width: 640px) {
   .steps-video {
     flex-direction: column;
@@ -222,21 +226,6 @@
   .steps-embed {
     width: 100%;
     padding-bottom: 56.25%;
-  }
-  .steps-slogan {
-    flex-direction: row;
-    justify-content: center;
-    border-bottom: 3px solid var(--color-accent);
-    padding-bottom: var(--space-2);
-    gap: var(--space-3);
-  }
-  .steps-slogan .slogan-word:nth-child(1),
-  .steps-slogan .slogan-word:nth-child(2),
-  .steps-slogan .slogan-word:nth-child(3) {
-    padding-left: 0;
-  }
-  .slogan-word {
-    font-size: 1.1rem;
   }
 }
 
