@@ -26,6 +26,13 @@
 .nav-logo img {
   height: 30px;
 }
+.logo-icon {
+  display: none;
+}
+@media (max-width: 480px) {
+  .logo-full { display: none; }
+  .logo-icon { display: block; }
+}
 .nav-links {
   display: flex;
   align-items: center;

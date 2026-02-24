@@ -14,7 +14,8 @@
   <nav class="site-nav">
     <div class="nav-inner">
       <a href="/" class="nav-logo">
-        <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="Visio-Shapes">
+        <img class="logo-full" src="{{ url_for('static', filename='images/logo.svg') }}" alt="Visio-Shapes">
+        <img class="logo-icon" src="{{ url_for('static', filename='images/logo-icon.svg') }}" alt="Visio-Shapes">
       </a>
       <ul class="nav-links">
         <li><a href="/browse">{{ _('Browse') }}</a></li>
