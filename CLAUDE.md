@@ -269,8 +269,6 @@ uv run flask send_status_mail
 - **Timer-Deletion nicht persistent**: Der 5-Minuten-Lösch-Timer überlebt keinen Server-Neustart.
 
 ### Fehlende Features
-- Kein Löschen von Shapes/Stencils (kein DELETE-Endpoint)
-- Kein Bearbeiten von Metadaten
 - Kein Passwort-Reset
 - Keine Datei-Validierung bei Uploads (Typ, Größe)
 - Kein Rate-Limiting auf `/register`

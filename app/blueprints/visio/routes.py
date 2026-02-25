@@ -50,10 +50,6 @@ def get_shapes():
     return jsonify(result)
 
 
-@bp.route('/search', methods=['GET', 'POST'])
-def search():
-    return redirect(url_for('index'))
-
 
 @bp.route('/download_stencil/<int:stencil_id>')
 def download_stencil(stencil_id):

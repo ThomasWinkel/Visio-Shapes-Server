@@ -161,13 +161,36 @@ uv run flask db upgrade
 
 ## API
 
-Write endpoints require HTTP token authentication (`Authorization: Bearer <token>`).
+### Shapes & Stencils
 
 | Method | Endpoint | Auth | Description |
 |---|---|---|---|
-| `GET` | `/get_shapes` | — | List all shapes |
-| `GET/POST` | `/search` | — | Search shapes by name |
-| `GET` | `/get_shape/<id>` | Session | Get shape data object |
-| `GET` | `/download_stencil/<id>` | Session | Download stencil file |
+| `GET` | `/get_shapes` | — | List shapes. Query params: `sort` (`date_desc` / `date_asc` / `popular`), `limit` (int). Search and filtering are handled client-side. |
+| `GET` | `/get_shape/<id>` | Session | Get shape data object (records a download) |
+| `GET` | `/download_stencil/<id>` | Session | Download stencil file (records a download) |
 | `POST` | `/add_shape` | Token | Upload a single shape |
 | `POST` | `/add_stencil` | Token | Upload a stencil with shapes |
+
+Token authentication: `Authorization: Bearer <token>`
+
+### Account
+
+All account endpoints require session authentication.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `POST` | `/account/shape/<id>/edit` | Edit shape metadata (name, keywords, prompt) |
+| `POST` | `/account/shape/<id>/delete` | Delete a shape |
+| `POST` | `/account/stencil/<id>/edit` | Edit stencil metadata (title, categories, tags, comments) |
+| `POST` | `/account/stencil/<id>/delete` | Delete a stencil and all its shapes |
+
+### Admin
+
+Requires admin or owner role.
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/admin` | User overview with shape/stencil counts |
+| `GET` | `/admin/user/<id>` | User detail with upload and download history |
+| `POST` | `/admin/user/<id>/delete` | Delete a user and all their content |
+| `POST` | `/admin/user/<id>/toggle_admin` | Grant or revoke admin role (owner only) |
