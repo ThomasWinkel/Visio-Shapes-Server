@@ -5,6 +5,7 @@ from flask_login import current_user
 from app.models.visio import Shape, Stencil, ShapeDownload, StencilDownload
 from app.utilities import register_shape
 from sqlalchemy import func
+from sqlalchemy.orm import selectinload
 import json, logging
 from pathlib import Path
 
@@ -27,6 +28,7 @@ def get_shapes():
     base_query = (
         db.session.query(Shape, func.coalesce(download_counts.c.cnt, 0).label('cnt'))
         .outerjoin(download_counts, Shape.id == download_counts.c.shape_id)
+        .options(selectinload(Shape.user), selectinload(Shape.stencil))
     )
 
     if sort == 'popular':
