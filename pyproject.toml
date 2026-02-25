@@ -1,7 +1,7 @@
 [project]
-name = "server"
+name = "visio-shapes-server"
 version = "0.1.0"
-description = "Add your description here"
+description = "Web platform for sharing Microsoft Visio shapes and stencils worldwide"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
