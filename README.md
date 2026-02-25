@@ -49,6 +49,8 @@ uv run flask db upgrade
 ```bash
 uv run flask run
 ```
+The server will be available on:  
+http://localhost:5000/
 
 ---
 
