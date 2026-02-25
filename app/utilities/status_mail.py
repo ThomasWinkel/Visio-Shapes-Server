@@ -9,9 +9,9 @@ from flask_mail import Message
 
 def send_status_mail():
     """Query last-24h stats and send a status e-mail to OWNER_EMAIL."""
-    owner_email = current_app.config.get('OWNER_EMAIL', '')
-    if not owner_email:
-        current_app.logger.warning('send_status_mail: OWNER_EMAIL not set – skipping.')
+    status_email = current_app.config.get('STATUS_EMAIL', '')
+    if not status_email:
+        current_app.logger.warning('send_status_mail: STATUS_EMAIL not set – skipping.')
         return
 
     since = datetime.utcnow() - timedelta(hours=24)
@@ -71,11 +71,11 @@ def send_status_mail():
 
     msg = Message(
         subject=f'Visio Shapes – Daily Status {date_str}',
-        recipients=[owner_email],
+        recipients=[status_email],
         html=_build_html(date_str, new_users, active_users),
     )
     mail.send(msg)
-    current_app.logger.info('send_status_mail: sent to %s', owner_email)
+    current_app.logger.info('send_status_mail: sent to %s', status_email)
 
 
 # ── HTML builder ──────────────────────────────────────────────────────────────

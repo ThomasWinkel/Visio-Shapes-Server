@@ -58,10 +58,11 @@ Auslieferung per Docker + Nginx Reverse Proxy.
 | Auth | Flask-Login (Session) + Flask-HTTPAuth (Token) |
 | Passwort | Flask-Bcrypt |
 | Mail | Flask-Mail |
+| i18n | Flask-Babel 4.0.0 |
 | Frontend | Vanilla JS, Web Components (Shadow DOM), SPA-Router |
 | Package Manager | uv |
 | Runtime | Gunicorn (4 Worker) |
-| DB | SQLite (default) – jede SQLAlchemy-DB möglich |
+| DB | SQLite (WAL-Modus) – jede SQLAlchemy-DB möglich |
 | Config | python-decouple (.env) |
 
 ---
@@ -71,11 +72,13 @@ Auslieferung per Docker + Nginx Reverse Proxy.
 ```
 /
 ├── app/                          # Flask-Package (root_path zeigt hierhin)
-│   ├── __init__.py               # App-Factory: create_app()
-│   ├── extensions.py             # db, migrate, bcrypt, login_manager, http_auth, mail, cors
+│   ├── __init__.py               # App-Factory: create_app(), CLI-Kommandos
+│   ├── extensions.py             # db, migrate, bcrypt, login_manager, http_auth, mail, cors, babel
 │   ├── blueprints/
 │   │   ├── auth/routes.py        # /login, /logout, /register, /token_login
-│   │   └── visio/routes.py       # /get_shapes, /search, /get_shape, /download_stencil, /add_shape, /add_stencil
+│   │   ├── visio/routes.py       # /get_shapes, /search, /get_shape, /download_stencil, /add_shape, /add_stencil
+│   │   ├── account/routes.py     # Account-Verwaltung (Profil, Passwort, Token)
+│   │   └── admin/routes.py       # Admin-Bereich (Nutzerverwaltung etc.)
 │   ├── models/
 │   │   ├── auth.py               # User, Team, Role + Assoziationstabellen
 │   │   └── visio.py              # Shape, Stencil, ShapeDownload, StencilDownload
@@ -89,10 +92,18 @@ Auslieferung per Docker + Nginx Reverse Proxy.
 │   │   │       └── shape-card.js # Web Component <shape-card>
 │   │   └── images/shapes/        # Shape-Vorschau-PNGs ({id}.png)
 │   ├── stencils/                 # Hochgeladene Stencil-Dateien ({id}{ext})
-│   └── templates/                # Jinja2-Templates
+│   ├── translations/             # Flask-Babel Übersetzungen
+│   │   └── de/LC_MESSAGES/       # Deutsche Übersetzung (.po / .mo)
+│   ├── utilities/
+│   │   ├── __init__.py           # Hilfsfunktionen: generate_password, delete_user_timer
+│   │   └── status_mail.py        # Tägliche Status-Mail an OWNER_EMAIL
+│   └── templates/
+│       ├── browser/              # Templates für die Browser-Ansicht
+│       └── panel/                # Templates für das Visio-AddIn-Panel
 ├── migrations/                   # Alembic-Migrationen
 ├── instance/                     # Flask Instance-Folder → enthält app.db
 ├── config.py                     # Config-Klasse (liest .env via decouple)
+├── babel.cfg                     # Babel-Konfiguration für String-Extraktion
 ├── Dockerfile
 ├── example_.env
 ├── example_docker-compose.yml
@@ -154,6 +165,9 @@ docker system prune -f
 ```bash
 # Migrations ausführen (kein uv run – hat Home-Verzeichnis-Problem)
 docker-compose exec www_visio /usr/src/app/.venv/bin/flask db upgrade
+
+# Tägliche Status-Mail manuell auslösen
+docker-compose exec www_visio /usr/src/app/.venv/bin/flask send_status_mail
 ```
 
 `uv run` **nicht** im Container verwenden – `appuser` hat kein Home-Verzeichnis, uv-Cache schlägt fehl.
@@ -193,7 +207,53 @@ User >──< Team (m:n)
 User >──< Role (m:n)
 ```
 
-**Hinweis:** `Team` und `Role` sind im Datenmodell vollständig definiert, werden im Code aber **nirgends genutzt** (tote Strukturen, vermutlich für spätere Erweiterung).
+**Hinweis:** `Team` und `Role` sind im Datenmodell vollständig definiert, werden im Code aber **nirgends genutzt** (tote Strukturen, Vorbereitung für Team-Features).
+
+---
+
+## Internationalisierung (i18n)
+
+- **Flask-Babel 4.0.0**, Englisch als msgid-Basis, Deutsch als Übersetzung
+- Sprache in `session['lang']`, Fallback: Accept-Language → `'de'`
+- Route `/set_lang/<lang>` zum Umschalten
+- `LANGUAGES = ['de', 'en']` in `app/__init__.py`
+- JS-Übersetzungen via `window.TRANSLATIONS` (Context Processor → base template)
+- `.mo`-Dateien werden im Dockerfile generiert (nicht committen, steht in `.gitignore`)
+- `format_date(date, format='medium')` statt `.strftime()` in Templates
+
+### Strings aktualisieren (nach Template-Änderungen)
+```bash
+uv run pybabel extract -F babel.cfg -k lazy_gettext -k _l -o messages.pot .
+uv run pybabel update -i messages.pot -d app/translations
+# Neue msgids in .po-Datei übersetzen, dann:
+uv run pybabel compile -d app/translations
+```
+
+### Neue Sprache hinzufügen
+```bash
+uv run pybabel init -i messages.pot -d app/translations -l <code>
+# Strings eintragen, dann compile
+```
+
+---
+
+## Status-Mail
+
+`OWNER_EMAIL` bestimmt, wer im UI Owner-Rechte erhält (`current_user_is_owner` im Context Processor).
+
+`STATUS_EMAIL` ist der Empfänger der täglichen Status-Mail. Ist der Wert leer, werden keine Status-Mails verschickt.
+
+Tägliche HTML-Mail an `STATUS_EMAIL` mit Aktivitäten der letzten 24 Stunden:
+- Neue User (Name, E-Mail)
+- Aktive User (Shapes hochgeladen, Stencils hochgeladen, Shapes genutzt, Stencils heruntergeladen)
+
+```bash
+# Lokal testen
+uv run flask send_status_mail
+
+# Cron-Job auf dem Host (täglich 07:00 UTC)
+0 7 * * * cd /services/visio-shapes-server && docker compose exec -T www_visio /usr/src/app/.venv/bin/flask send_status_mail >> /var/log/visio_status_mail.log 2>&1
+```
 
 ---
 
@@ -205,7 +265,6 @@ User >──< Role (m:n)
 - **WebView ohne Error-Handling**: `WebViewDragDrop.DragDropShape()` ist bewusst nur im Visio-WebView verfügbar, aber es fehlt ein `try/catch` → unkontrollierter JS-Fehler wenn die Seite im normalen Browser geöffnet wird.
 
 ### Backend-Bugs
-- **Race Condition bei Shape-ID** (`/add_stencil`): Shape-IDs werden manuell mit `max(id)+1` berechnet – bei gleichzeitigen Uploads können doppelte IDs entstehen. Sollte auf DB-seitiges Auto-Increment vertrauen.
 - **Keine Transaktion in `/add_stencil`**: DB-Commit passiert vor dem Dateispeichern. Wenn Dateispeicherung fehlschlägt, entstehen inkonsistente Daten.
 - **Timer-Deletion nicht persistent**: Der 5-Minuten-Lösch-Timer überlebt keinen Server-Neustart.
 
@@ -223,9 +282,10 @@ User >──< Role (m:n)
 
 ```bash
 uv sync
-uv run flask run        # Dev-Server
+uv run flask run                              # Dev-Server
 uv run flask db migrate -m "beschreibung"
 uv run flask db upgrade
+uv run flask send_status_mail                 # Status-Mail testen
 ```
 
 ---
@@ -236,12 +296,13 @@ Der Autor ist kein professioneller Entwickler und hat keine Webentwicklungserfah
 
 ---
 
-## Was ich ändern würde (Priorität)
+## Offene Aufgaben (Priorität)
 
 1. **`app.js` – `shape.rating` fix**: Feld aus `serialize()` entfernen oder Datenmodell ergänzen
 2. **`app.js` – categories**: String-Matching korrigieren (`split(',').map(s => s.trim())`)
 3. **WebView-Calls absichern**: `try/catch` um alle `chrome.webview`-Aufrufe
 4. **`/add_stencil` – Transaktion**: Dateien vor DB-Commit speichern oder Rollback bei Fehler
-5. **WORKDIR auf `/usr/src`** ändern: Beseitigt `app/app/`-Dopplung ohne Codeänderungen
-6. **Pagination in `/get_shapes`**: Für Skalierbarkeit
-7. **Dateivalidierung**: Typ + Größe bei Uploads prüfen
+5. **Pagination in `/get_shapes`**: Für Skalierbarkeit
+6. **Dateivalidierung**: Typ + Größe bei Uploads prüfen
+7. **WORKDIR auf `/usr/src`** ändern: Beseitigt `app/app/`-Dopplung ohne Codeänderungen
+8. **Team-Features**: `visibility` + `team_id` auf Shape/Stencil, `owner_id` auf Team, Access Control in API

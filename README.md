@@ -6,6 +6,7 @@ A web platform for sharing and discovering Microsoft Visio shapes and stencils. 
 
 - **Backend:** Flask 3, SQLAlchemy 2, Flask-Migrate (Alembic)
 - **Auth:** Flask-Login (session) + Flask-HTTPAuth (token)
+- **i18n:** Flask-Babel (DE / EN)
 - **Frontend:** Vanilla JS SPA with custom Web Components
 - **Package manager:** uv
 - **Runtime:** Gunicorn
@@ -18,6 +19,8 @@ A web platform for sharing and discovering Microsoft Visio shapes and stencils. 
 - Upload shapes and stencils via REST API (token auth)
 - Email-based registration with auto-generated passwords
 - Download tracking per user
+- Multi-language UI (German / English)
+- Daily status email report for the owner
 
 ## Installation
 
@@ -139,6 +142,8 @@ docker system prune -f
 | `MAIL_USERNAME` | SMTP login | `mail@example.com` |
 | `MAIL_PASSWORD` | SMTP password | |
 | `MAIL_DEFAULT_SENDER` | Sender name and address | `"My Name <mail@example.com>"` |
+| `OWNER_EMAIL` | Email of the owner account — grants owner privileges in the UI | `owner@example.com` |
+| `STATUS_EMAIL` | Recipient of the daily status mail — leave empty to disable | `owner@example.com` |
 
 ## Development
 
