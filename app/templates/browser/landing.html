@@ -157,11 +157,11 @@
     const topGrid    = document.getElementById('top-grid');
     try {
       const [resNewest, resTop] = await Promise.all([
-        fetch('/get_shapes?sort=date_desc'),
-        fetch('/get_shapes?sort=popular')
+        fetch('/get_shapes?sort=date_desc&limit=8'),
+        fetch('/get_shapes?sort=popular&limit=8')
       ]);
-      const newest = (await resNewest.json()).slice(0, 8);
-      const top    = (await resTop.json()).slice(0, 8);
+      const newest = await resNewest.json();
+      const top    = await resTop.json();
       renderGrid(latestGrid, newest);
       renderGrid(topGrid, top);
     } catch (e) {

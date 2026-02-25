@@ -17,7 +17,8 @@ def panel():
 
 @bp.route('/get_shapes')
 def get_shapes():
-    sort = request.args.get('sort', 'date_desc')
+    sort  = request.args.get('sort', 'date_desc')
+    limit = request.args.get('limit', type=int)
 
     download_counts = (
         db.session.query(ShapeDownload.shape_id, func.count(ShapeDownload.id).label('cnt'))
@@ -32,14 +33,17 @@ def get_shapes():
     )
 
     if sort == 'popular':
-        rows = base_query.order_by(func.coalesce(download_counts.c.cnt, 0).desc()).all()
+        base_query = base_query.order_by(func.coalesce(download_counts.c.cnt, 0).desc())
     elif sort == 'date_asc':
-        rows = base_query.order_by(Shape.upload_date.asc()).all()
+        base_query = base_query.order_by(Shape.upload_date.asc())
     else:  # date_desc (default)
-        rows = base_query.order_by(Shape.upload_date.desc()).all()
+        base_query = base_query.order_by(Shape.upload_date.desc())
+
+    if limit:
+        base_query = base_query.limit(limit)
 
     result = []
-    for shape, cnt in rows:
+    for shape, cnt in base_query.all():
         s = shape.serialize()
         s['download_count'] = cnt
         result.append(s)
