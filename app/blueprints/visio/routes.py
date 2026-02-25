@@ -122,27 +122,17 @@ def add_stencil():
         stencil = request.files['stencil']
         images = request.files.getlist('images')
 
-        i = 0
-        shape_id = (db.session.query(func.max(Shape.id)).scalar() or 0) + 1
-        shapes_list = []
-
-        for shape in add_stencil_request['Shapes']:
-            image = images[i]
-            
-            shapes_list.append(Shape(
-                id = shape_id,
+        shapes_list = [
+            Shape(
                 name = shape['Name'],
                 prompt = shape['Prompt'],
                 keywords = shape['Keywords'],
                 data_object = shape['DataObject'],
                 user_id = http_auth.current_user().id
-            ))
-            
-            image.save(Path(current_app.root_path) / 'static' / 'images' / 'shapes' / f'{shape_id}.png')
+            )
+            for shape in add_stencil_request['Shapes']
+        ]
 
-            i += 1
-            shape_id += 1
-        
         new_stencil = Stencil(
             file_name = add_stencil_request['FileName'],
             title = add_stencil_request['Title'],
@@ -157,14 +147,20 @@ def add_stencil():
             shapes = shapes_list,
             user_id = http_auth.current_user().id
         )
-        
+
         db.session.add(new_stencil)
-        db.session.commit()
+        db.session.flush()  # IDs werden vergeben, Transaktion noch offen
+
+        for shape, image in zip(shapes_list, images):
+            image.save(Path(current_app.root_path) / 'static' / 'images' / 'shapes' / f'{shape.id}.png')
 
         stencil.save(Path(current_app.root_path) / 'stencils' / f'{new_stencil.id}{Path(stencil.filename).suffix}')
 
+        db.session.commit()
+
     except Exception:
+        db.session.rollback()
         logging.exception('Error adding stencil.')
         return jsonify({'message': 'Failed'}), 500
-    
+
     return jsonify({'message': 'Success'}), 201
