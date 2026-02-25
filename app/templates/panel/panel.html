@@ -35,7 +35,16 @@
 {% block scripts %}
 <script>
   let allShapes = [];
+  let filteredShapes = [];
+  let displayedCount = 0;
+  let isLoading = false;
+  let debounceTimer;
   let detailView = localStorage.getItem('panel-view') === 'detail';
+  const PAGE_SIZE = 20;
+
+  const container = document.getElementById('panel-shapes');
+  const searchInput = document.getElementById('search');
+  const categoryFilter = document.getElementById('category-filter');
 
   function escHtml(str) {
     return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -75,32 +84,41 @@
     }
   }
 
-  function renderShapes(shapes) {
-    const container = document.getElementById('panel-shapes');
-    if (shapes.length === 0) {
+  function showNextPage() {
+    if (isLoading) return;
+    const end = Math.min(displayedCount + PAGE_SIZE, filteredShapes.length);
+    if (displayedCount >= filteredShapes.length) return;
+
+    isLoading = true;
+    const fragment = document.createDocumentFragment();
+    for (let i = displayedCount; i < end; i++) {
+      const div = document.createElement('div');
+      div.innerHTML = cardHtml(filteredShapes[i]).trim();
+      fragment.appendChild(div.firstChild);
+    }
+    container.appendChild(fragment);
+    displayedCount = end;
+    isLoading = false;
+  }
+
+  function filterShapes() {
+    const search = searchInput.value.toLowerCase();
+    const cat = categoryFilter.value.toLowerCase();
+
+    filteredShapes = allShapes.filter(s => {
+      const matchName = s.name.toLowerCase().includes(search) || s.keywords.toLowerCase().includes(search);
+      const matchCat = cat ? s.keywords.toLowerCase().includes(cat) : true;
+      return matchName && matchCat;
+    });
+
+    container.innerHTML = '';
+    displayedCount = 0;
+
+    if (filteredShapes.length === 0) {
       container.innerHTML = '<div class="panel-empty">Keine Shapes gefunden.</div>';
       return;
     }
-    container.innerHTML = shapes.map(cardHtml).join('');
-
-    container.querySelectorAll('.panel-card').forEach(card => {
-      card.addEventListener('mousedown', e => {
-        if (e.button !== 0) return;
-        const shapeId = card.dataset.id;
-        const cachedDo = card.dataset.do;
-        if (cachedDo) {
-          dragDrop(cachedDo);
-        } else {
-          fetch(`/get_shape/${shapeId}`)
-            .then(r => r.text())
-            .then(dataObject => {
-              card.dataset.do = dataObject;
-              dragDrop(dataObject);
-            })
-            .catch(err => console.error('get_shape failed:', err));
-        }
-      });
-    });
+    showNextPage();
   }
 
   function dragDrop(dataObject) {
@@ -114,16 +132,24 @@
     }
   }
 
-  function filterShapes() {
-    const search = document.getElementById('search').value.toLowerCase();
-    const cat = document.getElementById('category-filter').value.toLowerCase();
-    const filtered = allShapes.filter(s => {
-      const matchName = s.name.toLowerCase().includes(search) || s.keywords.toLowerCase().includes(search);
-      const matchCat = cat ? s.keywords.toLowerCase().includes(cat) : true;
-      return matchName && matchCat;
-    });
-    renderShapes(filtered);
-  }
+  // Event Delegation: ein Listener für alle Karten, auch neu geladene
+  container.addEventListener('mousedown', e => {
+    if (e.button !== 0) return;
+    const card = e.target.closest('.panel-card');
+    if (!card) return;
+    const cachedDo = card.dataset.do;
+    if (cachedDo) {
+      dragDrop(cachedDo);
+    } else {
+      fetch(`/get_shape/${card.dataset.id}`)
+        .then(r => r.text())
+        .then(dataObject => {
+          card.dataset.do = dataObject;
+          dragDrop(dataObject);
+        })
+        .catch(err => console.error('get_shape failed:', err));
+    }
+  });
 
   function populateCategories() {
     const cats = new Set();
@@ -133,29 +159,27 @@
         if (t) cats.add(t);
       });
     });
-    const sel = document.getElementById('category-filter');
     cats.forEach(c => {
       const opt = document.createElement('option');
       opt.value = c.toLowerCase();
       opt.textContent = c;
-      sel.appendChild(opt);
+      categoryFilter.appendChild(opt);
     });
   }
 
-  async function init() {
-    try {
-      const res = await fetch('/get_shapes?sort=date_desc');
-      allShapes = await res.json();
-      populateCategories();
-      renderShapes(allShapes);
-    } catch (err) {
-      document.getElementById('panel-shapes').innerHTML =
-        '<div class="panel-empty">Shapes konnten nicht geladen werden.</div>';
-    }
-  }
+  searchInput.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(filterShapes, 350);
+  });
 
-  document.getElementById('search').addEventListener('input', filterShapes);
-  document.getElementById('category-filter').addEventListener('change', filterShapes);
+  categoryFilter.addEventListener('change', filterShapes);
+
+  window.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = document.documentElement;
+    if (scrollTop + clientHeight >= scrollHeight - 100 && !isLoading) {
+      showNextPage();
+    }
+  });
 
   // View toggle
   const toggleBtn = document.getElementById('view-toggle');
@@ -175,6 +199,17 @@
     applyView(detailView);
     filterShapes();
   });
+
+  async function init() {
+    try {
+      const res = await fetch('/get_shapes?sort=date_desc');
+      allShapes = await res.json();
+      populateCategories();
+      filterShapes();
+    } catch (err) {
+      container.innerHTML = '<div class="panel-empty">Shapes konnten nicht geladen werden.</div>';
+    }
+  }
 
   init();
 </script>

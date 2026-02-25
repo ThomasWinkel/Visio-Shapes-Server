@@ -137,7 +137,11 @@ async function loadShapes() {
   }
 }
 
-searchInput.addEventListener('input', applyFilter);
+let debounceTimer;
+searchInput.addEventListener('input', () => {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(applyFilter, 350);
+});
 categoryFilter.addEventListener('change', applyFilter);
 sortOrder.addEventListener('change', () => {
   // reload from API when switching to/from popular (server-side sort)
