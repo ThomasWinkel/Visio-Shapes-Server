@@ -21,13 +21,46 @@ A web platform for sharing and discovering Microsoft Visio shapes and stencils. 
 
 ## Installation
 
-### Prerequisites
+### Local Testing
+
+**1. Clone and enter the repo**
+```bash
+git clone https://github.com/ThomasWinkel/Visio-Shapes-Server.git
+cd Visio-Shapes-Server
+```
+
+**2. Create `.env`**
+```bash
+cp example_.env .env
+```
+Edit `.env` – fill in your mail credentials and set `OWNER_EMAIL`.
+
+**3. Install dependencies**
+```bash
+uv sync
+```
+
+**4. Init the database**
+```bash
+uv run flask db upgrade
+```
+
+**5. Run the development server**
+```bash
+uv run flask run
+```
+
+---
+
+### Production (Docker)
+
+#### Prerequisites
 
 - Git
 - Docker and Docker Compose
 - A reverse proxy (e.g. nginx) handling HTTPS and forwarding to port 5000
 
-### Steps
+#### Steps
 
 **1. Create required directories**
 ```bash
@@ -68,7 +101,18 @@ docker-compose exec www_visio /usr/src/app/.venv/bin/flask db upgrade
 
 The application is now available on port `5000`.
 
-**7. Maintenance**
+**7. Set up the daily status mail (optional)**
+
+Add a cron job on the host to send a daily status e-mail to `OWNER_EMAIL`:
+```bash
+crontab -e
+```
+```cron
+# Daily at 07:00 UTC
+0 7 * * * cd /services/visio-shapes-server && docker compose exec -T www_visio /usr/src/app/.venv/bin/flask send_status_mail >> /var/log/visio_status_mail.log 2>&1
+```
+
+**8. Maintenance**
 
 To update the application to the latest version:
 ```bash
