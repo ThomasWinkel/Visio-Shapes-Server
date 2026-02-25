@@ -13,26 +13,26 @@ def generate_password(length):
 
 
 def delete_user_if_not_logged_in(user_id, context):
-    context.push()
-    user = User.query.get(user_id)
-    if not user: return
-    if user.last_active is None:
-        email = user.email
-        db.session.delete(user)
-        db.session.commit()
+    with context:
+        user = db.session.get(User, user_id)
+        if not user: return
+        if user.last_active is None:
+            email = user.email
+            db.session.delete(user)
+            db.session.commit()
 
-        msg = Message(
-            'Subscription time out - visio-shapes.com',
-            recipients=[email],
-            body = (f'Your subscription request has expired.\n'
-                f'\n'
-                f'Don\'t worry if you missed the time.\n'
-                f'Just register again: https://www.visio-shapes/register\n'
-                f'\n'
-                f'You did not expect this email?\n'
-                f'Someone probably made a typo -> Do nothing.')
-        )
-        mail.send(msg)
+            msg = Message(
+                'Subscription time out - visio-shapes.com',
+                recipients=[email],
+                body = (f'Your subscription request has expired.\n'
+                    f'\n'
+                    f'Don\'t worry if you missed the time.\n'
+                    f'Just register again: https://www.visio-shapes.com/register\n'
+                    f'\n'
+                    f'You did not expect this email?\n'
+                    f'Someone probably made a typo -> Do nothing.')
+            )
+            mail.send(msg)
 
 
 def delete_user_if_not_loggedIn_after_time(user_id):

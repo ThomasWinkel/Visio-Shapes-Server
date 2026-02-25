@@ -70,12 +70,7 @@ def register():
             return render_template('browser/register.html')
 
         password = generate_password(10)
-        token = '#' + password
-
-        from flask import current_app
-        current_app.logger.warning(
-            f'\n--- REGISTRATION ---\n  User:     {name}\n  Password: {password}\n  Token:    {token}\n---'
-        )
+        token = password
 
         new_user = User(
             email=email,
