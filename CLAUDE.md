@@ -185,7 +185,7 @@ docker-compose exec www_visio /usr/src/app/.venv/bin/flask send_status_mail
 - Für: `/add_shape`, `/add_stencil`
 - Header: `Authorization: Bearer <token>`
 - Token im `User.token`-Feld gespeichert
-- Token = `"#" + generiertes_passwort` (wird bei Registrierung erzeugt)
+- Token = `generiertes_passwort` (wird bei Registrierung erzeugt)
 
 ### Registrierungsflow
 1. E-Mail + Name eingeben
