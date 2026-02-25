@@ -2,6 +2,9 @@ from flask import Flask, render_template, session, request, redirect, url_for
 from flask_babel import lazy_gettext as _l
 from config import Config
 from app.extensions import db, migrate, bcrypt, login_manager, http_auth, mail, cors, babel
+from sqlalchemy import event
+from sqlalchemy.engine import Engine
+import sqlite3
 
 LANGUAGES = ['de', 'en']
 
@@ -22,6 +25,13 @@ def create_app(config_class=Config):
     # Initialize Flask extensions
     db.init_app(app)
     migrate.init_app(app, db)
+
+    @event.listens_for(Engine, "connect")
+    def _set_sqlite_wal(dbapi_connection, connection_record):
+        if isinstance(dbapi_connection, sqlite3.Connection):
+            cursor = dbapi_connection.cursor()
+            cursor.execute("PRAGMA journal_mode=WAL")
+            cursor.close()
     bcrypt.init_app(app)
     login_manager.init_app(app)
     mail.init_app(app)
