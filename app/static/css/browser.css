@@ -172,14 +172,14 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-5);
-  margin-top: var(--space-5);
+  margin-bottom: var(--space-5);
 }
 .steps-embed {
   flex: 0 0 auto;
-  width: 360px;
+  width: 720px;
   max-width: 100%;
   position: relative;
-  padding-bottom: calc(360px * 9 / 16);
+  padding-bottom: calc(720px * 9 / 16);
   height: 0;
   overflow: hidden;
   border-radius: var(--radius-card);
@@ -226,6 +226,73 @@
   .steps-embed {
     width: 100%;
     padding-bottom: 56.25%;
+  }
+}
+
+/* ── Section alternating background ── */
+.section-alt {
+  background-color: var(--color-surface-alt);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ── Business (landing) ── */
+.business-section {
+  padding: var(--space-5) 0;
+}
+.business-section h2 {
+  text-align: center;
+  font-size: 1.6rem;
+  margin-bottom: var(--space-4);
+}
+.business-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+.business-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-2) var(--space-3);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+.business-card-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  color: #fff;
+}
+.business-card-icon svg {
+  width: 26px;
+  height: 26px;
+}
+.business-card-text {
+  flex: 1;
+}
+.business-card h3 {
+  font-size: 0.95rem;
+  margin-bottom: 0.25rem;
+}
+.business-card p {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+}
+
+.btn-icon {
+  padding: 0.45rem;
+}
+@media (max-width: 480px) {
+  .business-grid {
+    grid-template-columns: 1fr;
   }
 }
 

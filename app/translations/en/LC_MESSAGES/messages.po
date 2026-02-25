@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-02-23 21:23+0100\n"
+"POT-Creation-Date: 2026-02-25 09:01+0100\n"
 "PO-Revision-Date: 2026-02-23 21:22+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -22,53 +22,53 @@ msgstr ""
 msgid "Please log in to access this page."
 msgstr ""
 
-#: app/__init__.py:63 app/templates/browser/browse.html:22
-#: app/templates/browser/landing.html:45 app/templates/browser/landing.html:54
+#: app/__init__.py:66 app/templates/browser/browse.html:22
+#: app/templates/browser/landing.html:55 app/templates/browser/landing.html:64
 msgid "Loading shapes…"
 msgstr ""
 
-#: app/__init__.py:64
+#: app/__init__.py:67
 msgid "No shapes yet."
 msgstr ""
 
-#: app/__init__.py:65
+#: app/__init__.py:68
 msgid "Could not load shapes."
 msgstr ""
 
-#: app/__init__.py:66
+#: app/__init__.py:69
 msgid "Load stencil"
 msgstr ""
 
-#: app/__init__.py:67
+#: app/__init__.py:70
 msgid "Download"
 msgstr ""
 
-#: app/__init__.py:68
+#: app/__init__.py:71
 msgid "Log in to download"
 msgstr ""
 
-#: app/__init__.py:69 app/templates/browser/browse.html:23
+#: app/__init__.py:72 app/templates/browser/browse.html:23
 msgid "No shapes found."
 msgstr ""
 
-#: app/__init__.py:70
+#: app/__init__.py:73
 msgid "Error saving. Please try again."
 msgstr ""
 
-#: app/__init__.py:71
+#: app/__init__.py:74
 msgid "Network error. Please try again."
 msgstr ""
 
-#: app/__init__.py:72
+#: app/__init__.py:75
 msgid "Error deleting. Please try again."
 msgstr ""
 
-#: app/__init__.py:73
+#: app/__init__.py:76
 #, python-brace-format
 msgid "Do you really want to permanently delete \"{name}\"?"
 msgstr ""
 
-#: app/__init__.py:74 app/templates/browser/account.html:28
+#: app/__init__.py:77 app/templates/browser/account.html:28
 msgid "Keywords:"
 msgstr ""
 
@@ -122,34 +122,34 @@ msgstr ""
 msgid "An email has been sent to %(email)s. Please log in within 5 minutes."
 msgstr ""
 
-#: app/templates/base_browser.html:20
+#: app/templates/base_browser.html:22
 msgid "Browse"
 msgstr ""
 
-#: app/templates/base_browser.html:22
+#: app/templates/base_browser.html:27
 msgid "Account"
 msgstr ""
 
-#: app/templates/base_browser.html:23
+#: app/templates/base_browser.html:28
 msgid "Logout"
 msgstr ""
 
-#: app/templates/base_browser.html:25 app/templates/browser/login.html:2
+#: app/templates/base_browser.html:30 app/templates/browser/login.html:2
 #: app/templates/browser/login.html:7 app/templates/browser/register.html:22
 msgid "Login"
 msgstr ""
 
-#: app/templates/base_browser.html:26 app/templates/browser/login.html:19
+#: app/templates/base_browser.html:31 app/templates/browser/login.html:19
 #: app/templates/browser/register.html:2 app/templates/browser/register.html:7
 #: app/templates/browser/register.html:20
 msgid "Register"
 msgstr ""
 
-#: app/templates/base_browser.html:52
+#: app/templates/base_browser.html:61
 msgid "Legal Notice"
 msgstr ""
 
-#: app/templates/base_browser.html:53
+#: app/templates/base_browser.html:62
 msgid "Privacy Policy"
 msgstr ""
 
@@ -179,10 +179,14 @@ msgstr ""
 
 #: app/templates/browser/account.html:34 app/templates/browser/account.html:79
 #: app/templates/browser/account.html:121
+#: app/templates/browser/admin_users.html:42
 msgid "Delete"
 msgstr ""
 
 #: app/templates/browser/account.html:39
+#: app/templates/browser/admin_user_detail.html:24
+#: app/templates/browser/admin_user_detail.html:53
+#: app/templates/browser/admin_users.html:12
 msgid "Name"
 msgstr ""
 
@@ -204,6 +208,7 @@ msgid "Cancel"
 msgstr ""
 
 #: app/templates/browser/account.html:60
+#: app/templates/browser/admin_user_detail.html:41
 msgid "No shapes uploaded yet."
 msgstr ""
 
@@ -220,6 +225,8 @@ msgid "Categories:"
 msgstr ""
 
 #: app/templates/browser/account.html:84
+#: app/templates/browser/admin_user_detail.html:81
+#: app/templates/browser/admin_user_detail.html:108
 msgid "Title"
 msgstr ""
 
@@ -236,11 +243,102 @@ msgid "Comment"
 msgstr ""
 
 #: app/templates/browser/account.html:109
+#: app/templates/browser/admin_user_detail.html:97
 msgid "No stencils uploaded yet."
 msgstr ""
 
 #: app/templates/browser/account.html:117
 msgid "Confirm deletion"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:7
+msgid "Back to overview"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:12
+msgid "Registered:"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:13
+msgid "Last active:"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:18
+msgid "Uploaded Shapes"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:25
+#: app/templates/browser/admin_user_detail.html:83
+msgid "Downloads"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:26
+#: app/templates/browser/admin_user_detail.html:55
+msgid "Uploaded"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:47
+msgid "Downloaded Shapes"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:54
+#: app/templates/browser/admin_user_detail.html:109
+msgid "Times downloaded"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:70
+msgid "No shapes downloaded yet."
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:76
+msgid "Uploaded Stencils"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:103
+msgid "Downloaded Stencils"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:122
+msgid "No stencils downloaded yet."
+msgstr ""
+
+#: app/templates/browser/admin_users.html:7
+msgid "User Administration"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:13
+msgid "Email"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:14
+msgid "Registered"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:15
+msgid "Last active"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:18
+msgid "Role"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:19
+msgid "Actions"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:41
+#, python-format
+msgid ""
+"Do you really want to permanently delete &quot;%(name)s&quot;? All shapes"
+" and stencils will also be deleted."
+msgstr ""
+
+#: app/templates/browser/admin_users.html:48
+msgid "Revoke admin"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:50
+msgid "Grant admin"
 msgstr ""
 
 #: app/templates/browser/browse.html:2 app/templates/browser/landing.html:12
@@ -285,44 +383,72 @@ msgstr ""
 msgid "How does it work?"
 msgstr ""
 
-#: app/templates/browser/landing.html:24
+#: app/templates/browser/landing.html:34
 msgid "Install VSTO Add-In"
 msgstr ""
 
-#: app/templates/browser/landing.html:25
+#: app/templates/browser/landing.html:35
 msgid "Install the Visio Add-In, which adds a sidebar in Microsoft Visio."
 msgstr ""
 
-#: app/templates/browser/landing.html:29
+#: app/templates/browser/landing.html:39
 msgid "Upload shapes"
 msgstr ""
 
-#: app/templates/browser/landing.html:30
+#: app/templates/browser/landing.html:40
 msgid ""
 "Select shapes or a complete stencil in Visio and upload them with one "
 "click."
 msgstr ""
 
-#: app/templates/browser/landing.html:34
+#: app/templates/browser/landing.html:44
 msgid "Use shapes"
 msgstr ""
 
-#: app/templates/browser/landing.html:35
+#: app/templates/browser/landing.html:45
 msgid ""
 "Search and filter in the sidebar, then drag and drop shapes onto the "
 "drawing canvas."
 msgstr ""
 
-#: app/templates/browser/landing.html:43
+#: app/templates/browser/landing.html:53
 msgid "Latest Shapes"
 msgstr ""
 
-#: app/templates/browser/landing.html:52
+#: app/templates/browser/landing.html:62
 msgid "Top Shapes"
 msgstr ""
 
-#: app/templates/browser/landing.html:57
+#: app/templates/browser/landing.html:67
 msgid "View all shapes"
+msgstr ""
+
+#: app/templates/browser/landing.html:74
+msgid "Business"
+msgstr ""
+
+#: app/templates/browser/landing.html:84
+msgid "Free & Open Source"
+msgstr ""
+
+#: app/templates/browser/landing.html:85
+msgid ""
+"Visio-Shapes is completely free to use and open source – share, benefit &"
+" contribute!"
+msgstr ""
+
+#: app/templates/browser/landing.html:96
+msgid "Private area on request"
+msgstr ""
+
+#: app/templates/browser/landing.html:97
+msgid ""
+"Need a private space for your company or your customers? Feel free to get"
+" in touch – we are happy to help."
+msgstr ""
+
+#: app/templates/browser/landing.html:99
+msgid "Get in touch"
 msgstr ""
 
 #: app/templates/browser/login.html:10 app/templates/browser/register.html:13

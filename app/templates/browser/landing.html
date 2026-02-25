@@ -18,6 +18,16 @@
 <section class="steps-section">
   <div class="container">
     <h2>{{ _('How does it work?') }}</h2>
+    <div class="steps-video">
+      <div class="steps-embed" id="yt-facade" data-videoid="2OO1_iuWjoI">
+        <button class="yt-play-btn" aria-label="Play video">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="2" width="20" height="20" rx="3" ry="3"/>
+            <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
+          </svg>
+        </button>
+      </div>
+    </div>
     <div class="steps-grid">
       <div class="step-card">
         <div class="step-number">1</div>
@@ -35,16 +45,6 @@
         <p>{{ _('Search and filter in the sidebar, then drag and drop shapes onto the drawing canvas.') }}</p>
       </div>
     </div>
-    <div class="steps-video">
-      <div class="steps-embed" id="yt-facade" data-videoid="AXyTQ90sKQY">
-        <button class="yt-play-btn" aria-label="Play video">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="2" y="2" width="20" height="20" rx="3" ry="3"/>
-            <polygon points="10,8 16,12 10,16" fill="currentColor" stroke="none"/>
-          </svg>
-        </button>
-      </div>
-    </div>
   </div>
 </section>
 
@@ -57,7 +57,7 @@
   </div>
 </section>
 
-<section class="latest-section">
+<section class="latest-section section-alt">
   <div class="container">
     <h2>{{ _('Top Shapes') }}</h2>
     <div class="shapes-grid" id="top-grid">
@@ -65,6 +65,44 @@
     </div>
     <div class="section-footer">
       <a href="/browse" class="btn btn-ghost">{{ _('View all shapes') }}</a>
+    </div>
+  </div>
+</section>
+
+<section class="business-section">
+  <div class="container">
+    <h2>{{ _('Business') }}</h2>
+    <div class="business-grid">
+      <div class="business-card">
+        <div class="business-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m16 18 6-6-6-6"/>
+            <path d="m8 6-6 6 6 6"/>
+          </svg>
+        </div>
+        <div class="business-card-text">
+          <h3>{{ _('Free & Open Source') }}</h3>
+          <p>{{ _('Visio-Shapes is completely free to use and open source – share, benefit & contribute!') }}</p>
+        </div>
+      </div>
+      <div class="business-card">
+        <div class="business-card-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <div class="business-card-text">
+          <h3>{{ _('Private area on request') }}</h3>
+          <p>{{ _('Need a private space for your company or your customers? Feel free to get in touch – we are happy to help.') }}</p>
+        </div>
+        <a href="mailto:info@geradeaus.engineering" class="btn btn-primary btn-icon" aria-label="{{ _('Get in touch') }}">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="18" height="18">
+            <rect width="20" height="16" x="2" y="4" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+        </a>
+      </div>
     </div>
   </div>
 </section>

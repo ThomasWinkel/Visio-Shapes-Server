@@ -1,68 +1,75 @@
 # German translations for Visio-Shapes.
 # Copyright (C) 2026 Thomas Winkel
-# This file is distributed under the same license as the Visio-Shapes project.
+# This file is distributed under the same license as the Visio-Shapes
+# project.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: Visio-Shapes 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-23 21:22+0100\n"
+"POT-Creation-Date: 2026-02-25 09:01+0100\n"
 "PO-Revision-Date: 2026-02-23 21:22+0100\n"
 "Last-Translator: Thomas Winkel\n"
-"Language-Team: de\n"
 "Language: de\n"
-"MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Language-Team: de\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
 
-#: app/__init__.py:63 app/templates/browser/browse.html:22
-#: app/templates/browser/landing.html:45 app/templates/browser/landing.html:54
-msgid "Loading shapes\u2026"
-msgstr "Shapes werden geladen\u2026"
+#: app/__init__.py:44
+msgid "Please log in to access this page."
+msgstr "Bitte logge dich ein, um auf diese Seite zuzugreifen."
 
-#: app/__init__.py:64
+#: app/__init__.py:66 app/templates/browser/browse.html:22
+#: app/templates/browser/landing.html:55 app/templates/browser/landing.html:64
+#, fuzzy
+msgid "Loading shapes…"
+msgstr "Shapes werden geladen\\u2026"
+
+#: app/__init__.py:67
 msgid "No shapes yet."
 msgstr "Noch keine Shapes vorhanden."
 
-#: app/__init__.py:65
+#: app/__init__.py:68
 msgid "Could not load shapes."
 msgstr "Shapes konnten nicht geladen werden."
 
-#: app/__init__.py:66
+#: app/__init__.py:69
 msgid "Load stencil"
 msgstr "Schablone laden"
 
-#: app/__init__.py:67
+#: app/__init__.py:70
 msgid "Download"
 msgstr "Download"
 
-#: app/__init__.py:68
+#: app/__init__.py:71
 msgid "Log in to download"
 msgstr "Login zum Download"
 
-#: app/__init__.py:69 app/templates/browser/browse.html:23
+#: app/__init__.py:72 app/templates/browser/browse.html:23
 msgid "No shapes found."
 msgstr "Keine Shapes gefunden."
 
-#: app/__init__.py:70
+#: app/__init__.py:73
 msgid "Error saving. Please try again."
 msgstr "Fehler beim Speichern. Bitte versuche es erneut."
 
-#: app/__init__.py:71
+#: app/__init__.py:74
 msgid "Network error. Please try again."
 msgstr "Netzwerkfehler. Bitte versuche es erneut."
 
-#: app/__init__.py:72
+#: app/__init__.py:75
 msgid "Error deleting. Please try again."
 msgstr "Fehler beim Löschen. Bitte versuche es erneut."
 
-#: app/__init__.py:73
+#: app/__init__.py:76
 #, python-brace-format
 msgid "Do you really want to permanently delete \"{name}\"?"
 msgstr "Möchtest du \"{name}\" wirklich unwiderruflich löschen?"
 
-#: app/__init__.py:74 app/templates/browser/account.html:28
+#: app/__init__.py:77 app/templates/browser/account.html:28
 msgid "Keywords:"
 msgstr "Keywords:"
 
@@ -108,42 +115,47 @@ msgid "You didn't expect this email?"
 msgstr "Du hast diese E-Mail nicht erwartet?"
 
 #: app/blueprints/auth/routes.py:102
-msgid "Someone probably made a typo \u2013 ignore this email."
-msgstr "Jemand hat wahrscheinlich einen Tippfehler gemacht \u2013 ignoriere diese E-Mail."
+#, fuzzy
+msgid "Someone probably made a typo – ignore this email."
+msgstr ""
+"Jemand hat wahrscheinlich einen Tippfehler gemacht \\u2013 ignoriere "
+"diese E-Mail."
 
 #: app/blueprints/auth/routes.py:107
 #, python-format
 msgid "An email has been sent to %(email)s. Please log in within 5 minutes."
-msgstr "Eine E-Mail wurde an %(email)s gesendet. Bitte logge dich innerhalb von 5 Minuten ein."
+msgstr ""
+"Eine E-Mail wurde an %(email)s gesendet. Bitte logge dich innerhalb von 5"
+" Minuten ein."
 
-#: app/templates/base_browser.html:20
+#: app/templates/base_browser.html:22
 msgid "Browse"
 msgstr "Browse"
 
-#: app/templates/base_browser.html:22
+#: app/templates/base_browser.html:27
 msgid "Account"
 msgstr "Account"
 
-#: app/templates/base_browser.html:23
+#: app/templates/base_browser.html:28
 msgid "Logout"
 msgstr "Logout"
 
-#: app/templates/base_browser.html:25 app/templates/browser/login.html:2
+#: app/templates/base_browser.html:30 app/templates/browser/login.html:2
 #: app/templates/browser/login.html:7 app/templates/browser/register.html:22
 msgid "Login"
 msgstr "Login"
 
-#: app/templates/base_browser.html:26 app/templates/browser/login.html:19
+#: app/templates/base_browser.html:31 app/templates/browser/login.html:19
 #: app/templates/browser/register.html:2 app/templates/browser/register.html:7
 #: app/templates/browser/register.html:20
 msgid "Register"
 msgstr "Registrieren"
 
-#: app/templates/base_browser.html:52
+#: app/templates/base_browser.html:61
 msgid "Legal Notice"
 msgstr "Impressum"
 
-#: app/templates/base_browser.html:53
+#: app/templates/base_browser.html:62
 msgid "Privacy Policy"
 msgstr "Datenschutz"
 
@@ -173,10 +185,14 @@ msgstr "Bearbeiten"
 
 #: app/templates/browser/account.html:34 app/templates/browser/account.html:79
 #: app/templates/browser/account.html:121
+#: app/templates/browser/admin_users.html:42
 msgid "Delete"
 msgstr "Löschen"
 
 #: app/templates/browser/account.html:39
+#: app/templates/browser/admin_user_detail.html:24
+#: app/templates/browser/admin_user_detail.html:53
+#: app/templates/browser/admin_users.html:12
 msgid "Name"
 msgstr "Name"
 
@@ -198,6 +214,7 @@ msgid "Cancel"
 msgstr "Abbrechen"
 
 #: app/templates/browser/account.html:60
+#: app/templates/browser/admin_user_detail.html:41
 msgid "No shapes uploaded yet."
 msgstr "Du hast noch keine Shapes hochgeladen."
 
@@ -214,6 +231,8 @@ msgid "Categories:"
 msgstr "Kategorien:"
 
 #: app/templates/browser/account.html:84
+#: app/templates/browser/admin_user_detail.html:81
+#: app/templates/browser/admin_user_detail.html:108
 msgid "Title"
 msgstr "Titel"
 
@@ -230,6 +249,7 @@ msgid "Comment"
 msgstr "Kommentar"
 
 #: app/templates/browser/account.html:109
+#: app/templates/browser/admin_user_detail.html:97
 msgid "No stencils uploaded yet."
 msgstr "Du hast noch keine Schablonen hochgeladen."
 
@@ -237,13 +257,117 @@ msgstr "Du hast noch keine Schablonen hochgeladen."
 msgid "Confirm deletion"
 msgstr "Löschen bestätigen"
 
+#: app/templates/browser/admin_user_detail.html:7
+msgid "Back to overview"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:12
+#, fuzzy
+msgid "Registered:"
+msgstr "Registrieren"
+
+#: app/templates/browser/admin_user_detail.html:13
+msgid "Last active:"
+msgstr ""
+
+#: app/templates/browser/admin_user_detail.html:18
+#, fuzzy
+msgid "Uploaded Shapes"
+msgstr "Shapes hochladen"
+
+#: app/templates/browser/admin_user_detail.html:25
+#: app/templates/browser/admin_user_detail.html:83
+#, fuzzy
+msgid "Downloads"
+msgstr "Download"
+
+#: app/templates/browser/admin_user_detail.html:26
+#: app/templates/browser/admin_user_detail.html:55
+#, fuzzy
+msgid "Uploaded"
+msgstr "Hochgeladen:"
+
+#: app/templates/browser/admin_user_detail.html:47
+#, fuzzy
+msgid "Downloaded Shapes"
+msgstr "Shapes hochladen"
+
+#: app/templates/browser/admin_user_detail.html:54
+#: app/templates/browser/admin_user_detail.html:109
+#, fuzzy
+msgid "Times downloaded"
+msgstr "Download"
+
+#: app/templates/browser/admin_user_detail.html:70
+#, fuzzy
+msgid "No shapes downloaded yet."
+msgstr "Du hast noch keine Shapes hochgeladen."
+
+#: app/templates/browser/admin_user_detail.html:76
+#, fuzzy
+msgid "Uploaded Stencils"
+msgstr "Schablone laden"
+
+#: app/templates/browser/admin_user_detail.html:103
+#, fuzzy
+msgid "Downloaded Stencils"
+msgstr "Schablone laden"
+
+#: app/templates/browser/admin_user_detail.html:122
+#, fuzzy
+msgid "No stencils downloaded yet."
+msgstr "Du hast noch keine Schablonen hochgeladen."
+
+#: app/templates/browser/admin_users.html:7
+msgid "User Administration"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:13
+#, fuzzy
+msgid "Email"
+msgstr "E-Mail eingeben"
+
+#: app/templates/browser/admin_users.html:14
+#, fuzzy
+msgid "Registered"
+msgstr "Registrieren"
+
+#: app/templates/browser/admin_users.html:15
+msgid "Last active"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:18
+#, fuzzy
+msgid "Role"
+msgstr "Browse"
+
+#: app/templates/browser/admin_users.html:19
+msgid "Actions"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:41
+#, python-format
+msgid ""
+"Do you really want to permanently delete &quot;%(name)s&quot;? All shapes"
+" and stencils will also be deleted."
+msgstr ""
+
+#: app/templates/browser/admin_users.html:48
+msgid "Revoke admin"
+msgstr ""
+
+#: app/templates/browser/admin_users.html:50
+msgid "Grant admin"
+msgstr ""
+
 #: app/templates/browser/browse.html:2 app/templates/browser/landing.html:12
 msgid "Browse shapes"
 msgstr "Shapes durchsuchen"
 
 #: app/templates/browser/browse.html:8
-msgid "Search\u2026"
-msgstr "Suchen\u2026"
+#, fuzzy
+msgid "Search…"
+msgstr "Suchen\\u2026"
 
 #: app/templates/browser/browse.html:10
 msgid "All categories"
@@ -262,8 +386,9 @@ msgid "Most popular"
 msgstr "Meistgenutzt"
 
 #: app/templates/browser/landing.html:2
-msgid "Visio-Shapes \u2013 Share Microsoft Visio Shapes"
-msgstr "Visio-Shapes \u2013 Microsoft Visio Shapes teilen"
+#, fuzzy
+msgid "Visio-Shapes – Share Microsoft Visio Shapes"
+msgstr "Visio-Shapes \\u2013 Microsoft Visio Shapes teilen"
 
 #: app/templates/browser/landing.html:9
 msgid "Share Microsoft Visio Shapes worldwide"
@@ -281,19 +406,21 @@ msgstr ""
 msgid "How does it work?"
 msgstr "Wie funktioniert es?"
 
-#: app/templates/browser/landing.html:24
+#: app/templates/browser/landing.html:34
 msgid "Install VSTO Add-In"
 msgstr "VSTO-AddIn installieren"
 
-#: app/templates/browser/landing.html:25
+#: app/templates/browser/landing.html:35
 msgid "Install the Visio Add-In, which adds a sidebar in Microsoft Visio."
-msgstr "Installiere das Visio-AddIn, das eine Seitenleiste in Microsoft Visio hinzufügt."
+msgstr ""
+"Installiere das Visio-AddIn, das eine Seitenleiste in Microsoft Visio "
+"hinzufügt."
 
-#: app/templates/browser/landing.html:29
+#: app/templates/browser/landing.html:39
 msgid "Upload shapes"
 msgstr "Shapes hochladen"
 
-#: app/templates/browser/landing.html:30
+#: app/templates/browser/landing.html:40
 msgid ""
 "Select shapes or a complete stencil in Visio and upload them with one "
 "click."
@@ -301,11 +428,11 @@ msgstr ""
 "Selektiere Shapes oder eine ganze Schablone in Visio und lade sie mit "
 "einem Klick hoch."
 
-#: app/templates/browser/landing.html:34
+#: app/templates/browser/landing.html:44
 msgid "Use shapes"
 msgstr "Shapes verwenden"
 
-#: app/templates/browser/landing.html:35
+#: app/templates/browser/landing.html:45
 msgid ""
 "Search and filter in the sidebar, then drag and drop shapes onto the "
 "drawing canvas."
@@ -313,17 +440,49 @@ msgstr ""
 "Suche und filtere in der Seitenleiste, dann ziehe Shapes per Drag & Drop "
 "auf die Zeichenfläche."
 
-#: app/templates/browser/landing.html:43
+#: app/templates/browser/landing.html:53
 msgid "Latest Shapes"
 msgstr "Neueste Shapes"
 
-#: app/templates/browser/landing.html:52
+#: app/templates/browser/landing.html:62
 msgid "Top Shapes"
 msgstr "Top Shapes"
 
-#: app/templates/browser/landing.html:57
+#: app/templates/browser/landing.html:67
 msgid "View all shapes"
 msgstr "Alle Shapes ansehen"
+
+#: app/templates/browser/landing.html:74
+msgid "Business"
+msgstr "Business"
+
+#: app/templates/browser/landing.html:84
+msgid "Free & Open Source"
+msgstr "Free & Open Source"
+
+#: app/templates/browser/landing.html:85
+msgid ""
+"Visio-Shapes is completely free to use and open source – share, benefit &"
+" contribute!"
+msgstr ""
+"Visio-Shapes ist komplett kostenlos und Open Source – teilen, profitieren"
+" & mitmachen!"
+
+#: app/templates/browser/landing.html:96
+msgid "Private area on request"
+msgstr "Privatbereich auf Anfrage"
+
+#: app/templates/browser/landing.html:97
+msgid ""
+"Need a private space for your company or your customers? Feel free to get"
+" in touch – we are happy to help."
+msgstr ""
+"Benötigst du einen privaten Bereich für dein Unternehmen oder deine"
+" Kunden? Melde dich gerne – wir helfen dir weiter."
+
+#: app/templates/browser/landing.html:99
+msgid "Get in touch"
+msgstr "Kontakt aufnehmen"
 
 #: app/templates/browser/login.html:10 app/templates/browser/register.html:13
 msgid "Email address"
@@ -369,6 +528,3 @@ msgstr "Benutzernamen wählen"
 msgid "Already registered?"
 msgstr "Bereits registriert?"
 
-#: app/__init__.py
-msgid "Please log in to access this page."
-msgstr "Bitte logge dich ein, um auf diese Seite zuzugreifen."
