@@ -121,4 +121,12 @@ def create_app(config_class=Config):
     def datenschutz():
         return render_template('browser/datenschutz.html')
 
+    # CLI command: flask send_status_mail
+    @app.cli.command('send_status_mail')
+    def send_status_mail_cmd():
+        """Send daily status e-mail to OWNER_EMAIL."""
+        from app.utilities.status_mail import send_status_mail
+        send_status_mail()
+        print('Status mail sent.')
+
     return app
