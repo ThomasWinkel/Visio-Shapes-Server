@@ -703,6 +703,70 @@ msgstr "Neues Passwort senden"
 msgid "Back to login"
 msgstr "Zurück zum Login"
 
+#: app/templates/browser/account.html app/__init__.py
+msgid "Click to edit"
+msgstr "Zum Bearbeiten klicken"
+
+#: app/__init__.py
+msgid "This name is already taken."
+msgstr "Dieser Name ist bereits vergeben."
+
+#: app/__init__.py
+msgid "This email address is already taken."
+msgstr "Diese E-Mail-Adresse ist bereits vergeben."
+
+#: app/__init__.py
+msgid "Please enter a valid email address."
+msgstr "Bitte gib eine gültige E-Mail-Adresse ein."
+
+#: app/__init__.py
+msgid "(pending confirmation)"
+msgstr "(Bestätigung ausstehend)"
+
+#: app/__init__.py
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: app/blueprints/account/routes.py
+msgid "Confirm your new email address"
+msgstr "Neue E-Mail-Adresse bestätigen"
+
+#: app/blueprints/account/routes.py
+msgid "You requested a change of your email address on Visio-Shapes. Click the button below to confirm."
+msgstr "Du hast eine Änderung deiner E-Mail-Adresse bei Visio-Shapes angefordert. Klicke auf den Button, um sie zu bestätigen."
+
+#: app/blueprints/account/routes.py
+msgid "Confirm email address"
+msgstr "E-Mail-Adresse bestätigen"
+
+#: app/blueprints/account/routes.py
+msgid "The link is valid for 24 hours."
+msgstr "Der Link ist 24 Stunden gültig."
+
+#: app/blueprints/account/routes.py
+msgid "You didn't expect this email? Just ignore it – your old email address remains active."
+msgstr "Du hast diese E-Mail nicht erwartet? Ignoriere sie einfach – deine alte E-Mail-Adresse bleibt aktiv."
+
+#: app/blueprints/account/routes.py
+msgid "The confirmation link has expired."
+msgstr "Der Bestätigungslink ist abgelaufen."
+
+#: app/blueprints/account/routes.py
+msgid "The confirmation link is invalid."
+msgstr "Der Bestätigungslink ist ungültig."
+
+#: app/blueprints/account/routes.py
+msgid "This confirmation link is no longer valid."
+msgstr "Dieser Bestätigungslink ist nicht mehr gültig."
+
+#: app/blueprints/account/routes.py
+msgid "This email address is already taken."
+msgstr "Diese E-Mail-Adresse ist bereits vergeben."
+
+#: app/blueprints/account/routes.py
+msgid "Your email address has been updated."
+msgstr "Deine E-Mail-Adresse wurde aktualisiert."
+
 #~ msgid "You have registered at %(url)s."
 #~ msgstr "Du hast dich bei %(url)s registriert."
 

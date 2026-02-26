@@ -1,10 +1,15 @@
-from flask import render_template, request, jsonify, abort
+from flask import render_template, request, jsonify, abort, redirect, flash, current_app
+from flask_babel import gettext as _
+from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
+import re
 from app.blueprints.account import bp
-from app.extensions import db
+from app.extensions import db, mail
+from app.models.auth import User
+from app.utilities import expire_pending_email_after_time
 from app.models.visio import Shape, Stencil, ShapeDownload, StencilDownload
 from flask_login import login_required, current_user
 from pathlib import Path
-from flask import current_app
 from sqlalchemy import func
 from datetime import datetime, timedelta
 import logging
@@ -183,6 +188,131 @@ def account():
     }
 
     return render_template('browser/account.html', shapes=shapes, stencils=stencils, stats=stats)
+
+
+@bp.route('/account/change_name', methods=['POST'])
+@login_required
+def change_name():
+    new_name = request.form.get('name', '').strip()
+    if not new_name:
+        return jsonify({'error': 'empty'}), 400
+    if new_name == current_user.name:
+        return jsonify({'name': current_user.name}), 200
+    if User.query.filter(User.name == new_name, User.id != current_user.id).first():
+        return jsonify({'error': 'taken'}), 409
+    current_user.name = new_name
+    db.session.commit()
+    return jsonify({'name': current_user.name}), 200
+
+
+def _build_email_change_email(confirm_url):
+    t_title      = _('Confirm your new email address')
+    t_intro      = _('You requested a change of your email address on Visio-Shapes. Click the button below to confirm.')
+    t_cta        = _('Confirm email address')
+    t_expiry     = _('The link is valid for 24 hours.')
+    t_disclaimer = _("You didn't expect this email? Just ignore it – your old email address remains active.")
+    return f'''<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#FAFAF8;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center" style="padding:40px 16px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+  <tr><td style="padding-bottom:20px;">
+    <span style="font-size:20px;font-weight:700;color:#E07B39;letter-spacing:-0.01em;">Visio-Shapes</span>
+  </td></tr>
+  <tr><td style="background:#FFFFFF;border:1px solid #E8E0D8;border-radius:8px;padding:32px;">
+    <h1 style="font-size:22px;font-weight:700;color:#1C1C1A;margin:0 0 16px 0;">{t_title}</h1>
+    <p style="font-size:14px;line-height:1.7;color:#1C1C1A;margin:0 0 24px 0;">{t_intro}</p>
+    <a href="{confirm_url}" style="display:inline-block;background:#E07B39;color:#FFFFFF;text-decoration:none;padding:12px 28px;border-radius:4px;font-size:14px;font-weight:700;">{t_cta} &rarr;</a>
+    <p style="font-size:13px;color:#6B6B67;margin:24px 0 0 0;padding-top:20px;border-top:1px solid #E8E0D8;">
+      {t_expiry}
+    </p>
+  </td></tr>
+  <tr><td style="padding-top:20px;">
+    <p style="font-size:12px;color:#6B6B67;margin:0;line-height:1.6;">{t_disclaimer}</p>
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>'''
+
+
+@bp.route('/account/change_email', methods=['POST'])
+@login_required
+def change_email():
+    new_email = request.form.get('email', '').strip().lower()
+    if not new_email:
+        return jsonify({'error': 'empty'}), 400
+    if not re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', new_email):
+        return jsonify({'error': 'invalid'}), 422
+    if new_email == current_user.email:
+        return jsonify({'error': 'same'}), 400
+    if User.query.filter(User.email == new_email, User.id != current_user.id).first():
+        return jsonify({'error': 'taken'}), 409
+
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    token = s.dumps({'user_id': current_user.id, 'new_email': new_email})
+
+    current_user.pending_email = new_email
+    db.session.commit()
+    expire_pending_email_after_time(current_user.id)
+
+    confirm_url = f"{current_app.config['BASE_URL']}/account/confirm_email/{token}"
+    msg = Message(
+        _('Confirm your new email address'),
+        recipients=[new_email],
+        html=_build_email_change_email(confirm_url)
+    )
+    mail.send(msg)
+
+    return jsonify({'pending_email': new_email}), 200
+
+
+@bp.route('/account/confirm_email/<token>')
+@login_required
+def confirm_email(token):
+    s = URLSafeTimedSerializer(current_app.config['SECRET_KEY'])
+    try:
+        data = s.loads(token, max_age=86400)
+    except SignatureExpired:
+        current_user.pending_email = None
+        db.session.commit()
+        flash(_('The confirmation link has expired.'), 'error')
+        return redirect('/account')
+    except BadSignature:
+        flash(_('The confirmation link is invalid.'), 'error')
+        return redirect('/account')
+
+    if data['user_id'] != current_user.id:
+        abort(403)
+
+    new_email = data['new_email']
+    if current_user.pending_email != new_email:
+        flash(_('This confirmation link is no longer valid.'), 'error')
+        return redirect('/account')
+
+    if User.query.filter(User.email == new_email, User.id != current_user.id).first():
+        flash(_('This email address is already taken.'), 'error')
+        current_user.pending_email = None
+        db.session.commit()
+        return redirect('/account')
+
+    current_user.email = new_email
+    current_user.pending_email = None
+    db.session.commit()
+
+    flash(_('Your email address has been updated.'), 'success')
+    return redirect('/account')
+
+
+@bp.route('/account/cancel_email_change', methods=['POST'])
+@login_required
+def cancel_email_change():
+    current_user.pending_email = None
+    db.session.commit()
+    return jsonify({'ok': True}), 200
 
 
 @bp.route('/account/shape/<int:shape_id>/delete', methods=['POST'])

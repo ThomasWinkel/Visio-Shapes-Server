@@ -6,7 +6,20 @@
 
   <div class="account-header">
     <h1>{{ _('My Account') }}</h1>
-    <p class="account-meta">{{ current_user.name }} &middot; {{ current_user.email }}</p>
+    <p class="account-meta">
+      <span id="account-display-name" class="editable-name" title="{{ _('Click to edit') }}">{{ current_user.name }}</span>
+      &middot;
+      {% if current_user.pending_email %}
+        <span id="account-display-email">{{ current_user.email }}</span>
+        <span id="pending-email-hint" class="pending-hint">
+          &rarr; <em>{{ current_user.pending_email }}</em> {{ _('(pending confirmation)') }}
+          <a href="#" id="cancel-email-change-link">{{ _('Cancel') }}</a>
+        </span>
+      {% else %}
+        <span id="account-display-email" class="editable-name" title="{{ _('Click to edit') }}">{{ current_user.email }}</span>
+        <span id="pending-email-hint" class="pending-hint" style="display:none"></span>
+      {% endif %}
+    </p>
   </div>
 
   <div class="tabs">
@@ -213,7 +226,7 @@
       {% for shape in shapes %}
       <div class="account-item" id="shape-item-{{ shape.id }}">
         <div class="account-item-image">
-          <img src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
+          <img data-src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
         </div>
         <div class="account-item-body">
           <div class="account-item-name">{{ shape.name }}</div>

@@ -85,6 +85,12 @@ def create_app(config_class=Config):
             'delete_error':      _('Error deleting. Please try again.'),
             'delete_confirm':    _('Do you really want to permanently delete "{name}"?'),
             'keywords_label':    _('Keywords:'),
+            'name_taken':        _('This name is already taken.'),
+            'email_taken':       _('This email address is already taken.'),
+            'invalid_email':     _('Please enter a valid email address.'),
+            'pending_confirmation': _('(pending confirmation)'),
+            'cancel':            _('Cancel'),
+            'click_to_edit':     _('Click to edit'),
         }
         from flask_login import current_user as cu
         owner_email = app.config.get('OWNER_EMAIL', '')
