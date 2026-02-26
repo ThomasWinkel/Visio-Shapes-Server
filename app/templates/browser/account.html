@@ -10,12 +10,205 @@
   </div>
 
   <div class="tabs">
-    <button class="tab-btn active" data-tab="shapes">{{ _('My Shapes') }} ({{ shapes|length }})</button>
+    <button class="tab-btn active" data-tab="overview">{{ _('Overview') }}</button>
+    <button class="tab-btn" data-tab="shapes">{{ _('My Shapes') }} ({{ shapes|length }})</button>
     <button class="tab-btn" data-tab="stencils">{{ _('My Stencils') }} ({{ stencils|length }})</button>
   </div>
 
+  <!-- Overview Tab -->
+  <div class="tab-panel active" id="tab-overview">
+
+    <p class="overview-meta">{{ _('Member since') }} {{ current_user.register_date | dateformat('medium') }}</p>
+
+    <!-- What I have shared -->
+    <div class="overview-section">
+      <h3 class="overview-section-title">{{ _('What I have shared') }}</h3>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ shapes|length }}</div>
+          <div class="stat-label">{{ _('Shapes shared') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stencils|length }}</div>
+          <div class="stat-label">{{ _('Stencils shared') }}</div>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <div class="stat-number">{{ stats.my_shapes_used_by_others }}</div>
+          <div class="stat-label">{{ _('Shape uses by others') }}</div>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <div class="stat-number">{{ stats.my_stencils_downloaded_by_others }}</div>
+          <div class="stat-label">{{ _('Stencil downloads by others') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.users_used_my_shapes }}</div>
+          <div class="stat-label">{{ _('Users using my shapes') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.users_downloaded_my_stencils }}</div>
+          <div class="stat-label">{{ _('Users using my stencils') }}</div>
+        </div>
+      </div>
+
+      {% if stats.top_own_shapes %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('My most popular shapes') }}</h4>
+        <div class="overview-list">
+          {% for shape, cnt in stats.top_own_shapes %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <img class="overview-thumb" src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
+            <span class="overview-item-name">{{ shape.name }}</span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if stats.top_own_stencils %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('My most popular stencils') }}</h4>
+        <div class="overview-list">
+          {% for stencil, cnt in stats.top_own_stencils %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <span class="overview-item-name">{{ stencil.title }}</span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Last 30 days -->
+    <div class="overview-section">
+      <h3 class="overview-section-title">{{ _('Last 30 days') }}</h3>
+      <div class="stat-grid">
+        <div class="stat-card stat-card--accent">
+          <div class="stat-number">{{ stats.my_shapes_used_by_others_30d }}</div>
+          <div class="stat-label">{{ _('Shape uses by others') }}</div>
+        </div>
+        <div class="stat-card stat-card--accent">
+          <div class="stat-number">{{ stats.my_stencils_downloaded_by_others_30d }}</div>
+          <div class="stat-label">{{ _('Stencil downloads by others') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.shapes_used_by_me_30d }}</div>
+          <div class="stat-label">{{ _('Shapes used by me') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.stencils_downloaded_by_me_30d }}</div>
+          <div class="stat-label">{{ _('Stencils downloaded by me') }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What I have used -->
+    <div class="overview-section">
+      <h3 class="overview-section-title">{{ _('What I have used') }}</h3>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.shapes_used_total }}</div>
+          <div class="stat-label">{{ _('Shapes used') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.stencils_downloaded_total }}</div>
+          <div class="stat-label">{{ _('Stencils downloaded') }}</div>
+        </div>
+      </div>
+
+      {% if stats.top_used_shapes %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('Most used shapes') }}</h4>
+        <div class="overview-list">
+          {% for shape, cnt in stats.top_used_shapes %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <img class="overview-thumb" src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
+            <span class="overview-item-name">{{ shape.name }} <span class="overview-item-author">{% if shape.user_id == current_user.id %}{{ _('by me') }}{% else %}{{ _('by') }} {{ shape.user.name }}{% endif %}</span></span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if stats.top_downloaded_stencils %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('Most downloaded stencils') }}</h4>
+        <div class="overview-list">
+          {% for stencil, cnt in stats.top_downloaded_stencils %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <span class="overview-item-name">{{ stencil.title }} <span class="overview-item-author">{% if stencil.user_id == current_user.id %}{{ _('by me') }}{% else %}{{ _('by') }} {{ stencil.user.name }}{% endif %}</span></span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if not stats.top_used_shapes and not stats.top_downloaded_stencils %}
+      <p class="overview-empty">{{ _('No activity yet.') }}</p>
+      {% endif %}
+    </div>
+
+    <!-- What I have used from others -->
+    <div class="overview-section">
+      <h3 class="overview-section-title">{{ _('What I have used from others') }}</h3>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.foreign_shapes_used_total }}</div>
+          <div class="stat-label">{{ _('Foreign shapes used') }}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">{{ stats.foreign_stencils_downloaded_total }}</div>
+          <div class="stat-label">{{ _('Foreign stencils downloaded') }}</div>
+        </div>
+      </div>
+
+      {% if stats.top_foreign_shapes %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('Most used shapes from others') }}</h4>
+        <div class="overview-list">
+          {% for shape, cnt in stats.top_foreign_shapes %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <img class="overview-thumb" src="{{ url_for('static', filename='images/shapes/' ~ shape.id ~ '.png') }}" alt="{{ shape.name }}">
+            <span class="overview-item-name">{{ shape.name }} <span class="overview-item-author">{{ _('by') }} {{ shape.user.name }}</span></span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if stats.top_foreign_stencils %}
+      <div class="overview-subsection">
+        <h4 class="overview-subsection-title">{{ _('Most downloaded stencils from others') }}</h4>
+        <div class="overview-list">
+          {% for stencil, cnt in stats.top_foreign_stencils %}
+          <div class="overview-list-item">
+            <span class="overview-rank">{{ loop.index }}</span>
+            <span class="overview-item-name">{{ stencil.title }} <span class="overview-item-author">{{ _('by') }} {{ stencil.user.name }}</span></span>
+            <span class="overview-item-count">{{ cnt }}&times;</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if not stats.top_foreign_shapes and not stats.top_foreign_stencils %}
+      <p class="overview-empty">{{ _('No activity yet.') }}</p>
+      {% endif %}
+    </div>
+
+  </div>
+
   <!-- Shapes Tab -->
-  <div class="tab-panel active" id="tab-shapes">
+  <div class="tab-panel" id="tab-shapes">
     {% if shapes %}
       {% for shape in shapes %}
       <div class="account-item" id="shape-item-{{ shape.id }}">

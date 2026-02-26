@@ -197,10 +197,115 @@ msgid "My Account"
 msgstr ""
 
 #: app/templates/browser/account.html:13
-msgid "My Shapes"
+msgid "Overview"
 msgstr ""
 
 #: app/templates/browser/account.html:14
+msgid "Member since"
+msgstr ""
+
+#: app/templates/browser/account.html:15
+msgid "What I have shared"
+msgstr ""
+
+#: app/templates/browser/account.html:16
+msgid "Shapes shared"
+msgstr ""
+
+#: app/templates/browser/account.html:17
+msgid "Stencils shared"
+msgstr ""
+
+#: app/templates/browser/account.html:18
+msgid "Shape uses by others"
+msgstr ""
+
+#: app/templates/browser/account.html:19
+msgid "Stencil downloads by others"
+msgstr ""
+
+msgid "Users using my shapes"
+msgstr ""
+
+msgid "Users using my stencils"
+msgstr ""
+
+#: app/templates/browser/account.html:20
+msgid "My most popular shapes"
+msgstr ""
+
+#: app/templates/browser/account.html:21
+msgid "My most popular stencils"
+msgstr ""
+
+#: app/templates/browser/account.html:22
+msgid "What I have used from others"
+msgstr ""
+
+#: app/templates/browser/account.html:23
+msgid "Foreign shapes used"
+msgstr ""
+
+#: app/templates/browser/account.html:24
+msgid "Foreign stencils downloaded"
+msgstr ""
+
+#: app/templates/browser/account.html:25
+msgid "Most used shapes from others"
+msgstr ""
+
+#: app/templates/browser/account.html:26
+msgid "Most downloaded stencils from others"
+msgstr ""
+
+#: app/templates/browser/account.html:27
+msgid "by"
+msgstr ""
+
+msgid "by me"
+msgstr ""
+
+#: app/templates/browser/account.html:31
+msgid "Last 30 days"
+msgstr ""
+
+#: app/templates/browser/account.html:32
+msgid "Shapes used by me"
+msgstr ""
+
+#: app/templates/browser/account.html:33
+msgid "Stencils downloaded by me"
+msgstr ""
+
+#: app/templates/browser/account.html:34
+msgid "What I have used"
+msgstr ""
+
+#: app/templates/browser/account.html:35
+msgid "Shapes used"
+msgstr ""
+
+#: app/templates/browser/account.html:36
+msgid "Stencils downloaded"
+msgstr ""
+
+#: app/templates/browser/account.html:37
+msgid "Most used shapes"
+msgstr ""
+
+#: app/templates/browser/account.html:38
+msgid "Most downloaded stencils"
+msgstr ""
+
+#: app/templates/browser/account.html:28
+msgid "No activity yet."
+msgstr ""
+
+#: app/templates/browser/account.html:29
+msgid "My Shapes"
+msgstr ""
+
+#: app/templates/browser/account.html:30
 msgid "My Stencils"
 msgstr ""
 

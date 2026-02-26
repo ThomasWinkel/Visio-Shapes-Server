@@ -8,7 +8,8 @@
       "Bash(head:*)",
       "Bash(cd:*)",
       "Bash(cd /c/Temp/Server && uv run pybabel compile -d app/translations 2>&1)",
-      "Bash(cd /c/Temp/Server && uv run flask db upgrade 2>&1)"
+      "Bash(cd /c/Temp/Server && uv run flask db upgrade 2>&1)",
+      "Bash(uv run:*)"
     ]
   }
 }

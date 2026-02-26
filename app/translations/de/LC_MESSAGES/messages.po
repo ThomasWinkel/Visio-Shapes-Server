@@ -210,10 +210,115 @@ msgid "My Account"
 msgstr "Mein Account"
 
 #: app/templates/browser/account.html:13
+msgid "Overview"
+msgstr "Übersicht"
+
+#: app/templates/browser/account.html:14
+msgid "Member since"
+msgstr "Mitglied seit"
+
+#: app/templates/browser/account.html:15
+msgid "What I have shared"
+msgstr "Was ich geteilt habe"
+
+#: app/templates/browser/account.html:16
+msgid "Shapes shared"
+msgstr "Geteilte Shapes"
+
+#: app/templates/browser/account.html:17
+msgid "Stencils shared"
+msgstr "Geteilte Schablonen"
+
+#: app/templates/browser/account.html:18
+msgid "Shape uses by others"
+msgstr "Shape-Nutzungen durch andere"
+
+#: app/templates/browser/account.html:19
+msgid "Stencil downloads by others"
+msgstr "Schablonen-Downloads durch andere"
+
+msgid "Users using my shapes"
+msgstr "Nutzer meiner Shapes"
+
+msgid "Users using my stencils"
+msgstr "Nutzer meiner Schablonen"
+
+#: app/templates/browser/account.html:20
+msgid "My most popular shapes"
+msgstr "Meine beliebtesten Shapes"
+
+#: app/templates/browser/account.html:21
+msgid "My most popular stencils"
+msgstr "Meine beliebtesten Schablonen"
+
+#: app/templates/browser/account.html:22
+msgid "What I have used from others"
+msgstr "Was ich von anderen genutzt habe"
+
+#: app/templates/browser/account.html:23
+msgid "Foreign shapes used"
+msgstr "Fremde Shapes genutzt"
+
+#: app/templates/browser/account.html:24
+msgid "Foreign stencils downloaded"
+msgstr "Fremde Schablonen heruntergeladen"
+
+#: app/templates/browser/account.html:25
+msgid "Most used shapes from others"
+msgstr "Häufig genutzte Shapes anderer"
+
+#: app/templates/browser/account.html:26
+msgid "Most downloaded stencils from others"
+msgstr "Häufig heruntergeladene Schablonen anderer"
+
+#: app/templates/browser/account.html:31
+msgid "Last 30 days"
+msgstr "Letzte 30 Tage"
+
+#: app/templates/browser/account.html:32
+msgid "Shapes used by me"
+msgstr "Von mir genutzte Shapes"
+
+#: app/templates/browser/account.html:33
+msgid "Stencils downloaded by me"
+msgstr "Von mir heruntergeladene Schablonen"
+
+#: app/templates/browser/account.html:34
+msgid "What I have used"
+msgstr "Was ich genutzt habe"
+
+#: app/templates/browser/account.html:35
+msgid "Shapes used"
+msgstr "Shapes genutzt"
+
+#: app/templates/browser/account.html:36
+msgid "Stencils downloaded"
+msgstr "Schablonen heruntergeladen"
+
+#: app/templates/browser/account.html:37
+msgid "Most used shapes"
+msgstr "Meistgenutzte Shapes"
+
+#: app/templates/browser/account.html:38
+msgid "Most downloaded stencils"
+msgstr "Meistgeladene Schablonen"
+
+#: app/templates/browser/account.html:27
+msgid "by"
+msgstr "von"
+
+msgid "by me"
+msgstr "von mir"
+
+#: app/templates/browser/account.html:28
+msgid "No activity yet."
+msgstr "Noch keine Aktivitäten."
+
+#: app/templates/browser/account.html:29
 msgid "My Shapes"
 msgstr "Meine Shapes"
 
-#: app/templates/browser/account.html:14
+#: app/templates/browser/account.html:30
 msgid "My Stencils"
 msgstr "Meine Schablonen"
 
