@@ -266,10 +266,9 @@ uv run flask send_status_mail
 
 ### Backend-Bugs
 - **Keine Transaktion in `/add_stencil`**: DB-Commit passiert vor dem Dateispeichern. Wenn Dateispeicherung fehlschlägt, entstehen inkonsistente Daten.
-- **Timer-Deletion nicht persistent**: Der 5-Minuten-Lösch-Timer überlebt keinen Server-Neustart.
+- **Timer nicht persistent**: Der 5-Minuten-Timer für Registrierung und Passwort-Reset überlebt keinen Server-Neustart.
 
 ### Fehlende Features
-- Kein Passwort-Reset
 - Keine Datei-Validierung bei Uploads (Typ, Größe)
 - Kein Rate-Limiting auf `/register`
 - `/get_shapes` lädt **alle** Shapes auf einmal – skaliert nicht
@@ -300,7 +299,7 @@ Der Autor ist kein professioneller Entwickler und hat keine Webentwicklungserfah
 2. **`app.js` – categories**: String-Matching korrigieren (`split(',').map(s => s.trim())`)
 3. **WebView-Calls absichern**: `try/catch` um alle `chrome.webview`-Aufrufe
 4. **`/add_stencil` – Transaktion**: Dateien vor DB-Commit speichern oder Rollback bei Fehler
-5. **Pagination in `/get_shapes`**: Für Skalierbarkeit
+5. **Skalierbarkeit `/get_shapes`**: Das Frontend lädt beim Start **alle** Shapes auf einmal (kein `limit` im Fetch-Aufruf). Filter, Sortierung und Infinite Scroll laufen komplett client-seitig auf dem vollen Datensatz. Unproblematisch bei kleiner Datenmenge – bei vielen Tausend Shapes wird der initiale Load langsam.
 6. **Dateivalidierung**: Typ + Größe bei Uploads prüfen
 7. **WORKDIR auf `/usr/src`** ändern: Beseitigt `app/app/`-Dopplung ohne Codeänderungen
 8. **Team-Features**: `visibility` + `team_id` auf Shape/Stencil, `owner_id` auf Team, Access Control in API

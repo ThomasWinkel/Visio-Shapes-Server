@@ -18,3 +18,4 @@ class Config(object):
     MAX_CONTENT_LENGTH = config('MAX_CONTENT_LENGTH', default=100 * 1024 * 1024, cast=int)    # 100 MB
     OWNER_EMAIL = config('OWNER_EMAIL', default='')
     STATUS_EMAIL = config('STATUS_EMAIL', default='')
+    BASE_URL = config('BASE_URL', default='http://localhost:5000')

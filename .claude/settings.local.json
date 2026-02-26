@@ -6,7 +6,9 @@
       "Bash(cd /c/Temp/Server && uv run python -c \"\n# Check the Werkzeug base Request._load_form_data to find the default max_form_memory_size\nimport werkzeug.wrappers.request as wr\nimport inspect\nsrc = inspect.getsource\\(wr.Request._load_form_data\\)\nprint\\(src\\)\n\" 2>&1)",
       "Bash(cd /c/Temp/Server && uv run python -c \"\nimport werkzeug.wrappers.request as wr\nimport inspect\nsrc = inspect.getsource\\(wr.Request.make_form_data_parser\\)\nprint\\(src\\)\n\" 2>&1)",
       "Bash(head:*)",
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(cd /c/Temp/Server && uv run pybabel compile -d app/translations 2>&1)",
+      "Bash(cd /c/Temp/Server && uv run flask db upgrade 2>&1)"
     ]
   }
 }

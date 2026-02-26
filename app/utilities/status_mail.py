@@ -144,6 +144,6 @@ def _build_html(date_str, new_users, active_users):
   </h3>
   {active_section}
 
-  <p style="margin:28px 0 0 0; font-size:11px; color:#bbb;">visio-shapes.com</p>
+  <p style="margin:28px 0 0 0; font-size:11px; color:#bbb;">{current_app.config.get("BASE_URL", "")}</p>
 </body>
 </html>'''

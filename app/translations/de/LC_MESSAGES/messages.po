@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Visio-Shapes 1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-25 09:01+0100\n"
+"POT-Creation-Date: 2026-02-26 12:51+0100\n"
 "PO-Revision-Date: 2026-02-23 21:22+0100\n"
 "Last-Translator: Thomas Winkel\n"
 "Language: de\n"
@@ -18,115 +18,161 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: app/__init__.py:44
+#: app/__init__.py:54
 msgid "Please log in to access this page."
 msgstr "Bitte logge dich ein, um auf diese Seite zuzugreifen."
 
-#: app/__init__.py:66 app/templates/browser/browse.html:22
+#: app/__init__.py:76 app/templates/browser/browse.html:22
 #: app/templates/browser/landing.html:55 app/templates/browser/landing.html:64
 #, fuzzy
 msgid "Loading shapes…"
 msgstr "Shapes werden geladen\\u2026"
 
-#: app/__init__.py:67
+#: app/__init__.py:77
 msgid "No shapes yet."
 msgstr "Noch keine Shapes vorhanden."
 
-#: app/__init__.py:68
+#: app/__init__.py:78
 msgid "Could not load shapes."
 msgstr "Shapes konnten nicht geladen werden."
 
-#: app/__init__.py:69
+#: app/__init__.py:79
 msgid "Load stencil"
 msgstr "Schablone laden"
 
-#: app/__init__.py:70
+#: app/__init__.py:80
 msgid "Download"
 msgstr "Download"
 
-#: app/__init__.py:71
+#: app/__init__.py:81
 msgid "Log in to download"
 msgstr "Login zum Download"
 
-#: app/__init__.py:72 app/templates/browser/browse.html:23
+#: app/__init__.py:82 app/templates/browser/browse.html:23
 msgid "No shapes found."
 msgstr "Keine Shapes gefunden."
 
-#: app/__init__.py:73
+#: app/__init__.py:83
 msgid "Error saving. Please try again."
 msgstr "Fehler beim Speichern. Bitte versuche es erneut."
 
-#: app/__init__.py:74
+#: app/__init__.py:84
 msgid "Network error. Please try again."
 msgstr "Netzwerkfehler. Bitte versuche es erneut."
 
-#: app/__init__.py:75
+#: app/__init__.py:85
 msgid "Error deleting. Please try again."
 msgstr "Fehler beim Löschen. Bitte versuche es erneut."
 
-#: app/__init__.py:76
+#: app/__init__.py:86
 #, python-brace-format
 msgid "Do you really want to permanently delete \"{name}\"?"
 msgstr "Möchtest du \"{name}\" wirklich unwiderruflich löschen?"
 
-#: app/__init__.py:77 app/templates/browser/account.html:28
+#: app/__init__.py:87 app/templates/browser/account.html:28
 msgid "Keywords:"
 msgstr "Keywords:"
 
-#: app/blueprints/auth/routes.py:26
+#: app/blueprints/auth/routes.py:37
 msgid "Login failed. Please try again."
 msgstr "Login fehlgeschlagen. Bitte versuche es erneut."
 
-#: app/blueprints/auth/routes.py:61
+#: app/blueprints/auth/routes.py:66
+msgid "Welcome to Visio-Shapes!"
+msgstr "Willkommen bei Visio-Shapes!"
+
+#: app/blueprints/auth/routes.py:67
+msgid ""
+"Your registration was successful. Here is your automatically generated "
+"password:"
+msgstr ""
+"Deine Registrierung war erfolgreich. Hier ist dein automatisch "
+"generiertes Passwort:"
+
+#: app/blueprints/auth/routes.py:68
+msgid "Your password"
+msgstr "Dein Passwort"
+
+#: app/blueprints/auth/routes.py:69
+msgid "Please log in within the next 5 minutes to activate your account."
+msgstr ""
+"Bitte logge dich innerhalb der nächsten 5 Minuten ein, um deinen Account "
+"zu aktivieren."
+
+#: app/blueprints/auth/routes.py:70 app/blueprints/auth/routes.py:114
+msgid "Log in now"
+msgstr "Jetzt einloggen"
+
+#: app/blueprints/auth/routes.py:71
+msgid "If you missed the time window, you can register again at any time:"
+msgstr "Falls du die Zeit verpasst hast, kannst du dich jederzeit erneut registrieren:"
+
+#: app/blueprints/auth/routes.py:72 app/blueprints/auth/routes.py:116
+msgid ""
+"You didn't expect this email? Someone probably made a typo – just ignore "
+"it."
+msgstr ""
+"Du hast diese E-Mail nicht erwartet? Jemand hat wahrscheinlich einen "
+"Tippfehler gemacht – ignoriere sie einfach."
+
+#: app/blueprints/auth/routes.py:110
+msgid "Reset your password"
+msgstr "Passwort zurücksetzen"
+
+#: app/blueprints/auth/routes.py:111
+msgid ""
+"A new password has been generated for your Visio-Shapes account. Log in "
+"below to activate it."
+msgstr ""
+"Für deinen Visio-Shapes-Account wurde ein neues Passwort generiert. "
+"Logge dich unten ein, um es zu aktivieren."
+
+#: app/blueprints/auth/routes.py:112
+msgid "Your new password"
+msgstr "Dein neues Passwort"
+
+#: app/blueprints/auth/routes.py:113
+msgid "Log in within the next 5 minutes to activate the new password."
+msgstr "Logge dich innerhalb der nächsten 5 Minuten ein, um das neue Passwort zu aktivieren."
+
+#: app/blueprints/auth/routes.py:115
+msgid ""
+"If you do not log in within 5 minutes, your current password remains "
+"unchanged."
+msgstr ""
+"Wenn du dich nicht innerhalb von 5 Minuten einloggst, bleibt dein altes "
+"Passwort unverändert aktiv."
+
+#: app/blueprints/auth/routes.py:158
 msgid "Email address already registered."
 msgstr "E-Mail-Adresse bereits registriert."
 
-#: app/blueprints/auth/routes.py:65
+#: app/blueprints/auth/routes.py:162
 msgid "Username already taken."
 msgstr "Benutzername bereits vergeben."
 
-#: app/blueprints/auth/routes.py:69
+#: app/blueprints/auth/routes.py:166
 msgid "Username must be at least 2 characters long."
 msgstr "Benutzername muss mindestens 2 Zeichen lang sein."
 
-#: app/blueprints/auth/routes.py:90
-msgid "Welcome to visio-shapes.com"
-msgstr "Willkommen bei visio-shapes.com"
+#: app/blueprints/auth/routes.py:182
+msgid "Your Visio-Shapes password"
+msgstr "Dein Visio-Shapes-Passwort"
 
-#: app/blueprints/auth/routes.py:93
-msgid "You have registered at https://www.visio-shapes.com."
-msgstr "Du hast dich bei https://www.visio-shapes.com registriert."
-
-#: app/blueprints/auth/routes.py:94
-msgid "Please log in within the next 5 minutes."
-msgstr "Bitte logge dich innerhalb der nächsten 5 Minuten ein."
-
-#: app/blueprints/auth/routes.py:96
-#, python-format
-msgid "  Your password is: %(password)s"
-msgstr "  Dein Passwort lautet: %(password)s"
-
-#: app/blueprints/auth/routes.py:98
-msgid "If you missed the time window, simply register again:"
-msgstr "Falls du die Zeit verpasst hast, registriere dich einfach erneut:"
-
-#: app/blueprints/auth/routes.py:101
-msgid "You didn't expect this email?"
-msgstr "Du hast diese E-Mail nicht erwartet?"
-
-#: app/blueprints/auth/routes.py:102
-#, fuzzy
-msgid "Someone probably made a typo – ignore this email."
-msgstr ""
-"Jemand hat wahrscheinlich einen Tippfehler gemacht \\u2013 ignoriere "
-"diese E-Mail."
-
-#: app/blueprints/auth/routes.py:107
+#: app/blueprints/auth/routes.py:188
 #, python-format
 msgid "An email has been sent to %(email)s. Please log in within 5 minutes."
 msgstr ""
 "Eine E-Mail wurde an %(email)s gesendet. Bitte logge dich innerhalb von 5"
 " Minuten ein."
+
+#: app/blueprints/auth/routes.py:210
+msgid "Your new Visio-Shapes password"
+msgstr "Dein neues Visio-Shapes-Passwort"
+
+#: app/blueprints/auth/routes.py:217
+msgid "If a matching account was found, an email has been sent."
+msgstr "Falls ein passender Account gefunden wurde, wurde eine E-Mail verschickt."
 
 #: app/templates/base_browser.html:22
 msgid "Browse"
@@ -477,18 +523,20 @@ msgid ""
 "Need a private space for your company or your customers? Feel free to get"
 " in touch – we are happy to help."
 msgstr ""
-"Benötigst du einen privaten Bereich für dein Unternehmen oder deine"
-" Kunden? Melde dich gerne – wir helfen dir weiter."
+"Benötigst du einen privaten Bereich für dein Unternehmen oder deine "
+"Kunden? Melde dich gerne – wir helfen dir weiter."
 
 #: app/templates/browser/landing.html:99
 msgid "Get in touch"
 msgstr "Kontakt aufnehmen"
 
 #: app/templates/browser/login.html:10 app/templates/browser/register.html:13
+#: app/templates/browser/reset_password.html:13
 msgid "Email address"
 msgstr "E-Mail-Adresse"
 
 #: app/templates/browser/login.html:11 app/templates/browser/register.html:14
+#: app/templates/browser/reset_password.html:14
 msgid "Enter email"
 msgstr "E-Mail eingeben"
 
@@ -507,6 +555,16 @@ msgstr "Einloggen"
 #: app/templates/browser/login.html:19
 msgid "No account yet?"
 msgstr "Noch kein Konto?"
+
+#: app/templates/browser/login.html:20
+msgid "Forgot your password?"
+msgstr "Passwort vergessen?"
+
+#: app/templates/browser/login.html:20
+#: app/templates/browser/reset_password.html:2
+#: app/templates/browser/reset_password.html:7
+msgid "Reset password"
+msgstr "Passwort zurücksetzen"
 
 #: app/templates/browser/register.html:9
 msgid ""
@@ -527,4 +585,34 @@ msgstr "Benutzernamen wählen"
 #: app/templates/browser/register.html:22
 msgid "Already registered?"
 msgstr "Bereits registriert?"
+
+#: app/templates/browser/reset_password.html:9
+msgid "Enter your email address to receive a new password."
+msgstr "Gib deine E-Mail-Adresse ein, um ein neues Passwort zu erhalten."
+
+#: app/templates/browser/reset_password.html:16
+msgid "Send new password"
+msgstr "Neues Passwort senden"
+
+#: app/templates/browser/reset_password.html:18
+msgid "Back to login"
+msgstr "Zurück zum Login"
+
+#~ msgid "You have registered at %(url)s."
+#~ msgstr "Du hast dich bei %(url)s registriert."
+
+#~ msgid "Please log in within the next 5 minutes."
+#~ msgstr "Bitte logge dich innerhalb der nächsten 5 Minuten ein."
+
+#~ msgid "  Your password is: %(password)s"
+#~ msgstr "  Dein Passwort lautet: %(password)s"
+
+#~ msgid "You didn't expect this email?"
+#~ msgstr "Du hast diese E-Mail nicht erwartet?"
+
+#~ msgid "Password reset – visio-shapes.com"
+#~ msgstr "Passwort zurücksetzen – visio-shapes.com"
+
+#~ msgid "  Your new password is: %(password)s"
+#~ msgstr "  Dein neues Passwort lautet: %(password)s"
 

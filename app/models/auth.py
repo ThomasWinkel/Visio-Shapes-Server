@@ -30,6 +30,7 @@ class User(db.Model, UserMixin):
     email: Mapped[str] = mapped_column(unique=True, nullable=False)
     password_hash: Mapped[str] = mapped_column(nullable=False)
     token: Mapped[str] = mapped_column(nullable=True)
+    pending_password_hash: Mapped[str] = mapped_column(nullable=True)
     message: Mapped[str] = mapped_column(String(512), nullable=True)
     link: Mapped[str] = mapped_column(String(512), nullable=True)
     teams: Mapped[List[Team]] = relationship(secondary=user_team_table, back_populates="users")
