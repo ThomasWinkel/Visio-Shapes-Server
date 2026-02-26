@@ -18,6 +18,7 @@ A web platform for sharing and discovering Microsoft Visio shapes and stencils. 
 - Download shapes and stencils (registered users only)
 - Upload shapes and stencils via REST API (token auth)
 - Email-based registration with auto-generated passwords
+- Password reset via email
 - Download tracking per user
 - Multi-language UI (German / English)
 - Daily status email report for the owner
@@ -144,6 +145,7 @@ docker system prune -f
 | `MAIL_DEFAULT_SENDER` | Sender name and address | `"My Name <mail@example.com>"` |
 | `OWNER_EMAIL` | Email of the owner account — grants owner privileges in the UI | `owner@example.com` |
 | `STATUS_EMAIL` | Recipient of the daily status mail — leave empty to disable | `owner@example.com` |
+| `BASE_URL` | Public base URL of the application — used in outgoing emails | `https://www.visio-shapes.com` |
 
 ## Development
 
