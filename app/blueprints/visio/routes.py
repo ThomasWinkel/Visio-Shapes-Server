@@ -130,6 +130,18 @@ def get_shape(shape_id):
     return shape.data_object
 
 
+@bp.route('/get_user_teams')
+@http_auth.login_required
+def get_user_teams():
+    user = http_auth.current_user()
+    teams = [
+        {'id': m.team_id, 'name': m.team.name}
+        for m in user.memberships
+        if m.role in ('contributor', 'admin', 'owner')
+    ]
+    return jsonify(teams)
+
+
 @bp.route('/add_shape', methods=['POST'])
 @http_auth.login_required
 def add_shape():

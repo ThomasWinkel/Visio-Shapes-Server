@@ -308,3 +308,10 @@ Der Autor ist kein professioneller Entwickler und hat keine Webentwicklungserfah
    - Admin-Tab Teams (System-Owner only), Account-Tab "My Teams"
    - Panel Team-Dropdown (serverseitig fertig; AddIn muss `getSelectedTeamId()` noch aufrufen)
    - **Noch offen**: Branch in `master` mergen
+9. **API auf REST-Konventionen umstellen**: Die aktuellen Routen verwenden Verb-Präfixe (`get_shapes`, `add_shape` etc.) – historisch gewachsen. Vor dem Go-Live auf REST-konforme Nomen-URLs umstellen. Betrifft Server-Routen, AddIn-URLs und ggf. JS-Aufrufe im Frontend. Beispiele:
+   - `GET /get_shapes` → `GET /shapes`
+   - `GET /get_shape/<id>` → `GET /shapes/<id>`
+   - `POST /add_shape` → `POST /shapes`
+   - `POST /add_stencil` → `POST /stencils`
+   - `GET /download_stencil/<id>` → `GET /stencils/<id>/file`
+   - `GET /get_user_teams` → `GET /users/me/teams`
