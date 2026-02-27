@@ -207,7 +207,7 @@ User >──< Team (m:n)
 User >──< Role (m:n)
 ```
 
-**Hinweis:** `Team` und `Role` sind im Datenmodell vollständig definiert, werden im Code aber **nirgends genutzt** (tote Strukturen, Vorbereitung für Team-Features).
+**Hinweis:** `Role` wird im Code nicht aktiv genutzt. `Team` ist vollständig implementiert (branch `teams`).
 
 ---
 
@@ -302,4 +302,9 @@ Der Autor ist kein professioneller Entwickler und hat keine Webentwicklungserfah
 5. **Skalierbarkeit `/get_shapes`**: Das Frontend lädt beim Start **alle** Shapes auf einmal (kein `limit` im Fetch-Aufruf). Filter, Sortierung und Infinite Scroll laufen komplett client-seitig auf dem vollen Datensatz. Unproblematisch bei kleiner Datenmenge – bei vielen Tausend Shapes wird der initiale Load langsam.
 6. **Dateivalidierung**: Typ + Größe bei Uploads prüfen
 7. **WORKDIR auf `/usr/src`** ändern: Beseitigt `app/app/`-Dopplung ohne Codeänderungen
-8. **Team-Features**: `visibility` + `team_id` auf Shape/Stencil, `owner_id` auf Team, Access Control in API
+8. **Team-Features** ✅ implementiert (branch `teams`, noch nicht gemergt):
+   - `TeamMembership` (Rollen: owner/admin/contributor/None), `Team.visibility` (public/visible/private)
+   - `Shape.team_id` + `Stencil.team_id`, Visibility-Filter in API, Access Control
+   - Admin-Tab Teams (System-Owner only), Account-Tab "My Teams"
+   - Panel Team-Dropdown (serverseitig fertig; AddIn muss `getSelectedTeamId()` noch aufrufen)
+   - **Noch offen**: Branch in `master` mergen

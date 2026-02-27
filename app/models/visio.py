@@ -6,7 +6,7 @@ from sqlalchemy import Integer, String, func, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from app.models.auth import User
+    from app.models.auth import User, Team
 
 
 class Stencil(db.Model):
@@ -27,6 +27,8 @@ class Stencil(db.Model):
     shapes: Mapped[List["Shape"]] = relationship(back_populates="stencil", cascade="all, delete-orphan")
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     user: Mapped["User"] = relationship(back_populates="stencils")
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
+    team: Mapped["Team"] = relationship(back_populates="stencils")
 
     def __repr__(self) -> str:
         return f"Stencil(id={self.id!r}, name={self.title!r})"
@@ -45,10 +47,12 @@ class Shape(db.Model):
     stencil: Mapped["Stencil"] = relationship(back_populates="shapes")
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
     user: Mapped["User"] = relationship(back_populates="shapes")
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), nullable=True)
+    team: Mapped["Team"] = relationship(back_populates="shapes")
 
     def __repr__(self) -> str:
         return f"Shape(id={self.id!r}, name={self.name!r})"
-    
+
     def serialize(self):
         return {
             'id': self.id,
@@ -61,7 +65,9 @@ class Shape(db.Model):
             'stencil_file_name': self.stencil.file_name if self.stencil else '',
             'stencil_title': self.stencil.title if self.stencil else '',
             'user_id': self.user.id,
-            'user_name': self.user.name
+            'user_name': self.user.name,
+            'team_id': self.team.id if self.team else None,
+            'team_name': self.team.name if self.team else None,
         }
 
 

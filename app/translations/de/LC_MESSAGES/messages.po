@@ -767,6 +767,253 @@ msgstr "Diese E-Mail-Adresse ist bereits vergeben."
 msgid "Your email address has been updated."
 msgstr "Deine E-Mail-Adresse wurde aktualisiert."
 
+#: app/__init__.py
+msgid "No user found with this email address."
+msgstr "Kein Nutzer mit dieser E-Mail-Adresse gefunden."
+
+#: app/__init__.py
+msgid "This user is already a member of this team."
+msgstr "Dieser Nutzer ist bereits Mitglied dieses Teams."
+
+#: app/templates/browser/admin_users.html
+#: app/templates/browser/admin_teams.html
+msgid "Users"
+msgstr "Nutzer"
+
+#: app/templates/browser/admin_teams.html
+msgid "Create team"
+msgstr "Team anlegen"
+
+#: app/templates/browser/admin_teams.html
+msgid "Team name"
+msgstr "Team-Name"
+
+#: app/templates/browser/admin_teams.html
+msgid "Description (optional)"
+msgstr "Beschreibung (optional)"
+
+#: app/templates/browser/admin_teams.html
+msgid "Create"
+msgstr "Anlegen"
+
+#: app/templates/browser/admin_teams.html
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+#: app/templates/browser/admin_teams.html
+msgid "Members"
+msgstr "Mitglieder"
+
+#: app/templates/browser/admin_teams.html
+msgid "No owner"
+msgstr "Kein Owner"
+
+#: app/templates/browser/admin_teams.html
+msgid "Set owner"
+msgstr "Owner setzen"
+
+#: app/templates/browser/admin_teams.html
+msgid "Rename"
+msgstr "Umbenennen"
+
+#: app/templates/browser/admin_teams.html
+msgid "Rename team"
+msgstr "Team umbenennen"
+
+#: app/templates/browser/admin_teams.html
+msgid "New name"
+msgstr "Neuer Name"
+
+#: app/templates/browser/admin_teams.html
+msgid "No teams yet."
+msgstr "Noch keine Teams vorhanden."
+
+#: app/templates/browser/admin_teams.html
+#, python-format
+msgid "Do you really want to permanently delete the team &quot;%(name)s&quot;?"
+msgstr "Möchtest du das Team \"%(name)s\" wirklich unwiderruflich löschen?"
+
+#: app/templates/browser/admin_teams.html
+msgid "Cannot delete: team still has shapes or stencils."
+msgstr "Löschen nicht möglich: Das Team hat noch Shapes oder Schablonen."
+
+#: app/blueprints/admin/routes.py
+msgid "Team name is required."
+msgstr "Team-Name ist erforderlich."
+
+#: app/blueprints/admin/routes.py
+msgid "A team with this name already exists."
+msgstr "Ein Team mit diesem Namen existiert bereits."
+
+#: app/blueprints/admin/routes.py
+msgid "Cannot delete team: it still has shapes or stencils."
+msgstr "Team kann nicht gelöscht werden: Es hat noch Shapes oder Schablonen."
+
+#: app/blueprints/admin/routes.py
+msgid "Please select a user."
+msgstr "Bitte einen Nutzer auswählen."
+
+#: app/templates/browser/account.html
+msgid "My Teams"
+msgstr "Meine Teams"
+
+#: app/templates/browser/account.html
+msgid "You are not a member of any team."
+msgstr "Du bist in keinem Team Mitglied."
+
+#: app/templates/browser/account.html
+msgid "members"
+msgstr "Mitglieder"
+
+#: app/templates/browser/account.html
+msgid "Member"
+msgstr "Mitglied"
+
+#: app/templates/browser/account.html
+msgid "Add member"
+msgstr "Mitglied hinzufügen"
+
+#: app/templates/browser/account.html
+msgid "Remove"
+msgstr "Entfernen"
+
+#: app/blueprints/account/routes.py
+msgid "You have been added to a team"
+msgstr "Du wurdest zu einem Team hinzugefügt"
+
+#: app/blueprints/account/routes.py
+#, python-format
+msgid "You have been added to the team \"%(team)s\" on Visio-Shapes."
+msgstr "Du wurdest zum Team \"%(team)s\" auf Visio-Shapes hinzugefügt."
+
+#: app/blueprints/account/routes.py
+msgid "Your role"
+msgstr "Deine Rolle"
+
+#: app/blueprints/account/routes.py
+msgid "Go to My Account"
+msgstr "Zu meinem Account"
+
+#: app/blueprints/account/routes.py
+#, python-format
+msgid "You have been added to team \"%(team)s\""
+msgstr "Du wurdest zum Team \"%(team)s\" hinzugefügt"
+
+#: app/blueprints/account/routes.py
+msgid "You have been removed from a team"
+msgstr "Du wurdest aus einem Team entfernt"
+
+#: app/blueprints/account/routes.py
+#, python-format
+msgid "You have been removed from the team \"%(team)s\" on Visio-Shapes."
+msgstr "Du wurdest aus dem Team \"%(team)s\" auf Visio-Shapes entfernt."
+
+#: app/blueprints/account/routes.py
+#, python-format
+msgid "You have been removed from team \"%(team)s\""
+msgstr "Du wurdest aus dem Team \"%(team)s\" entfernt"
+
+#: app/blueprints/admin/routes.py
+msgid "You have been appointed team owner"
+msgstr "Du wurdest zum Team-Owner ernannt"
+
+#: app/blueprints/admin/routes.py
+#, python-format
+msgid "You are now the owner of team \"%(team)s\" on Visio-Shapes."
+msgstr "Du bist jetzt Owner des Teams \"%(team)s\" auf Visio-Shapes."
+
+#: app/blueprints/admin/routes.py
+#, python-format
+msgid "You are now the owner of team \"%(team)s\""
+msgstr "Du bist jetzt Owner des Teams \"%(team)s\""
+
+#: app/blueprints/admin/routes.py
+msgid "Your team owner role has been revoked"
+msgstr "Deine Team-Owner-Rolle wurde entzogen"
+
+#: app/blueprints/admin/routes.py
+#, python-format
+msgid "You are no longer the owner of team \"%(team)s\" on Visio-Shapes."
+msgstr "Du bist nicht mehr Owner des Teams \"%(team)s\" auf Visio-Shapes."
+
+#: app/blueprints/admin/routes.py
+#, python-format
+msgid "You are no longer the owner of team \"%(team)s\""
+msgstr "Du bist nicht mehr Owner des Teams \"%(team)s\""
+
+#: app/blueprints/account/routes.py
+msgid "Owner"
+msgstr "Owner"
+
+#: app/blueprints/account/routes.py
+msgid "Admin"
+msgstr "Admin"
+
+#: app/blueprints/account/routes.py
+msgid "Contributor"
+msgstr "Contributor"
+
+#: app/templates/browser/admin_teams.html
+msgid "Open"
+msgstr "Öffnen"
+
+#: app/templates/browser/admin_teams.html
+msgid "No members"
+msgstr "Keine Mitglieder"
+
+#: app/templates/browser/admin_teams.html
+msgid "Set this member as team owner?"
+msgstr "Dieses Mitglied als Team-Owner festlegen?"
+
+#: app/templates/browser/admin_teams.html
+msgid "Remove the current owner?"
+msgstr "Aktuellen Owner entfernen?"
+
+#: app/templates/browser/admin_team_detail.html
+msgid "Back to teams"
+msgstr "Zurück zu Teams"
+
+#: app/templates/browser/admin_team_detail.html
+msgid "No members yet."
+msgstr "Noch keine Mitglieder."
+
+#: app/templates/browser/admin_team_detail.html
+msgid "This will revoke the owner role from"
+msgstr "Dadurch wird die Owner-Rolle entzogen von"
+
+#: app/templates/browser/admin_team_detail.html
+msgid "Continue?"
+msgstr "Fortfahren?"
+
+#: app/templates/browser/admin_team_detail.html
+msgid "Please enter an email address."
+msgstr "Bitte eine E-Mail-Adresse eingeben."
+
+#: app/templates/browser/admin_team_detail.html
+msgid "No user found with this email address."
+msgstr "Kein Nutzer mit dieser E-Mail-Adresse gefunden."
+
+msgid "Visibility"
+msgstr "Sichtbarkeit"
+
+msgid "Public"
+msgstr "Öffentlich"
+
+msgid "Visible"
+msgstr "Sichtbar"
+
+msgid "Private"
+msgstr "Privat"
+
+msgid "Change visibility"
+msgstr "Sichtbarkeit ändern"
+
+msgid "Do you really want to change the visibility of this team to \"{value}\"?"
+msgstr "Möchtest du die Sichtbarkeit dieses Teams wirklich auf \"{value}\" ändern?"
+
+msgid "Change"
+msgstr "Ändern"
+
 #~ msgid "You have registered at %(url)s."
 #~ msgstr "Du hast dich bei %(url)s registriert."
 

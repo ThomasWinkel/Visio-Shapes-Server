@@ -5,7 +5,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadSignature
 import re
 from app.blueprints.account import bp
 from app.extensions import db, mail
-from app.models.auth import User
+from app.models.auth import User, Team, TeamMembership
 from app.utilities import expire_pending_email_after_time
 from app.models.visio import Shape, Stencil, ShapeDownload, StencilDownload
 from flask_login import login_required, current_user
@@ -14,6 +14,38 @@ from sqlalchemy import func
 from datetime import datetime, timedelta
 import logging
 
+
+# ── Helper: team access ──
+
+def _get_team_role(user_id, team_id):
+    """Returns the role string for a user in a team, or None if not a member."""
+    m = TeamMembership.query.filter_by(user_id=user_id, team_id=team_id).first()
+    return m.role if m else None
+
+
+def _can_manage_shape(shape):
+    """True if current_user may edit/delete this shape."""
+    if shape.user_id == current_user.id:
+        return True
+    if shape.team_id:
+        role = _get_team_role(current_user.id, shape.team_id)
+        if role in ('admin', 'owner'):
+            return True
+    return False
+
+
+def _can_manage_stencil(stencil):
+    """True if current_user may edit/delete this stencil."""
+    if stencil.user_id == current_user.id:
+        return True
+    if stencil.team_id:
+        role = _get_team_role(current_user.id, stencil.team_id)
+        if role in ('admin', 'owner'):
+            return True
+    return False
+
+
+# ── Account overview ──
 
 @bp.route('/account')
 @login_required
@@ -24,7 +56,6 @@ def account():
     my_shape_ids = [s.id for s in shapes]
     my_stencil_ids = [s.id for s in stencils]
 
-    # How often my shapes were used by others, and by how many distinct users
     if my_shape_ids:
         my_shapes_used_by_others = (
             ShapeDownload.query
@@ -50,7 +81,6 @@ def account():
         users_used_my_shapes = 0
         top_own_shapes = []
 
-    # How often my stencils were downloaded by others, and by how many distinct users
     if my_stencil_ids:
         my_stencils_downloaded_by_others = (
             StencilDownload.query
@@ -76,7 +106,6 @@ def account():
         users_downloaded_my_stencils = 0
         top_own_stencils = []
 
-    # Only foreign shapes / stencils I have used
     top_foreign_shapes = (
         db.session.query(Shape, func.count(ShapeDownload.id).label('cnt'))
         .join(ShapeDownload, ShapeDownload.shape_id == Shape.id)
@@ -108,7 +137,6 @@ def account():
         .count()
     )
 
-    # All shapes / stencils I have used (including my own)
     top_used_shapes = (
         db.session.query(Shape, func.count(ShapeDownload.id).label('cnt'))
         .join(ShapeDownload, ShapeDownload.shape_id == Shape.id)
@@ -139,7 +167,6 @@ def account():
         .count()
     )
 
-    # Last 30 days
     since = datetime.utcnow() - timedelta(days=30)
 
     my_shapes_used_by_others_30d = (
@@ -187,8 +214,18 @@ def account():
         'stencils_downloaded_by_me_30d': stencils_downloaded_by_me_30d,
     }
 
-    return render_template('browser/account.html', shapes=shapes, stencils=stencils, stats=stats)
+    memberships = current_user.memberships
 
+    return render_template(
+        'browser/account.html',
+        shapes=shapes,
+        stencils=stencils,
+        stats=stats,
+        memberships=memberships,
+    )
+
+
+# ── Profile edits ──
 
 @bp.route('/account/change_name', methods=['POST'])
 @login_required
@@ -315,14 +352,15 @@ def cancel_email_change():
     return jsonify({'ok': True}), 200
 
 
+# ── Shape / Stencil management ──
+
 @bp.route('/account/shape/<int:shape_id>/delete', methods=['POST'])
 @login_required
 def delete_shape(shape_id):
     shape = Shape.query.get_or_404(shape_id)
-    if shape.user_id != current_user.id:
+    if not _can_manage_shape(shape):
         abort(403)
 
-    # Delete preview image
     img_path = Path(current_app.root_path) / 'static' / 'images' / 'shapes' / f'{shape_id}.png'
     try:
         if img_path.exists():
@@ -339,10 +377,9 @@ def delete_shape(shape_id):
 @login_required
 def delete_stencil(stencil_id):
     stencil = Stencil.query.get_or_404(stencil_id)
-    if stencil.user_id != current_user.id:
+    if not _can_manage_stencil(stencil):
         abort(403)
 
-    # Delete stencil file
     ext = Path(stencil.file_name).suffix
     stencil_path = Path(current_app.root_path) / 'stencils' / f'{stencil_id}{ext}'
     try:
@@ -351,7 +388,6 @@ def delete_stencil(stencil_id):
     except Exception:
         logging.warning(f'Could not delete stencil file {stencil_id}')
 
-    # Delete shape preview images (cascade deletes shapes from DB)
     for shape in stencil.shapes:
         img_path = Path(current_app.root_path) / 'static' / 'images' / 'shapes' / f'{shape.id}.png'
         try:
@@ -369,7 +405,7 @@ def delete_stencil(stencil_id):
 @login_required
 def edit_shape(shape_id):
     shape = Shape.query.get_or_404(shape_id)
-    if shape.user_id != current_user.id:
+    if not _can_manage_shape(shape):
         abort(403)
 
     shape.name = request.form.get('name', shape.name).strip()
@@ -383,7 +419,7 @@ def edit_shape(shape_id):
 @login_required
 def edit_stencil(stencil_id):
     stencil = Stencil.query.get_or_404(stencil_id)
-    if stencil.user_id != current_user.id:
+    if not _can_manage_stencil(stencil):
         abort(403)
 
     stencil.title = request.form.get('title', stencil.title).strip()
@@ -396,3 +432,173 @@ def edit_stencil(stencil_id):
         'categories': stencil.categories,
         'tags': stencil.tags,
     }), 200
+
+
+# ── Team member management (Team Owner only) ──
+
+def _build_team_notification_email(subject_text, body_html):
+    return f'''<!DOCTYPE html>
+<html>
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#FAFAF8;font-family:Arial,Helvetica,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0">
+<tr><td align="center" style="padding:40px 16px;">
+<table width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;">
+  <tr><td style="padding-bottom:20px;">
+    <span style="font-size:20px;font-weight:700;color:#E07B39;letter-spacing:-0.01em;">Visio-Shapes</span>
+  </td></tr>
+  <tr><td style="background:#FFFFFF;border:1px solid #E8E0D8;border-radius:8px;padding:32px;">
+    {body_html}
+  </td></tr>
+</table>
+</td></tr>
+</table>
+</body>
+</html>'''
+
+
+def _send_team_added_email(user, team, role):
+    role_labels = {
+        'owner': _('Owner'),
+        'admin': _('Admin'),
+        'contributor': _('Contributor'),
+    }
+    role_label = role_labels.get(role, _('Member'))
+    body = f'''
+    <h1 style="font-size:20px;font-weight:700;color:#1C1C1A;margin:0 0 16px 0;">{_('You have been added to a team')}</h1>
+    <p style="font-size:14px;line-height:1.7;color:#1C1C1A;margin:0 0 12px 0;">
+      {_('You have been added to the team "%(team)s" on Visio-Shapes.', team=team.name)}
+    </p>
+    <p style="font-size:14px;line-height:1.7;color:#1C1C1A;margin:0 0 24px 0;">
+      {_('Your role')}: <strong>{role_label}</strong>
+    </p>
+    <a href="{current_app.config['BASE_URL']}/account" style="display:inline-block;background:#E07B39;color:#FFFFFF;text-decoration:none;padding:12px 28px;border-radius:4px;font-size:14px;font-weight:700;">{_('Go to My Account')} &rarr;</a>
+    '''
+    msg = Message(
+        _('You have been added to team "%(team)s"', team=team.name),
+        recipients=[user.email],
+        html=_build_team_notification_email(team.name, body)
+    )
+    try:
+        mail.send(msg)
+    except Exception:
+        logging.warning(f'Could not send team-added email to {user.email}')
+
+
+def _send_team_removed_email(user, team):
+    body = f'''
+    <h1 style="font-size:20px;font-weight:700;color:#1C1C1A;margin:0 0 16px 0;">{_('You have been removed from a team')}</h1>
+    <p style="font-size:14px;line-height:1.7;color:#1C1C1A;margin:0 0 24px 0;">
+      {_('You have been removed from the team "%(team)s" on Visio-Shapes.', team=team.name)}
+    </p>
+    '''
+    msg = Message(
+        _('You have been removed from team "%(team)s"', team=team.name),
+        recipients=[user.email],
+        html=_build_team_notification_email(team.name, body)
+    )
+    try:
+        mail.send(msg)
+    except Exception:
+        logging.warning(f'Could not send team-removed email to {user.email}')
+
+
+@bp.route('/account/team/<int:team_id>/add_member', methods=['POST'])
+@login_required
+def team_add_member(team_id):
+    team = Team.query.get_or_404(team_id)
+
+    my_m = TeamMembership.query.filter_by(user_id=current_user.id, team_id=team_id).first()
+    if not my_m or my_m.role != 'owner':
+        abort(403)
+
+    email = request.form.get('email', '').strip().lower()
+    role = request.form.get('role') or None
+    if role not in ('contributor', 'admin', None):
+        role = None
+
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        return jsonify({'error': 'user_not_found'}), 404
+
+    if TeamMembership.query.filter_by(user_id=user.id, team_id=team_id).first():
+        return jsonify({'error': 'already_member'}), 409
+
+    membership = TeamMembership(user_id=user.id, team_id=team_id, role=role)
+    db.session.add(membership)
+    db.session.commit()
+
+    _send_team_added_email(user, team, role)
+
+    return jsonify({
+        'ok': True,
+        'user': {'id': user.id, 'name': user.name, 'email': user.email, 'role': role}
+    }), 200
+
+
+@bp.route('/account/team/<int:team_id>/remove_member', methods=['POST'])
+@login_required
+def team_remove_member(team_id):
+    team = Team.query.get_or_404(team_id)
+
+    my_m = TeamMembership.query.filter_by(user_id=current_user.id, team_id=team_id).first()
+    if not my_m or my_m.role != 'owner':
+        abort(403)
+
+    user_id = request.form.get('user_id', type=int)
+    membership = TeamMembership.query.filter_by(user_id=user_id, team_id=team_id).first()
+    if not membership:
+        abort(404)
+
+    if membership.role == 'owner':
+        return jsonify({'error': 'cannot_remove_owner'}), 400
+
+    user = User.query.get(user_id)
+    db.session.delete(membership)
+    db.session.commit()
+
+    if user:
+        _send_team_removed_email(user, team)
+
+    return jsonify({'ok': True}), 200
+
+
+@bp.route('/account/team/<int:team_id>/set_visibility', methods=['POST'])
+@login_required
+def team_set_visibility(team_id):
+    team = Team.query.get_or_404(team_id)
+
+    my_m = TeamMembership.query.filter_by(user_id=current_user.id, team_id=team_id).first()
+    if not my_m or my_m.role != 'owner':
+        abort(403)
+
+    visibility = request.form.get('visibility')
+    if visibility not in ('public', 'visible', 'private'):
+        return jsonify({'error': 'invalid_visibility'}), 400
+
+    team.visibility = visibility
+    db.session.commit()
+    return jsonify({'ok': True, 'visibility': visibility}), 200
+
+
+@bp.route('/account/team/<int:team_id>/set_member_role', methods=['POST'])
+@login_required
+def team_set_member_role(team_id):
+    team = Team.query.get_or_404(team_id)  # noqa: F841
+
+    my_m = TeamMembership.query.filter_by(user_id=current_user.id, team_id=team_id).first()
+    if not my_m or my_m.role != 'owner':
+        abort(403)
+
+    user_id = request.form.get('user_id', type=int)
+    role = request.form.get('role') or None
+    if role not in ('contributor', 'admin', None):
+        return jsonify({'error': 'invalid_role'}), 400
+
+    membership = TeamMembership.query.filter_by(user_id=user_id, team_id=team_id).first()
+    if not membership or membership.role == 'owner':
+        abort(403)
+
+    membership.role = role
+    db.session.commit()
+    return jsonify({'ok': True, 'role': role}), 200

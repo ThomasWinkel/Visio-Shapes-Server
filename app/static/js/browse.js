@@ -44,7 +44,7 @@ function buildCard(shape) {
         ${stencilRow}
       </div>
       <div class="shape-card-footer">
-        <span class="shape-card-user">${escHtml(shape.user_name)}</span>
+        <span class="shape-card-user">${escHtml(shape.team_name || shape.user_name)}</span>
         <span class="shape-card-count">&darr; ${shape.download_count ?? 0}</span>
       </div>
     </div>

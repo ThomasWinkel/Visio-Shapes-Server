@@ -1,0 +1,232 @@
+{% extends 'base_browser.html' %}
+{% block title %}{{ team.name }} – Admin – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+
+  <h1>Admin</h1>
+
+  <div class="admin-tab-nav">
+    <a href="/admin" class="admin-tab-link">{{ _('Users') }}</a>
+    <a href="/admin/teams" class="admin-tab-link active">Teams</a>
+  </div>
+
+  <div class="admin-detail-header">
+    <a href="/admin/teams">&larr; {{ _('Back to teams') }}</a>
+    <h2>{{ team.name }}</h2>
+    {% if team.description %}
+    <small class="text-muted">{{ team.description }}</small>
+    {% endif %}
+  </div>
+
+  <!-- Members table -->
+  <div class="admin-section">
+    <table class="admin-table" id="members-table">
+      <thead>
+        <tr>
+          <th>{{ _('Name') }}</th>
+          <th>{{ _('Email') }}</th>
+          <th>{{ _('Role') }}</th>
+          <th>{{ _('Actions') }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for m in team.memberships %}
+        <tr id="member-row-{{ m.user_id }}">
+          <td><strong>{{ m.user.name }}</strong></td>
+          <td class="text-muted" style="font-size:0.85rem">{{ m.user.email }}</td>
+          <td>
+            <select class="form-control form-control-sm team-role-select"
+                    data-user="{{ m.user_id }}"
+                    data-prev="{{ m.role or '' }}"
+                    onchange="setRole({{ m.user_id }}, this)">
+              <option value=""   {% if not m.role %}selected{% endif %}>{{ _('Member') }}</option>
+              <option value="contributor" {% if m.role == 'contributor' %}selected{% endif %}>{{ _('Contributor') }}</option>
+              <option value="admin"       {% if m.role == 'admin'       %}selected{% endif %}>{{ _('Admin') }}</option>
+              <option value="owner"       {% if m.role == 'owner'       %}selected{% endif %}>{{ _('Owner') }}</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm"
+                    onclick="removeMember({{ m.user_id }}, '{{ m.user.name|e }}')">
+              {{ _('Remove') }}
+            </button>
+          </td>
+        </tr>
+        {% else %}
+        <tr id="empty-row"><td colspan="4" class="text-muted">{{ _('No members yet.') }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Add member -->
+  <div class="admin-section">
+    <h2>{{ _('Add member') }}</h2>
+    <div class="add-member-row">
+      <input type="email" id="add-email" class="form-control" placeholder="{{ _('Email') }}" style="max-width:280px">
+      <select id="add-role" class="form-control" style="max-width:160px">
+        <option value="">{{ _('Member') }}</option>
+        <option value="contributor">{{ _('Contributor') }}</option>
+        <option value="admin">{{ _('Admin') }}</option>
+        <option value="owner">{{ _('Owner') }}</option>
+      </select>
+      <button class="btn btn-primary" onclick="addMember()">{{ _('Add member') }}</button>
+    </div>
+    <div class="form-error" id="add-error" style="display:none"></div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const TEAM_ID = {{ team.id }};
+
+const ROLE_LABELS = {
+  '':            '{{ _('Member') }}',
+  'contributor': '{{ _('Contributor') }}',
+  'admin':       '{{ _('Admin') }}',
+  'owner':       '{{ _('Owner') }}',
+};
+
+function setRole(userId, select) {
+  const newRole = select.value;
+  const prevRole = select.dataset.prev;
+
+  if (newRole === prevRole) return;
+
+  // If promoting to owner, check for existing owner
+  if (newRole === 'owner') {
+    const existingOwnerRow = document.querySelector('select[data-prev="owner"]');
+    if (existingOwnerRow && existingOwnerRow.dataset.user != userId) {
+      const ownerName = existingOwnerRow.closest('tr').querySelector('strong').textContent;
+      if (!confirm(`{{ _('This will revoke the owner role from') }} ${ownerName}. {{ _('Continue?') }}`)) {
+        select.value = prevRole;
+        return;
+      }
+    }
+  }
+
+  const body = new FormData();
+  body.append('role', newRole);
+
+  fetch(`/admin/team/${TEAM_ID}/member/${userId}/set_role`, { method: 'POST', body })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        select.dataset.prev = newRole;
+        // If we just set a new owner, reset the old owner's select in DOM
+        if (newRole === 'owner') {
+          document.querySelectorAll('.team-role-select').forEach(s => {
+            if (s !== select && s.dataset.prev === 'owner') {
+              s.dataset.prev = '';
+              s.value = '';
+            }
+          });
+        }
+      } else {
+        select.value = prevRole;
+        alert(data.error || 'Error');
+      }
+    })
+    .catch(() => { select.value = prevRole; });
+}
+
+function removeMember(userId, name) {
+  if (!confirm(`{{ _('Remove') }} ${name}?`)) return;
+
+  fetch(`/admin/team/${TEAM_ID}/member/${userId}/remove`, { method: 'POST' })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        const row = document.getElementById(`member-row-${userId}`);
+        if (row) row.remove();
+        // Show empty state if no rows left
+        const tbody = document.querySelector('#members-table tbody');
+        if (tbody && tbody.querySelectorAll('tr').length === 0) {
+          const tr = document.createElement('tr');
+          tr.id = 'empty-row';
+          tr.innerHTML = `<td colspan="4" class="text-muted">{{ _('No members yet.') }}</td>`;
+          tbody.appendChild(tr);
+        }
+      } else {
+        alert(data.error || 'Error');
+      }
+    })
+    .catch(() => alert('Error'));
+}
+
+function addMember() {
+  const email = document.getElementById('add-email').value.trim();
+  const role  = document.getElementById('add-role').value;
+  const errEl = document.getElementById('add-error');
+
+  if (!email) {
+    errEl.style.display = '';
+    errEl.textContent = '{{ _('Please enter an email address.') }}';
+    return;
+  }
+
+  errEl.style.display = 'none';
+  errEl.textContent = '';
+
+  const body = new FormData();
+  body.append('email', email);
+  body.append('role', role);
+
+  fetch(`/admin/team/${TEAM_ID}/add_member`, { method: 'POST', body })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        const u = data.user;
+        // Remove empty-row if present
+        const emptyRow = document.getElementById('empty-row');
+        if (emptyRow) emptyRow.remove();
+
+        const roleLabel = ROLE_LABELS[u.role || ''] || '{{ _('Member') }}';
+        const tbody = document.querySelector('#members-table tbody');
+        const tr = document.createElement('tr');
+        tr.id = `member-row-${u.id}`;
+        tr.innerHTML = `
+          <td><strong>${u.name}</strong></td>
+          <td class="text-muted" style="font-size:0.85rem">${u.email}</td>
+          <td>
+            <select class="form-control form-control-sm team-role-select"
+                    data-user="${u.id}"
+                    data-prev="${u.role || ''}"
+                    onchange="setRole(${u.id}, this)">
+              <option value=""   ${!u.role ? 'selected' : ''}>{{ _('Member') }}</option>
+              <option value="contributor" ${u.role === 'contributor' ? 'selected' : ''}>{{ _('Contributor') }}</option>
+              <option value="admin"       ${u.role === 'admin'       ? 'selected' : ''}>{{ _('Admin') }}</option>
+              <option value="owner"       ${u.role === 'owner'       ? 'selected' : ''}>{{ _('Owner') }}</option>
+            </select>
+          </td>
+          <td>
+            <button class="btn btn-danger btn-sm"
+                    onclick="removeMember(${u.id}, '${u.name.replace(/'/g, "\\'")}')">
+              {{ _('Remove') }}
+            </button>
+          </td>`;
+        tbody.appendChild(tr);
+
+        document.getElementById('add-email').value = '';
+        document.getElementById('add-role').value = '';
+      } else {
+        errEl.style.display = '';
+        if (data.error === 'user_not_found') {
+          errEl.textContent = '{{ _('No user found with this email address.') }}';
+        } else if (data.error === 'already_member') {
+          errEl.textContent = '{{ _('This user is already a member of this team.') }}';
+        } else {
+          errEl.textContent = data.error || 'Error';
+        }
+      }
+    })
+    .catch(() => {
+      errEl.style.display = '';
+      errEl.textContent = 'Error';
+    });
+}
+</script>
+{% endblock %}

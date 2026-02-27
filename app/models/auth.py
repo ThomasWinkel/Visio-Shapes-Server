@@ -7,19 +7,23 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from flask_login import UserMixin
 from app.models.visio import Shape, Stencil
 
-user_team_table = Table(
-    "user_team_table",
-    db.Model.metadata,
-    Column("user_id", ForeignKey("users.id")),
-    Column("team_id", ForeignKey("teams.id"))
-)
-
 user_role_table = Table(
     "user_role_table",
     db.Model.metadata,
     Column("user_id", ForeignKey("users.id")),
     Column("role_id", ForeignKey("roles.id"))
 )
+
+
+class TeamMembership(db.Model):
+    __tablename__ = "team_membership"
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), primary_key=True)
+    team_id: Mapped[int] = mapped_column(ForeignKey("teams.id"), primary_key=True)
+    # 'owner', 'admin', 'contributor', or None (= Viewer/Konsument)
+    role: Mapped[str] = mapped_column(String(20), nullable=True)
+    user: Mapped["User"] = relationship(back_populates="memberships")
+    team: Mapped["Team"] = relationship(back_populates="memberships")
+
 
 class User(db.Model, UserMixin):
     __tablename__ = "users"
@@ -34,21 +38,36 @@ class User(db.Model, UserMixin):
     pending_email: Mapped[str] = mapped_column(nullable=True)
     message: Mapped[str] = mapped_column(String(512), nullable=True)
     link: Mapped[str] = mapped_column(String(512), nullable=True)
-    teams: Mapped[List[Team]] = relationship(secondary=user_team_table, back_populates="users")
+    memberships: Mapped[List[TeamMembership]] = relationship(back_populates="user", cascade="all, delete-orphan")
     roles: Mapped[List[Role]] = relationship(secondary=user_role_table, back_populates="users")
     shapes: Mapped[List["Shape"]] = relationship(back_populates="user", cascade="all, delete-orphan")
     stencils: Mapped[List["Stencil"]] = relationship(back_populates="user", cascade="all, delete-orphan")
+
     def __repr__(self) -> str:
         return f"User(id={self.id!r}, name={self.name!r})"
+
     def get_id(self):
         return self.id
+
 
 class Team(db.Model):
     __tablename__ = "teams"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(unique=True, nullable=False)
-    description: Mapped[str] = mapped_column(nullable=False)
-    users: Mapped[List[User]] = relationship(secondary=user_team_table, back_populates="teams")
+    description: Mapped[str] = mapped_column(nullable=True)
+    # 'public', 'visible', 'private'
+    visibility: Mapped[str] = mapped_column(String(10), nullable=False, default='public')
+    memberships: Mapped[List[TeamMembership]] = relationship(back_populates="team", cascade="all, delete-orphan")
+    shapes: Mapped[List["Shape"]] = relationship(back_populates="team")
+    stencils: Mapped[List["Stencil"]] = relationship(back_populates="team")
+
+    @property
+    def owner(self):
+        for m in self.memberships:
+            if m.role == 'owner':
+                return m.user
+        return None
+
 
 class Role(db.Model):
     __tablename__ = "roles"

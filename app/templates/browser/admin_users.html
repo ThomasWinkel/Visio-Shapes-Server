@@ -4,7 +4,12 @@
 {% block content %}
 <div class="admin-container">
 
-  <h1>{{ _('User Administration') }}</h1>
+  <div class="admin-tab-nav">
+    <a href="/admin" class="admin-tab-link active">{{ _('Users') }}</a>
+    {% if current_user_is_owner %}
+      <a href="/admin/teams" class="admin-tab-link">Teams</a>
+    {% endif %}
+  </div>
 
   <table class="admin-table">
     <thead>

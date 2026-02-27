@@ -1,0 +1,230 @@
+{% extends 'base_browser.html' %}
+{% block title %}Admin – Teams – Visio-Shapes{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+
+  <div class="admin-tab-nav">
+    <a href="/admin" class="admin-tab-link">{{ _('Users') }}</a>
+    <a href="/admin/teams" class="admin-tab-link active">Teams</a>
+  </div>
+
+  <!-- Create Team -->
+  <div class="admin-section">
+    <h2>{{ _('Create team') }}</h2>
+    <form method="post" action="/admin/team/create" class="admin-create-form">
+      <input type="text" name="name" class="form-control" placeholder="{{ _('Team name') }}" required>
+      <input type="text" name="description" class="form-control" placeholder="{{ _('Description (optional)') }}">
+      <select name="visibility" class="form-control">
+        <option value="public">Public</option>
+        <option value="visible">Visible</option>
+        <option value="private">Private</option>
+      </select>
+      <button type="submit" class="btn btn-primary">{{ _('Create') }}</button>
+    </form>
+  </div>
+
+  <!-- Teams table -->
+  {% if teams %}
+  <table class="admin-table admin-teams-table">
+    <thead>
+      <tr>
+        <th>{{ _('Name') }}</th>
+        <th>{{ _('Visibility') }}</th>
+        <th>{{ _('Members') }}</th>
+        <th>Shapes</th>
+        <th>Stencils</th>
+        <th>Team-Owner</th>
+        <th>{{ _('Actions') }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for team in teams %}
+      <tr id="team-row-{{ team.id }}">
+        <td>
+          <span class="editable-cell" onclick="startEdit(this, {{ team.id }}, 'name')"
+                data-value="{{ team.name|e }}">{{ team.name }}</span>
+          <div class="form-error" id="name-error-{{ team.id }}" style="display:none"></div>
+          <span class="editable-cell-desc" onclick="startEdit(this, {{ team.id }}, 'description')"
+                data-value="{{ team.description|e if team.description else '' }}">
+            {% if team.description %}{{ team.description }}{% else %}<em>{{ _('Description (optional)') }}</em>{% endif %}
+          </span>
+        </td>
+        <td>
+          <form method="post" action="/admin/team/{{ team.id }}/set_visibility">
+            <select name="visibility" class="form-control form-control-sm" onchange="this.form.submit()">
+              <option value="public"   {% if team.visibility == 'public'   %}selected{% endif %}>Public</option>
+              <option value="visible"  {% if team.visibility == 'visible'  %}selected{% endif %}>Visible</option>
+              <option value="private"  {% if team.visibility == 'private'  %}selected{% endif %}>Private</option>
+            </select>
+          </form>
+        </td>
+        <td>{{ team.memberships|length }}</td>
+        <td>{{ team.shapes|length }}</td>
+        <td>{{ team.stencils|length }}</td>
+        <td>
+          {% set owner = team.owner %}
+          {% set member_list = team.memberships %}
+          {% if member_list %}
+            <select class="form-control form-control-sm"
+                    data-team="{{ team.id }}"
+                    data-current="{{ owner.id if owner else '' }}"
+                    onchange="ownerChanged(this)">
+              <option value="">– {{ _('No owner') }} –</option>
+              {% for m in member_list %}
+              <option value="{{ m.user_id }}"{% if owner and owner.id == m.user_id %} selected{% endif %}>
+                {{ m.user.name }}
+              </option>
+              {% endfor %}
+            </select>
+            <div class="form-error" id="owner-error-{{ team.id }}" style="display:none"></div>
+          {% else %}
+            <em class="text-muted">{{ _('No members') }}</em>
+          {% endif %}
+        </td>
+        <td>
+          <div class="admin-actions">
+            <a href="/admin/team/{{ team.id }}" class="admin-open-link">{{ _('Open') }} &rarr;</a>
+            {% if not team.shapes and not team.stencils %}
+              <form method="post" action="/admin/team/{{ team.id }}/delete" style="display:inline"
+                    onsubmit="return confirm('{{ _('Do you really want to permanently delete the team &quot;%(name)s&quot;?', name=team.name) }}')">
+                <button type="submit" class="btn btn-danger btn-sm">{{ _('Delete') }}</button>
+              </form>
+            {% else %}
+              <button class="btn btn-danger btn-sm" disabled
+                      title="{{ _('Cannot delete: team still has shapes or stencils.') }}">{{ _('Delete') }}</button>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+    <div class="empty-state"><p>{{ _('No teams yet.') }}</p></div>
+  {% endif %}
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function startEdit(span, teamId, field) {
+  if (span.querySelector('input')) return; // already editing
+
+  const currentValue = span.dataset.value || '';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = currentValue;
+  input.className = 'form-control form-control-sm';
+  input.style.width = '100%';
+
+  span.textContent = '';
+  span.appendChild(input);
+  input.focus();
+  input.select();
+
+  function save() {
+    const newValue = input.value.trim();
+    const endpoint = field === 'name'
+      ? `/admin/team/${teamId}/rename`
+      : `/admin/team/${teamId}/update_description`;
+
+    const body = new FormData();
+    body.append(field, newValue);
+
+    fetch(endpoint, { method: 'POST', body })
+      .then(r => r.json())
+      .then(data => {
+        if (data.ok) {
+          span.dataset.value = newValue;
+          if (field === 'name') {
+            span.textContent = newValue || '';
+            const errEl = document.getElementById(`name-error-${teamId}`);
+            if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+          } else {
+            span.innerHTML = newValue
+              ? newValue
+              : '<em>{{ _('Description (optional)')|e }}</em>';
+            span.dataset.value = newValue;
+          }
+        } else {
+          span.textContent = currentValue || (field === 'description' ? '' : currentValue);
+          if (field === 'name') {
+            span.textContent = currentValue;
+            const errEl = document.getElementById(`name-error-${teamId}`);
+            if (errEl) { errEl.style.display = ''; errEl.textContent = data.error || 'Error'; }
+          } else {
+            span.innerHTML = currentValue
+              ? currentValue
+              : '<em>{{ _('Description (optional)')|e }}</em>';
+          }
+        }
+      })
+      .catch(() => {
+        span.textContent = currentValue;
+      });
+  }
+
+  input.addEventListener('blur', save);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    if (e.key === 'Escape') {
+      input.removeEventListener('blur', save);
+      if (field === 'name') {
+        span.textContent = currentValue;
+      } else {
+        span.innerHTML = currentValue
+          ? currentValue
+          : '<em>{{ _('Description (optional)')|e }}</em>';
+      }
+    }
+  });
+}
+
+function ownerChanged(select) {
+  const teamId = select.dataset.team;
+  const currentId = select.dataset.current;
+  const newId = select.value;
+
+  if (newId === currentId) return;
+
+  const confirmMsg = newId
+    ? '{{ _('Set this member as team owner?') }}'
+    : '{{ _('Remove the current owner?') }}';
+
+  if (!confirm(confirmMsg)) {
+    select.value = currentId;
+    return;
+  }
+
+  const errorEl = document.getElementById(`owner-error-${teamId}`);
+
+  if (!newId) {
+    // Remove owner via form post (unchanged route)
+    const form = document.createElement('form');
+    form.method = 'post';
+    form.action = `/admin/team/${teamId}/remove_owner`;
+    document.body.appendChild(form);
+    form.submit();
+    return;
+  }
+
+  const body = new FormData();
+  body.append('user_id', newId);
+
+  fetch(`/admin/team/${teamId}/set_owner`, { method: 'POST', body })
+    .then(r => r.json())
+    .then(data => {
+      if (data.ok) {
+        select.dataset.current = newId;
+        if (errorEl) { errorEl.style.display = 'none'; errorEl.textContent = ''; }
+      } else {
+        select.value = currentId;
+        if (errorEl) { errorEl.style.display = ''; errorEl.textContent = data.error || 'Error'; }
+      }
+    })
+    .catch(() => { select.value = currentId; });
+}
+</script>
+{% endblock %}

@@ -26,6 +26,7 @@
   </button>
 </div>
 
+
 <div class="panel-shapes" id="panel-shapes">
   <div class="panel-loading">Shapes werden geladen…</div>
 </div>
@@ -46,11 +47,12 @@
   const searchInput = document.getElementById('search');
   const categoryFilter = document.getElementById('category-filter');
 
-  function escHtml(str) {
+function escHtml(str) {
     return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function cardHtml(shape) {
+    const displayName = shape.team_name || shape.user_name;
     const doAttr = escHtml(shape.data_object ?? '');
     const img = `<div class="panel-card-image"><img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy"></div>`;
     if (detailView) {
@@ -61,7 +63,7 @@
             <div class="panel-card-name">${escHtml(shape.name)}</div>
             <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>
             <div class="panel-card-stencil">${escHtml(shape.stencil_title)}</div>
-            <div class="panel-card-user">${escHtml(shape.user_name)}</div>
+            <div class="panel-card-user">${escHtml(displayName)}</div>
             <div class="panel-card-count">&darr; ${shape.download_count ?? 0}</div>
           </div>
         </div>`;
@@ -72,7 +74,7 @@
           <div class="panel-card-body">
             <div class="panel-card-row">
               <div class="panel-card-name">${escHtml(shape.name)}</div>
-              <div class="panel-card-user">${escHtml(shape.user_name)}</div>
+              <div class="panel-card-user">${escHtml(displayName)}</div>
             </div>
             <div class="panel-card-row">
               <div class="panel-card-keywords">${escHtml(shape.keywords)}</div>

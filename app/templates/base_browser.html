@@ -19,15 +19,15 @@
         <img class="logo-icon" src="{{ url_for('static', filename='images/logo-icon.svg') }}" alt="Visio-Shapes">
       </a>
       <ul class="nav-links">
-        <li><a href="/browse">{{ _('Browse') }}</a></li>
+        <li><a href="/browse"{% if request.path.startswith('/browse') %} class="active"{% endif %}>{{ _('Browse') }}</a></li>
         {% if current_user.is_authenticated %}
           {% if current_user_is_admin or current_user_is_owner %}
-            <li><a href="/admin">Admin</a></li>
+            <li><a href="/admin"{% if request.path.startswith('/admin') %} class="active"{% endif %}>Admin</a></li>
           {% endif %}
-          <li><a href="/account">{{ _('Account') }}</a></li>
+          <li><a href="/account"{% if request.path.startswith('/account') %} class="active"{% endif %}>{{ _('Account') }}</a></li>
           <li><a href="/logout">{{ _('Logout') }}</a></li>
         {% else %}
-          <li><a href="/login">{{ _('Login') }}</a></li>
+          <li><a href="/login"{% if request.path == '/login' %} class="active"{% endif %}>{{ _('Login') }}</a></li>
           <li><a href="/register" class="btn btn-primary btn-sm">{{ _('Register') }}</a></li>
         {% endif %}
         <li class="lang-switcher">

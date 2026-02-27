@@ -5,7 +5,6 @@
 <div class="account-container">
 
   <div class="account-header">
-    <h1>{{ _('My Account') }}</h1>
     <p class="account-meta">
       <span id="account-display-name" class="editable-name" title="{{ _('Click to edit') }}">{{ current_user.name }}</span>
       &middot;
@@ -26,6 +25,7 @@
     <button class="tab-btn active" data-tab="overview">{{ _('Overview') }}</button>
     <button class="tab-btn" data-tab="shapes">{{ _('My Shapes') }} ({{ shapes|length }})</button>
     <button class="tab-btn" data-tab="stencils">{{ _('My Stencils') }} ({{ stencils|length }})</button>
+    <button class="tab-btn" data-tab="teams">{{ _('My Teams') }} ({{ memberships|length }})</button>
   </div>
 
   <!-- Overview Tab -->
@@ -234,6 +234,7 @@
             {{ _('Keywords:') }} {{ shape.keywords }}<br>
             {{ _('Uploaded:') }} {{ shape.upload_date | dateformat('medium') }}
             {% if shape.stencil %} &middot; {{ _('Part of stencil:') }} {{ shape.stencil.title }}{% endif %}
+            {% if shape.team %} &middot; Team: <strong>{{ shape.team.name }}</strong>{% endif %}
           </div>
           <div class="account-item-actions">
             <button class="btn btn-secondary btn-sm" onclick="toggleEdit('shape', {{ shape.id }})">{{ _('Edit') }}</button>
@@ -279,6 +280,7 @@
             {{ _('Shapes:') }} {{ stencil.shapes|length }} &middot;
             {{ _('Uploaded:') }} {{ stencil.upload_date | dateformat('medium') }}
             {% if stencil.categories %} &middot; {{ _('Categories:') }} {{ stencil.categories }}{% endif %}
+            {% if stencil.team %} &middot; Team: <strong>{{ stencil.team.name }}</strong>{% endif %}
           </div>
           <div class="account-item-actions">
             <button class="btn btn-secondary btn-sm" onclick="toggleEdit('stencil', {{ stencil.id }})">{{ _('Edit') }}</button>
@@ -316,6 +318,97 @@
     {% endif %}
   </div>
 
+  <!-- My Teams Tab -->
+  <div class="tab-panel" id="tab-teams">
+    {% if memberships %}
+      {% for m in memberships %}
+      <div class="team-card" id="team-card-{{ m.team.id }}">
+        <div class="team-card-header">
+          <div class="team-card-title">{{ m.team.name }}</div>
+          <div class="team-card-badges">
+            <span class="team-visibility-badge team-visibility-{{ m.team.visibility }}" id="visibility-badge-{{ m.team.id }}">{{ m.team.visibility | capitalize }}</span>
+            {% if m.role == 'owner' %}
+              <span class="team-role-badge team-role-owner">Owner</span>
+            {% elif m.role == 'admin' %}
+              <span class="team-role-badge team-role-admin">Admin</span>
+            {% elif m.role == 'contributor' %}
+              <span class="team-role-badge team-role-contributor">Contributor</span>
+            {% else %}
+              <span class="team-role-badge">{{ _('Member') }}</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if m.team.description %}
+        <p class="team-card-description">{{ m.team.description }}</p>
+        {% endif %}
+
+        <p class="team-card-meta">{{ m.team.memberships|length }} {{ _('members') }}</p>
+
+        {% if m.role == 'owner' %}
+        <!-- Team Owner: Visibility -->
+        <div class="team-visibility-row">
+          <label class="team-visibility-label">{{ _('Visibility') }}</label>
+          <select class="form-control form-control-sm team-visibility-select"
+                  id="visibility-select-{{ m.team.id }}"
+                  data-current="{{ m.team.visibility }}"
+                  onchange="confirmVisibilityChange({{ m.team.id }}, this)">
+            <option value="public"  {% if m.team.visibility == 'public'  %}selected{% endif %}>{{ _('Public') }}</option>
+            <option value="visible" {% if m.team.visibility == 'visible' %}selected{% endif %}>{{ _('Visible') }}</option>
+            <option value="private" {% if m.team.visibility == 'private' %}selected{% endif %}>{{ _('Private') }}</option>
+          </select>
+        </div>
+
+        <!-- Team Owner: Member management -->
+        <div class="team-members-section">
+          <h4 class="team-members-title">{{ _('Members') }}</h4>
+          <div class="team-member-list" id="member-list-{{ m.team.id }}">
+            {% for member_m in m.team.memberships %}
+            <div class="team-member-item" id="member-{{ m.team.id }}-{{ member_m.user.id }}">
+              <div class="team-member-info">
+                <span class="team-member-name">{{ member_m.user.name }}</span>
+                <span class="team-member-email">{{ member_m.user.email }}</span>
+              </div>
+              {% if member_m.role == 'owner' %}
+                <span class="team-role-badge team-role-owner">Owner</span>
+              {% else %}
+                <select class="form-control form-control-sm team-role-select"
+                        onchange="setMemberRole({{ m.team.id }}, {{ member_m.user.id }}, this.value, this)">
+                  <option value=""            {% if not member_m.role %}selected{% endif %}>{{ _('Member') }}</option>
+                  <option value="contributor" {% if member_m.role == 'contributor' %}selected{% endif %}>Contributor</option>
+                  <option value="admin"       {% if member_m.role == 'admin' %}selected{% endif %}>Admin</option>
+                </select>
+                <button class="btn btn-danger btn-sm"
+                        onclick="removeMember({{ m.team.id }}, {{ member_m.user.id }}, '{{ member_m.user.name|e }}')">{{ _('Remove') }}</button>
+              {% endif %}
+            </div>
+            {% endfor %}
+          </div>
+
+          <!-- Add member -->
+          <div class="add-member-form">
+            <h4 class="team-members-title">{{ _('Add member') }}</h4>
+            <div class="add-member-row">
+              <input type="email" class="form-control" id="add-email-{{ m.team.id }}"
+                     placeholder="{{ _('Email address') }}">
+              <select class="form-control" id="add-role-{{ m.team.id }}">
+                <option value="">{{ _('Member') }}</option>
+                <option value="contributor">Contributor</option>
+                <option value="admin">Admin</option>
+              </select>
+              <button class="btn btn-primary" onclick="addMember({{ m.team.id }})">{{ _('Add') }}</button>
+            </div>
+            <div class="form-error" id="add-error-{{ m.team.id }}"></div>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state"><p>{{ _('You are not a member of any team.') }}</p></div>
+    {% endif %}
+  </div>
+
 </div>
 
 <!-- Delete confirmation dialog -->
@@ -328,8 +421,129 @@
   </div>
 </dialog>
 
+<!-- Visibility change confirmation dialog -->
+<dialog id="visibility-dialog">
+  <h3>{{ _('Change visibility') }}</h3>
+  <p id="visibility-dialog-text"></p>
+  <div class="dialog-actions">
+    <button class="btn btn-secondary" id="visibility-cancel-btn">{{ _('Cancel') }}</button>
+    <button class="btn btn-primary" id="visibility-confirm-btn">{{ _('Change') }}</button>
+  </div>
+</dialog>
+
 {% endblock %}
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='js/account.js') }}"></script>
+<script>
+// ── Team visibility ──
+
+let _pendingVisibility = null;
+
+function confirmVisibilityChange(teamId, selectEl) {
+  const newValue  = selectEl.value;
+  const prevValue = selectEl.dataset.current;
+  if (newValue === prevValue) return;
+  _pendingVisibility = { teamId, newValue, prevValue, selectEl };
+  document.getElementById('visibility-dialog-text').textContent =
+    window.TRANSLATIONS.visibility_change_confirm.replace('{value}', newValue);
+  document.getElementById('visibility-dialog').showModal();
+}
+
+document.getElementById('visibility-cancel-btn').addEventListener('click', () => {
+  document.getElementById('visibility-dialog').close();
+  if (_pendingVisibility) {
+    _pendingVisibility.selectEl.value = _pendingVisibility.prevValue;
+    _pendingVisibility = null;
+  }
+});
+
+document.getElementById('visibility-confirm-btn').addEventListener('click', async () => {
+  document.getElementById('visibility-dialog').close();
+  if (!_pendingVisibility) return;
+  const { teamId, newValue, prevValue, selectEl } = _pendingVisibility;
+  _pendingVisibility = null;
+
+  const fd = new FormData();
+  fd.append('visibility', newValue);
+  try {
+    const res = await fetch(`/account/team/${teamId}/set_visibility`, { method: 'POST', body: fd });
+    if (res.ok) {
+      selectEl.dataset.current = newValue;
+      const badgeEl = document.getElementById(`visibility-badge-${teamId}`);
+      if (badgeEl) {
+        badgeEl.className = `team-visibility-badge team-visibility-${newValue}`;
+        badgeEl.textContent = newValue.charAt(0).toUpperCase() + newValue.slice(1);
+      }
+    } else {
+      alert(window.TRANSLATIONS.save_error);
+      selectEl.value = prevValue;
+    }
+  } catch {
+    alert(window.TRANSLATIONS.network_error);
+    selectEl.value = prevValue;
+  }
+});
+
+// ── Team member management ──
+
+async function addMember(teamId) {
+  const emailInput = document.getElementById(`add-email-${teamId}`);
+  const roleSelect = document.getElementById(`add-role-${teamId}`);
+  const errorEl   = document.getElementById(`add-error-${teamId}`);
+  errorEl.textContent = '';
+
+  const fd = new FormData();
+  fd.append('email', emailInput.value.trim());
+  if (roleSelect.value) fd.append('role', roleSelect.value);
+
+  try {
+    const res  = await fetch(`/account/team/${teamId}/add_member`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) {
+      if (data.error === 'user_not_found')  errorEl.textContent = window.TRANSLATIONS.user_not_found;
+      else if (data.error === 'already_member') errorEl.textContent = window.TRANSLATIONS.already_member;
+      else errorEl.textContent = window.TRANSLATIONS.save_error;
+      return;
+    }
+    // Reload to show updated member list
+    location.reload();
+  } catch {
+    errorEl.textContent = window.TRANSLATIONS.network_error;
+  }
+}
+
+async function removeMember(teamId, userId, name) {
+  if (!confirm(window.TRANSLATIONS.delete_confirm.replace('{name}', name))) return;
+  const fd = new FormData();
+  fd.append('user_id', userId);
+  try {
+    const res = await fetch(`/account/team/${teamId}/remove_member`, { method: 'POST', body: fd });
+    if (res.ok) {
+      document.getElementById(`member-${teamId}-${userId}`)?.remove();
+    } else {
+      alert(window.TRANSLATIONS.delete_error);
+    }
+  } catch {
+    alert(window.TRANSLATIONS.network_error);
+  }
+}
+
+async function setMemberRole(teamId, userId, role, selectEl) {
+  const fd = new FormData();
+  fd.append('user_id', userId);
+  fd.append('role', role);
+  try {
+    const res = await fetch(`/account/team/${teamId}/set_member_role`, { method: 'POST', body: fd });
+    if (!res.ok) {
+      alert(window.TRANSLATIONS.save_error);
+      // Reset select to previous value on error
+      location.reload();
+    }
+  } catch {
+    alert(window.TRANSLATIONS.network_error);
+    location.reload();
+  }
+}
+</script>
 {% endblock %}

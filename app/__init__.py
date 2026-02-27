@@ -91,6 +91,10 @@ def create_app(config_class=Config):
             'pending_confirmation': _('(pending confirmation)'),
             'cancel':            _('Cancel'),
             'click_to_edit':     _('Click to edit'),
+            'user_not_found':    _('No user found with this email address.'),
+            'already_member':    _('This user is already a member of this team.'),
+            'visibility_change_confirm': _('Do you really want to change the visibility of this team to "{value}"?'),
+            'change':            _('Change'),
         }
         from flask_login import current_user as cu
         owner_email = app.config.get('OWNER_EMAIL', '')
