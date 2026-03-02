@@ -4,7 +4,7 @@ from app.extensions import db, http_auth
 from flask_login import current_user
 from app.models.auth import Team, TeamMembership
 from app.models.visio import Shape, Stencil, ShapeDownload, StencilDownload
-from app.utilities import register_shape
+from app.utilities import register_shape, noaccess_shape
 from sqlalchemy import func
 from sqlalchemy.orm import selectinload
 import json, logging
@@ -111,17 +111,20 @@ def download_stencil(stencil_id):
 def get_shape(shape_id):
     if not current_user.is_authenticated:
         return register_shape
-
     shape = Shape.query.get(shape_id)
     if not shape:
-        return register_shape
+        return noaccess_shape
+
+    def access_denied():
+        team_shape = Shape.query.filter_by(name='Team-Shape', team_id=shape.team_id).first() if shape.team_id else None
+        return team_shape.data_object if team_shape else noaccess_shape
 
     # Access check for Visible and Private teams
     if shape.team_id:
         team = shape.team
         if team.visibility in ('visible', 'private'):
             if not _user_is_team_member(current_user.id, shape.team_id):
-                return register_shape
+                return access_denied()
 
     download = ShapeDownload(shape_id=shape_id, user_id=current_user.id)
     db.session.add(download)
