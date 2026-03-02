@@ -54,10 +54,11 @@ function escHtml(str) {
   function cardHtml(shape) {
     const displayName = shape.team_name || shape.user_name;
     const doAttr = escHtml(shape.data_object ?? '');
+    const titleAttr = escHtml(shape.prompt ?? '');
     const img = `<div class="panel-card-image"><img src="/static/images/shapes/${shape.id}.png" alt="${escHtml(shape.name)}" loading="lazy"></div>`;
     if (detailView) {
       return `
-        <div class="panel-card detail" data-id="${shape.id}" data-do="${doAttr}">
+        <div class="panel-card detail" data-id="${shape.id}" data-do="${doAttr}" title="${titleAttr}">
           ${img}
           <div class="panel-card-body">
             <div class="panel-card-name">${escHtml(shape.name)}</div>
@@ -69,7 +70,7 @@ function escHtml(str) {
         </div>`;
     } else {
       return `
-        <div class="panel-card" data-id="${shape.id}" data-do="${doAttr}">
+        <div class="panel-card" data-id="${shape.id}" data-do="${doAttr}" title="${titleAttr}">
           ${img}
           <div class="panel-card-body">
             <div class="panel-card-row">

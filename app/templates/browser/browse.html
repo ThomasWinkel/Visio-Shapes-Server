@@ -29,5 +29,6 @@
 <script>
   const LOGGED_IN = {{ 'true' if current_user.is_authenticated else 'false' }};
 </script>
+<script src="{{ url_for('static', filename='js/shape-card.js') }}"></script>
 <script src="{{ url_for('static', filename='js/browse.js') }}"></script>
 {% endblock %}

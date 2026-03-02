@@ -87,9 +87,7 @@ Auslieferung per Docker + Nginx Reverse Proxy.
 │   │   ├── fonts/                # Open Sans WOFF2
 │   │   ├── js/
 │   │   │   ├── app.js            # Shape-Laden, Filter, Sort, Infinite Scroll
-│   │   │   ├── router.js         # Client-seitiger SPA-Router
-│   │   │   └── components/
-│   │   │       └── shape-card.js # Web Component <shape-card>
+│   │   │   └── router.js         # Client-seitiger SPA-Router
 │   │   └── images/shapes/        # Shape-Vorschau-PNGs ({id}.png)
 │   ├── stencils/                 # Hochgeladene Stencil-Dateien ({id}{ext})
 │   ├── translations/             # Flask-Babel Übersetzungen
